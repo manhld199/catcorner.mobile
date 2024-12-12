@@ -1,11 +1,27 @@
 import { ScrollView, View } from "react-native";
-import React, { useState } from "react";
+import { useContext, useState } from "react";
 import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
 import { Image } from "react-native";
 import { Text } from "@/components/Text";
 
+// import providers
+import { AuthContext } from "@/providers";
+
+interface IUser {
+  user_id?: string;
+  user_name?: string;
+  email: string;
+  user_role?: string;
+  user_avt?: string;
+  password?: string;
+}
+
 const Login = () => {
+  const { login } = useContext(AuthContext) || {
+    login: async (user: IUser) => {},
+  };
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -63,8 +79,15 @@ const Login = () => {
     return valid;
   };
 
-  const handleSubmit = () => {
-    validateForm();
+  const handleSubmit = async () => {
+    if (validateForm()) {
+      const user = {
+        email: email,
+        password: password,
+      };
+
+      await login(user);
+    }
   };
 
   return (
@@ -80,14 +103,8 @@ const Login = () => {
 
         {/* Email */}
         <View className="flex flex-col gap-2">
-          <View className="flex flex-row justify-between">
-            <Text className={`w-1/5 text-gray-600 ${errors.email ? "text-red-500" : ""}`}>
-              Email:
-            </Text>
-            {errors.email ? (
-              <Text className="w-4/5 text-right text-red-500">{errors.email}</Text>
-            ) : null}
-          </View>
+          <Text className={`text-gray-600 ${errors.email ? "text-red-500" : ""}`}>Email:</Text>
+
           <Input
             value={email}
             onChangeText={validateEmail}
@@ -98,18 +115,16 @@ const Login = () => {
               errors.email ? "border-red-500 placeholder:text-red-500" : ""
             }`}
           />
+
+          {errors.email ? <Text className="text-right text-red-500">{errors.email}</Text> : null}
         </View>
 
         {/* Password */}
         <View className="flex flex-col gap-2">
-          <View className="flex flex-row justify-between">
-            <Text className={`w-1/5 text-gray-600 ${errors.password ? "text-red-500" : ""}`}>
-              Password:
-            </Text>
-            {errors.password ? (
-              <Text className="w-4/5 text-right text-red-500">{errors.password}</Text>
-            ) : null}
-          </View>
+          <Text className={`text-gray-600 ${errors.password ? "text-red-500" : ""}`}>
+            Password:
+          </Text>
+
           <Input
             value={password}
             onChangeText={validatePassword}
@@ -119,6 +134,10 @@ const Login = () => {
               errors.password ? "border-red-500 placeholder:text-red-500" : ""
             }`}
           />
+
+          {errors.password ? (
+            <Text className="text-right text-red-500">{errors.password}</Text>
+          ) : null}
         </View>
 
         <View className="w-full flex flex-col gap-2">
