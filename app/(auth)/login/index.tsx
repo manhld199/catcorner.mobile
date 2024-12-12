@@ -1,11 +1,27 @@
 import { ScrollView, View } from "react-native";
-import React, { useState } from "react";
+import { useContext, useState } from "react";
 import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
 import { Image } from "react-native";
 import { Text } from "@/components/Text";
 
+// import providers
+import { AuthContext } from "@/providers";
+
+interface IUser {
+  user_id?: string;
+  user_name?: string;
+  email: string;
+  user_role?: string;
+  user_avt?: string;
+  password?: string;
+}
+
 const Login = () => {
+  const { login } = useContext(AuthContext) || {
+    login: async (user: IUser) => {},
+  };
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -63,8 +79,15 @@ const Login = () => {
     return valid;
   };
 
-  const handleSubmit = () => {
-    validateForm();
+  const handleSubmit = async () => {
+    if (validateForm()) {
+      const user = {
+        email: email,
+        password: password,
+      };
+
+      await login(user);
+    }
   };
 
   return (

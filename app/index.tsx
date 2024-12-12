@@ -1,13 +1,28 @@
 // import libs
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { Link } from "expo-router";
+import { useContext } from "react";
+
+// import providers
+import { AuthContext } from "@/providers";
+
+// import utils
 import { AUTH_REGISTER_URL } from "@/utils/constants/urls";
-import { Button } from "@/components/Button";
-import Toast from "react-native-toast-message";
+
+// import components
+import { Text } from "@/components/Text";
 
 export default function Screen() {
+  const { user } = useContext(AuthContext) || { user: null };
+
   return (
     <View className="flex-1 justify-center items-center gap-5 p-6">
+      <Text>ID: {user?.user_id}</Text>
+      <Text>Email: {user?.email}</Text>
+      <Text>Name: {user?.user_name}</Text>
+      <Text>Role: {user?.user_role}</Text>
+      <Text>Avatar: {user?.user_avt}</Text>
+
       <Link
         href="/verify-email?email=leducmanh123kt@gmail.com"
         className="dark:text-white font-c-bold"

@@ -13,9 +13,12 @@ import { Text } from "@/components/Text";
 import { AuthContext } from "@/providers";
 
 interface IUser {
-  user_name: string;
+  user_id?: string;
+  user_name?: string;
   email: string;
-  password: string;
+  user_role?: string;
+  user_avt?: string;
+  password?: string;
 }
 
 const Register = () => {
@@ -178,7 +181,7 @@ const Register = () => {
         email: email,
         password: password,
       };
-      console.log("user ", user);
+      // console.log("user ", user);
 
       await register(user);
     }
