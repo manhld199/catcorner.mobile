@@ -11,6 +11,9 @@ export default function Screen() {
       <Link href="/login" className="dark:text-white font-c-bold-italic">
         Go to auth login
       </Link>
+      <Link href="/profile" className="dark:text-white font-c-bold-italic">
+        Go to auth login
+      </Link>
     </View>
   );
 }
