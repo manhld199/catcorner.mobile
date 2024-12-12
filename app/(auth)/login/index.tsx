@@ -80,14 +80,8 @@ const Login = () => {
 
         {/* Email */}
         <View className="flex flex-col gap-2">
-          <View className="flex flex-row justify-between">
-            <Text className={`w-1/5 text-gray-600 ${errors.email ? "text-red-500" : ""}`}>
-              Email:
-            </Text>
-            {errors.email ? (
-              <Text className="w-4/5 text-right text-red-500">{errors.email}</Text>
-            ) : null}
-          </View>
+          <Text className={`text-gray-600 ${errors.email ? "text-red-500" : ""}`}>Email:</Text>
+
           <Input
             value={email}
             onChangeText={validateEmail}
@@ -98,18 +92,16 @@ const Login = () => {
               errors.email ? "border-red-500 placeholder:text-red-500" : ""
             }`}
           />
+
+          {errors.email ? <Text className="text-right text-red-500">{errors.email}</Text> : null}
         </View>
 
         {/* Password */}
         <View className="flex flex-col gap-2">
-          <View className="flex flex-row justify-between">
-            <Text className={`w-1/5 text-gray-600 ${errors.password ? "text-red-500" : ""}`}>
-              Password:
-            </Text>
-            {errors.password ? (
-              <Text className="w-4/5 text-right text-red-500">{errors.password}</Text>
-            ) : null}
-          </View>
+          <Text className={`text-gray-600 ${errors.password ? "text-red-500" : ""}`}>
+            Password:
+          </Text>
+
           <Input
             value={password}
             onChangeText={validatePassword}
@@ -119,6 +111,10 @@ const Login = () => {
               errors.password ? "border-red-500 placeholder:text-red-500" : ""
             }`}
           />
+
+          {errors.password ? (
+            <Text className="text-right text-red-500">{errors.password}</Text>
+          ) : null}
         </View>
 
         <View className="w-full flex flex-col gap-2">

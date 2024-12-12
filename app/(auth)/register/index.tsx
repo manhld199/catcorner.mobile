@@ -1,12 +1,26 @@
-import React, { useState } from "react";
-import { ScrollView, View, Alert } from "react-native";
+// import libs
+import React, { useContext, useState } from "react";
+import { ScrollView, View } from "react-native";
+import { Link, useRouter } from "expo-router";
+
+// import components
 import { Input } from "@/components/Input";
 import { Checkbox } from "@/components/Checkbox";
 import { Button } from "@/components/Button";
 import { Text } from "@/components/Text";
-import { Link } from "expo-router";
+
+// import providers
+import { AuthContext } from "@/providers";
+
+interface IUser {
+  user_name: string;
+  email: string;
+  password: string;
+}
 
 const Register = () => {
+  const router = useRouter();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -14,6 +28,10 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agreeTerm, setAgreeTerm] = useState(false);
   const [agreeSubscribe, setAgreeSubscribe] = useState(false);
+
+  const { register } = useContext(AuthContext) || {
+    register: async (user: IUser) => {},
+  };
 
   const [errors, setErrors] = useState({
     firstName: "",
@@ -24,7 +42,8 @@ const Register = () => {
     agreeTerm: "",
   });
 
-  const nameRegex = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăêếềđ\s]+$/;
+  const nameRegex =
+    /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨứỪỬỮỰỲỴÝỶỸỳỵỷỹ\s]+$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const validateFirstName = (text: string) => {
@@ -39,7 +58,7 @@ const Register = () => {
 
   const validateLastName = (text: string) => {
     setLastName(text);
-    if (text === "") setErrors((prev) => ({ ...prev, firstName: "Last name is required." }));
+    if (text === "") setErrors((prev) => ({ ...prev, lastName: "Last name is required." }));
     else if (!text.match(nameRegex)) {
       setErrors((prev) => ({ ...prev, lastName: "Last name must contain only letters." }));
     } else {
@@ -68,7 +87,7 @@ const Register = () => {
   const validateConfirmPassword = (text: string) => {
     setConfirmPassword(text);
     if (text !== password) {
-      setErrors((prev) => ({ ...prev, confirmPassword: "Passwords do not match." }));
+      setErrors((prev) => ({ ...prev, confirmPassword: "Password does not match." }));
     } else if (text === "") {
       setErrors((prev) => ({ ...prev, confirmPassword: "Confirm password is required" }));
     } else {
@@ -138,7 +157,7 @@ const Register = () => {
       newErrors.confirmPassword = "Confirm password is required.";
       valid = false;
     } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match.";
+      newErrors.confirmPassword = "Password does not match.";
       valid = false;
     }
 
@@ -152,8 +171,17 @@ const Register = () => {
     return valid;
   };
 
-  const handleSubmit = () => {
-    validateForm();
+  const handleSubmit = async () => {
+    if (validateForm()) {
+      const user = {
+        user_name: `${firstName} ${lastName}`,
+        email: email,
+        password: password,
+      };
+      console.log("user ", user);
+
+      await register(user);
+    }
   };
 
   return (
@@ -162,18 +190,16 @@ const Register = () => {
         <View className="flex flex-col gap-1">
           <Text className="w-full text-center text-4xl font-c-bold">Create your account</Text>
           <Text className="text-center text-red-500">
-            Vui lòng không để trống các mục được đánh dấu *
+            Vui lòng không để trống các mục đánh dấu *
           </Text>
         </View>
 
         {/* First Name and Last Name */}
         <View className="flex flex-col gap-2">
-          <View className="flex flex-row justify-between">
-            <Text className="w-2/5 text-gray-600 font-c-semibold">First Name:</Text>
-            {errors.firstName ? (
-              <Text className="w-3/5 text-right text-red-500">{errors.firstName}</Text>
-            ) : null}
-          </View>
+          <Text className="text-gray-600 dark:text-white font-c-semibold">
+            <Text className="text-red-500">*</Text> First Name:
+          </Text>
+
           <Input
             value={firstName}
             onChangeText={validateFirstName}
@@ -182,15 +208,16 @@ const Register = () => {
               errors.firstName ? "border-red-500 placeholder:text-red-500" : ""
             }`}
           />
+          {errors.firstName ? (
+            <Text className="text-red-500 text-right">{errors.firstName}</Text>
+          ) : null}
         </View>
 
         <View className="flex flex-col gap-2">
-          <View className="flex flex-row justify-between">
-            <Text className="w-2/5 text-gray-600 font-c-semibold">Last Name:</Text>
-            {errors.lastName ? (
-              <Text className="w-3/5 text-right text-red-500">{errors.lastName}</Text>
-            ) : null}
-          </View>
+          <Text className="text-gray-600 dark:text-white font-c-semibold">
+            <Text className="text-red-500">*</Text> Last Name:
+          </Text>
+
           <Input
             value={lastName}
             onChangeText={validateLastName}
@@ -199,16 +226,17 @@ const Register = () => {
               errors.lastName ? "border-red-500 placeholder:text-red-500" : ""
             }`}
           />
+          {errors.lastName ? (
+            <Text className="text-red-500 text-right">{errors.lastName}</Text>
+          ) : null}
         </View>
 
         {/* Email */}
         <View className="flex flex-col gap-2">
-          <View className="flex flex-row justify-between">
-            <Text className="text-gray-600 font-c-semibold">Email:</Text>
-            {errors.email ? (
-              <Text className="w-4/5 text-right text-red-500">{errors.email}</Text>
-            ) : null}
-          </View>
+          <Text className="text-gray-600 dark:text-white font-c-semibold">
+            <Text className="text-red-500">*</Text> Email:
+          </Text>
+
           <Input
             value={email}
             onChangeText={validateEmail}
@@ -219,16 +247,15 @@ const Register = () => {
               errors.email ? "border-red-500 placeholder:text-red-500" : ""
             }`}
           />
+          {errors.email ? <Text className="text-right text-red-500">{errors.email}</Text> : null}
         </View>
 
         {/* Password */}
         <View className="flex flex-col gap-2">
-          <View className="flex flex-row justify-between">
-            <Text className="w-1/5 text-gray-600 font-c-semibold">Password:</Text>
-            {errors.password ? (
-              <Text className="w-4/5 text-right text-red-500">{errors.password}</Text>
-            ) : null}
-          </View>
+          <Text className="text-gray-600 dark:text-white font-c-semibold">
+            <Text className="text-red-500">*</Text> Password:
+          </Text>
+
           <Input
             value={password}
             onChangeText={validatePassword}
@@ -238,16 +265,18 @@ const Register = () => {
               errors.password ? "border-red-500 placeholder:text-red-500" : ""
             }`}
           />
+
+          {errors.password ? (
+            <Text className="text-right text-red-500">{errors.password}</Text>
+          ) : null}
         </View>
 
         {/* Confirm Password */}
         <View className="flex flex-col gap-2">
-          <View className="flex flex-row justify-between">
-            <Text className="w-2/5 text-gray-600 font-c-semibold">Confirm password:</Text>
-            {errors.confirmPassword ? (
-              <Text className="w-3/5 text-right text-red-500">{errors.confirmPassword}</Text>
-            ) : null}
-          </View>
+          <Text className="w-[150px] text-gray-600 dark:text-white font-c-semibold">
+            <Text className="text-red-500">*</Text> Confirm password:
+          </Text>
+
           <Input
             value={confirmPassword}
             onChangeText={validateConfirmPassword}
@@ -257,6 +286,10 @@ const Register = () => {
               errors.confirmPassword ? "border-red-500 placeholder:text-red-500" : ""
             }`}
           />
+
+          {errors.confirmPassword ? (
+            <Text className="text-right text-red-500">{errors.confirmPassword}</Text>
+          ) : null}
         </View>
 
         {/* Terms and Subscription */}
@@ -266,7 +299,9 @@ const Register = () => {
             onCheckedChange={validateAgreeTerm}
             className={errors.agreeTerm ? "border-red-500" : ""}
           />
-          <Text className={`text-gray-600 ${errors.agreeTerm ? "text-red-500" : ""}`}>
+          <Text
+            className={`text-gray-600 dark:text-white ${errors.agreeTerm ? "text-red-500" : ""}`}
+          >
             Agree to our{" "}
             <Link href="/term-of-use" className="underline">
               Terms of use
@@ -280,7 +315,7 @@ const Register = () => {
 
         <View className="flex flex-row gap-2">
           <Checkbox checked={agreeSubscribe} onCheckedChange={setAgreeSubscribe} />
-          <Text className="text-gray-600">Subscribe to our monthly newsletter</Text>
+          <Text className="text-gray-600 dark:text-white">Subscribe to our monthly newsletter</Text>
         </View>
 
         {/* Submit Button */}

@@ -3,8 +3,8 @@ import "@/global.css";
 
 // import libs
 import { useEffect } from "react";
-import { View, StyleSheet } from "react-native";
-import { Stack } from "expo-router";
+import { View } from "react-native";
+import { Slot } from "expo-router";
 import {
   JosefinSans_100Thin,
   JosefinSans_100Thin_Italic,
@@ -23,12 +23,13 @@ import {
   useFonts,
 } from "@expo-google-fonts/josefin-sans";
 import * as SplashScreen from "expo-splash-screen";
+import Toast from "react-native-toast-message";
 
 // import components
 import { ThemeToggle } from "@/components";
 
 // import providers
-import { ThemeProvider } from "@/providers";
+import { AuthProvider, ThemeProvider } from "@/providers";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -61,25 +62,14 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider>
-      <View style={styles.container}>
-        <Stack>
-          <Stack.Screen
-            name="index"
-            options={{
-              title: "Starter Base",
-              headerRight: () => <ThemeToggle />,
-            }}
-          />
-        </Stack>
-      </View>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <View className="w-full h-full bg-white dark:bg-zinc-900 flex">
+          <ThemeToggle />
+          <Slot />
+          <Toast />
+        </View>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-  },
-});
