@@ -293,7 +293,9 @@ const Register = () => {
             className={errors.agreeTerm ? "border-red-500" : ""}
           />
           <Text
-            className={`text-gray-600 dark:text-white ${errors.agreeTerm ? "text-red-500" : ""}`}
+            className={`flex-1 text-gray-600 dark:text-white ${
+              errors.agreeTerm ? "text-red-500" : ""
+            }`}
           >
             Bạn đồng ý với{" "}
             <Link href="/term-of-use" className="underline">

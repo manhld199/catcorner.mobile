@@ -64,7 +64,7 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <View className="w-full h-full bg-white dark:bg-zinc-900 flex">
+        <View className="w-full h-full bg-bg-1 dark:bg-zinc-900 flex">
           <ThemeToggle />
           <Slot />
           <Toast />
