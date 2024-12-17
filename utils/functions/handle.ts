@@ -32,7 +32,7 @@ export const getData = async (url: string) => {
     });
 
     const data = await res.json();
-    console.log("data", data);
+    // console.log("data", data);
 
     if (!res.ok) return { data: null, message: data.data.message || "Get Failed" };
 

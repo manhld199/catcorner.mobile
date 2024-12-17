@@ -41,8 +41,9 @@ export default function SearchPage() {
   const [recognizing, setRecognizing] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [suggestedProducts, setSuggestedProducts] = useState<IProductSuggest[]>([]); // Dữ liệu sản phẩm
+  const [isProductLoading, setIsProductLoading] = useState(false); // Loading state
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [loading, setLoading] = useState(false); // Loading state
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(false); // Loading state
 
   // Đảm bảo sự kiện nhận dạng giọng nói được theo dõi
   useSpeechRecognitionEvent("start", () => setRecognizing(true));
@@ -73,7 +74,7 @@ export default function SearchPage() {
   // Hàm fetch API
   const fetchSuggestedProducts = async (query: string) => {
     try {
-      setLoading(true);
+      setIsProductLoading(true);
       const { data, message } = await getData(
         `${RECOMMEND_SEARCH_URL}?searchKey=${encodeURIComponent(query)}`
       );
@@ -82,7 +83,7 @@ export default function SearchPage() {
     } catch (error) {
       console.error("Fetch error:", error);
     } finally {
-      setLoading(false);
+      setIsProductLoading(false);
     }
   };
 
@@ -113,14 +114,14 @@ export default function SearchPage() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        setLoading(true);
+        setIsCategoriesLoading(true);
         const { data, message } = await getData(RECOMMEND_CATEGORY_URL);
         // console.log("ressssssss", data.data);
         setCategories(data.data);
       } catch (error) {
         console.error("Fetch error:", error);
       } finally {
-        setLoading(false);
+        setIsCategoriesLoading(false);
       }
     };
 
@@ -165,7 +166,7 @@ export default function SearchPage() {
             Sản phẩm gợi ý
           </Text>
           <View className="w-1/3 h-[1.5px] mx-auto my-2 bg-teal-300"></View>
-          {loading ? (
+          {isProductLoading ? (
             <ActivityIndicator size="large" color="#00bcd4" />
           ) : (
             <View className="flex flex-col gap-2">
@@ -200,11 +201,15 @@ export default function SearchPage() {
           Sản phẩm theo danh mục
         </Text>
         <View className="w-1/3 h-[1.5px] mx-auto my-2 bg-teal-300"></View>
-        <View className="w-full flex flex-row flex-wrap justify-between gap-x-2 gap-y-4">
-          {categories.map((category, index) => (
-            <CardCategory key={index} category={category} />
-          ))}
-        </View>
+        {isCategoriesLoading ? (
+          <ActivityIndicator size="large" color="#00bcd4" />
+        ) : (
+          <View className="w-full flex flex-row flex-wrap justify-between gap-x-2 gap-y-4">
+            {categories.map((category, index) => (
+              <CardCategory key={index} category={category} />
+            ))}
+          </View>
+        )}
       </View>
     </ScrollView>
   );
