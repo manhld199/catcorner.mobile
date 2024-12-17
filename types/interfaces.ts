@@ -21,3 +21,20 @@ export interface IUser {
   token?: string;
   otp?: string;
 }
+
+export interface IProductSuggest {
+  highest_discount: number | null;
+  lowest_price: number;
+  product_id_hashed: string;
+  product_img: string;
+  product_name: string;
+  product_slug: string;
+  variant_names: string[];
+  product_price: number;
+}
+
+export interface ICategory {
+  category_id_hashed: string;
+  category_img: string;
+  category_name: string;
+}

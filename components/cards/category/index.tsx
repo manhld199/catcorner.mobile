@@ -1,23 +1,31 @@
+// import libs
 import { View, Image } from "react-native";
-import React from "react";
 import { Link } from "expo-router";
-import { Text } from "@/components/Text";
 
-export default function CardCategory() {
+// import components
+import { Text } from "@/components/Text";
+import { ICategory } from "@/types/interfaces";
+
+export default function CardCategory({ category }: { category: ICategory }) {
   return (
-    <Link href="#" className="w-[30%] flex flex-col items-center justify-start">
-      <View className="flex flex-col gap-2">
+    <Link
+      href={`/categories/${encodeURIComponent(category.category_id_hashed)}`}
+      className="w-[30%] flex flex-col items-center justify-start"
+    >
+      <View className="w-full flex flex-col gap-2">
         {/* Container cho hình ảnh */}
-        <Image
-          source={{
-            uri: "https://i.pinimg.com/474x/db/16/7f/db167f5639b20ed2857ddd862626e24e.jpg",
-          }}
-          className="w-full aspect-[2/3] rounded-md"
-          resizeMode="cover"
-        />
+        <View className="w-[100px] aspect-[2/3] flex-1">
+          <Image
+            source={{
+              uri: category.category_img || require("@/assets/images/placeholder.png"),
+            }}
+            className="w-full h-full rounded-md"
+            resizeMode="cover"
+          />
+        </View>
 
         {/* Dòng chữ */}
-        <Text className="w-full text-base text-center">Tên danh mục</Text>
+        <Text className="w-full text-base text-center">{category.category_name}</Text>
       </View>
     </Link>
   );
