@@ -14,7 +14,11 @@ import { convertNumberToVND } from "@/utils/functions/convert";
 export default function CardSuggestedProduct({ product }: { product: IProductSuggest }) {
   return (
     <Link
-      href={`/${product.product_slug}?pid=${encodeURIComponent(product.product_id_hashed)}` as any}
+      href={
+        `/product/${product.product_slug}?pid=${encodeURIComponent(
+          product.product_id_hashed
+        )}` as any
+      }
       className="flex-1 w-full p-1 bg-pri-5 dark:bg-pri-7 rounded-md flex flex-row"
     >
       <View className="flex flex-row items-center gap-2">
