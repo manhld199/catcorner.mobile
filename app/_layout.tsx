@@ -3,7 +3,7 @@ import "@/global.css";
 
 // import libs
 import { useEffect } from "react";
-import { View } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import { Slot } from "expo-router";
 import {
   JosefinSans_100Thin,
@@ -30,6 +30,7 @@ import { ThemeToggle } from "@/components";
 
 // import providers
 import { AuthProvider, ThemeProvider } from "@/providers";
+import { CustomerAppbar, CustomerHeader } from "@/partials";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -64,11 +65,13 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <View className="w-full h-full bg-white dark:bg-zinc-900 flex">
+        <SafeAreaView className="w-full h-full bg-white dark:bg-zinc-900 flex">
+          <CustomerHeader />
           <ThemeToggle />
           <Slot />
           <Toast />
-        </View>
+          <CustomerAppbar />
+        </SafeAreaView>
       </ThemeProvider>
     </AuthProvider>
   );
