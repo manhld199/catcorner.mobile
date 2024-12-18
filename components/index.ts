@@ -9,5 +9,8 @@ export { default as CardReview } from "./cards/review";
 // Modals
 export { default as ModalBottomSheet } from "./modals/bottom-sheet";
 
+// Inputs
+export { default as InputQuantity } from "./inputs/quantity";
+
 // Others
 export { default as StarGroup } from "./star-group";

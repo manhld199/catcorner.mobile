@@ -83,3 +83,9 @@ export interface IProductSpecification {
   name: string;
   value: string;
 }
+
+export interface IPurchaseProduct {
+  product_hashed_id: string;
+  variant_id: string;
+  quantity: number;
+}

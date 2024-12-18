@@ -1,7 +1,7 @@
 // import libs
 import { Image, ScrollView, View } from "react-native";
 import { Text } from "@/components/Text";
-import { StarGroup } from "@/components";
+import StarGroup from "../../star-group";
 
 export default function CardReview({ type = 1 }: { type?: number }) {
   if (type == 1)

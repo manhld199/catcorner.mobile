@@ -3,7 +3,6 @@ import "@/global.css";
 
 // import libs
 import { useEffect } from "react";
-import { View } from "react-native";
 import { Slot } from "expo-router";
 import {
   JosefinSans_100Thin,
@@ -24,6 +23,7 @@ import {
 } from "@expo-google-fonts/josefin-sans";
 import * as SplashScreen from "expo-splash-screen";
 import Toast from "react-native-toast-message";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // import components
 import { ThemeToggle } from "@/components";
@@ -52,9 +52,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
-    }
+    if (loaded || error) SplashScreen.hideAsync();
   }, [loaded, error]);
 
   if (!loaded && !error) {
@@ -64,11 +62,11 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <View className="w-full h-full bg-bg-1 dark:bg-zinc-900 flex">
+        <SafeAreaView className="w-full h-full bg-bg-1 dark:bg-zinc-900 flex">
           <ThemeToggle />
           <Slot />
           <Toast />
-        </View>
+        </SafeAreaView>
       </ThemeProvider>
     </AuthProvider>
   );

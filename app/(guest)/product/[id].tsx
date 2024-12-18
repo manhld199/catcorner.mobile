@@ -1,14 +1,7 @@
 // import libs
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import {
-  View,
-  Image,
-  Dimensions,
-  ScrollView,
-  ActivityIndicator,
-  TouchableOpacity,
-} from "react-native";
+import { View, Image, ScrollView, ActivityIndicator, TouchableOpacity } from "react-native";
 import Swiper from "react-native-swiper";
 import { ChevronRight, MessageCircleMore, ShoppingCart, Star } from "lucide-react-native";
 import { WebView } from "react-native-webview";
@@ -16,6 +9,7 @@ import { WebView } from "react-native-webview";
 // import components
 import { Text } from "@/components/Text";
 import { CardCoupon, CardReview, ModalBottomSheet, StarGroup } from "@/components";
+import PurchaseInfo from "./purchase-info";
 
 // import utils
 import { getData } from "@/utils/functions/handle";
@@ -38,6 +32,8 @@ export default function ProductDetailPage() {
   const [showDesModal, setShowDesModal] = useState<boolean>(false);
   const [showSpeModal, setShowSpeModal] = useState<boolean>(false);
   const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
+  const [showBuyModal, setShowBuyModal] = useState<boolean>(false);
+  const [showCartModal, setShowCartModal] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -156,7 +152,10 @@ export default function ProductDetailPage() {
             onPress={() => setShowCouponModal(true)}
           >
             <Text className="font-c-semibold">Phiếu giảm giá</Text>
-            <ChevronRight color="#4b5563" size={16} />
+            <View className="flex flex-row gap-1 items-center">
+              <Text className="text-base text-gray-600">Xem thêm</Text>
+              <ChevronRight color="#4b5563" size={16} />
+            </View>
           </TouchableOpacity>
 
           <View className="flex flex-row gap-2 justify-between">
@@ -185,7 +184,10 @@ export default function ProductDetailPage() {
         >
           <View className="flex flex-row justify-between items-center">
             <Text className="font-c-semibold">Mô tả sản phẩm</Text>
-            <ChevronRight color="#4b5563" size={16} />
+            <View className="flex flex-row gap-1 items-center">
+              <Text className="text-base text-gray-600">Xem thêm</Text>
+              <ChevronRight color="#4b5563" size={16} />
+            </View>
           </View>
 
           <View className="w-full h-[200px]">
@@ -205,6 +207,7 @@ export default function ProductDetailPage() {
           onClose={() => setShowDesModal(false)}
           title="Mô tả sản phẩm"
           useScrollView={false}
+          modalHeight="h-2/3"
         >
           <WebView
             originWhitelist={["*"]}
@@ -224,7 +227,10 @@ export default function ProductDetailPage() {
         >
           <View className="flex flex-row justify-between items-center">
             <Text className="font-c-semibold">Thông số sản phẩm</Text>
-            <ChevronRight color="#4b5563" size={16} />
+            <View className="flex flex-row gap-1 items-center">
+              <Text className="text-base text-gray-600">Xem thêm</Text>
+              <ChevronRight color="#4b5563" size={16} />
+            </View>
           </View>
 
           <View className="w-full flex flex-col gap-2">
@@ -271,7 +277,10 @@ export default function ProductDetailPage() {
         >
           <View className="flex flex-row justify-between items-center">
             <Text className="font-c-semibold">Đánh giá sản phẩm</Text>
-            <ChevronRight color="#4b5563" size={16} />
+            <View className="flex flex-row gap-1 items-center">
+              <Text className="text-base text-gray-600">Xem thêm</Text>
+              <ChevronRight color="#4b5563" size={16} />
+            </View>
           </View>
 
           <View className="flex flex-row gap-2 items-center">
@@ -328,14 +337,34 @@ export default function ProductDetailPage() {
       </ScrollView>
 
       {/* App bar */}
-      <View className="w-full absolute bottom-0 flex flex-row items-center bg-white">
-        <TouchableOpacity className="w-1/5 h-[48px] p-2 bg-white flex justify-center items-center">
+      <View className="w-full absolute bottom-[40px] flex flex-row items-center bg-white">
+        <TouchableOpacity className="w-1/5 h-[52px] p-2 bg-white flex justify-center items-center">
           <MessageCircleMore color="#315475" size={24} />
         </TouchableOpacity>
-        <TouchableOpacity className="w-1/5 h-[48px] p-2 bg-white flex justify-center items-center">
+
+        {/* Gio hang */}
+        <TouchableOpacity
+          className="w-1/5 h-[48px] p-2 bg-white flex justify-center items-center"
+          onPress={() => setShowCartModal(true)}
+        >
           <ShoppingCart color="#315475" size={24} />
         </TouchableOpacity>
-        <TouchableOpacity className="w-3/5 h-[48px] p-2 bg-teal-500 flex justify-center items-center">
+
+        <PurchaseInfo
+          title="Thông tin sản phẩm"
+          actionTitle="Thêm vào giỏ hàng"
+          currentVariant={currentVariant}
+          productVariants={productData?.product_variants || []}
+          setCurrentVariant={setCurrentVariant}
+          setShowModal={setShowCartModal}
+          showModal={showCartModal}
+        />
+
+        {/* Mua hang */}
+        <TouchableOpacity
+          className="w-3/5 h-[48px] p-2 bg-teal-500 flex justify-center items-center"
+          onPress={() => setShowBuyModal(true)}
+        >
           <Text className="font-c-semibold text-white">Mua ngay</Text>
           <Text className="font-c-semibold text-white">
             {convertNumberToVND(
@@ -346,6 +375,16 @@ export default function ProductDetailPage() {
             )}
           </Text>
         </TouchableOpacity>
+
+        <PurchaseInfo
+          title="Thông tin sản phẩm"
+          actionTitle="Mua ngay"
+          currentVariant={currentVariant}
+          productVariants={productData?.product_variants || []}
+          setCurrentVariant={setCurrentVariant}
+          setShowModal={setShowBuyModal}
+          showModal={showBuyModal}
+        />
       </View>
     </View>
   );
