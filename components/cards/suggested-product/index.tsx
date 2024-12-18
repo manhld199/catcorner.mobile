@@ -37,7 +37,7 @@ export default function CardSuggestedProduct({ product }: { product: IProductSug
 
           <View className="flex flex-row gap-1">
             {(product.variant_names ?? []).map((variant, index) => (
-              <View key={`${variant} ${index}`} className="w-[80px] p-1 bg-pri-2 rounded-md flex">
+              <View key={`${variant} ${index}`} className="w-[86px] p-1 bg-pri-2 rounded-md flex">
                 <Text className="text-base text-center line-clamp-1">
                   {product.variant_names[0]}
                 </Text>

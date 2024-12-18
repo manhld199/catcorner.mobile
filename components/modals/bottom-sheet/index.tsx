@@ -4,9 +4,10 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
-  ScrollView,
+  TouchableWithoutFeedback,
   PanResponder,
   Animated,
+  ScrollView,
 } from "react-native";
 import { Text } from "@/components/Text";
 import { X } from "lucide-react-native"; // Import X icon
@@ -18,6 +19,9 @@ interface BottomSheetModalProps {
   onClose: () => void; // Hàm đóng modal
   title?: string; // Tiêu đề của modal (tuỳ chọn)
   children: ReactNode; // Nội dung của modal
+  useScrollView?: boolean;
+  modalHeight?: string;
+  customTitle?: ReactNode;
 }
 
 export const ModalBottomSheet: React.FC<BottomSheetModalProps> = ({
@@ -25,6 +29,9 @@ export const ModalBottomSheet: React.FC<BottomSheetModalProps> = ({
   onClose,
   title,
   children,
+  useScrollView = true,
+  modalHeight,
+  customTitle,
 }) => {
   const [panY] = useState(new Animated.Value(0)); // Sử dụng Animated.Value cho mượt mà
 
@@ -38,24 +45,35 @@ export const ModalBottomSheet: React.FC<BottomSheetModalProps> = ({
     }
   }, [visible]);
 
+  // State để kiểm tra xem thao tác kéo có bắt đầu ở vùng tiêu đề hay không
+  const [isDraggingAllowed, setIsDraggingAllowed] = useState(false);
+
   const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onMoveShouldSetPanResponder: (evt, gestureState) => gestureState.dy > 5, // Chỉ bắt đầu nếu kéo xuống
+    onStartShouldSetPanResponder: (evt) => {
+      const { locationY } = evt.nativeEvent;
+      if (locationY <= 40) {
+        setIsDraggingAllowed(true);
+        return true;
+      }
+      return false;
+    },
+    onMoveShouldSetPanResponder: (evt, gestureState) => {
+      return isDraggingAllowed && gestureState.dy > 5;
+    },
     onPanResponderMove: (evt, gestureState) => {
-      if (gestureState.dy > 0) {
-        panY.setValue(gestureState.dy); // Theo dõi vị trí khi kéo xuống
+      if (isDraggingAllowed && gestureState.dy > 0) {
+        panY.setValue(gestureState.dy);
       }
     },
     onPanResponderRelease: (evt, gestureState) => {
+      setIsDraggingAllowed(false);
       if (gestureState.dy > 100) {
-        // Ngưỡng kéo xuống để đóng modal
         Animated.timing(panY, {
-          toValue: height, // Trượt modal ra ngoài màn hình
+          toValue: height,
           duration: 200,
           useNativeDriver: true,
-        }).start(onClose); // Đóng modal
+        }).start(onClose);
       } else {
-        // Reset lại vị trí modal nếu không kéo đủ xa
         Animated.timing(panY, {
           toValue: 0,
           duration: 200,
@@ -67,35 +85,48 @@ export const ModalBottomSheet: React.FC<BottomSheetModalProps> = ({
 
   return (
     <Modal transparent animationType="none" visible={visible} onRequestClose={onClose}>
-      <View className="flex-1 justify-end bg-black/20">
-        <Animated.View
-          className="h-1/2 w-full bg-white rounded-t-xl pt-2.5 px-4"
-          {...panResponder.panHandlers}
-          style={{
-            transform: [{ translateY: panY }],
-          }}
-        >
-          {/* Thanh ngăn xếp (Drag handle) */}
-          <View className="items-center mb-2">
-            <View className="w-10 h-1.5 bg-gray-300 rounded-full" />
-          </View>
-
-          {/* Tiêu đề */}
-          {title && (
-            <View className="mb-3">
-              <Text className="text-lg font-c-semibold">{title}</Text>
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View className="flex-1 justify-end bg-black/20">
+          <Animated.View
+            className={`${modalHeight ? modalHeight : "h-1/2"} w-full bg-white ${
+              modalHeight == "h-full" ? "pt-4" : "rounded-t-xl pt-2.5"
+            } px-4`}
+            {...panResponder.panHandlers}
+            style={{
+              transform: [{ translateY: panY }],
+            }}
+          >
+            {/* Thanh ngăn xếp (Drag handle) */}
+            <View className="items-center mb-2">
+              <View className="w-10 h-1.5 bg-gray-300 rounded-full" />
             </View>
-          )}
 
-          {/* Nút đóng (X icon) */}
-          <TouchableOpacity onPress={onClose} className="absolute top-4 right-4 p-2 rounded-full">
-            <X size={24} color="#4b5563" />
-          </TouchableOpacity>
+            {customTitle ? (
+              customTitle
+            ) : (
+              <>
+                {title && (
+                  <View className="mb-3">
+                    <Text className="text-lg font-c-semibold">{title}</Text>
+                  </View>
+                )}
+              </>
+            )}
 
-          {/* Nội dung của modal */}
-          <ScrollView className="mt-4 flex-1">{children}</ScrollView>
-        </Animated.View>
-      </View>
+            {/* Nút đóng (X icon) */}
+            <TouchableOpacity onPress={onClose} className="absolute top-4 right-4 p-2 rounded-full">
+              <X size={24} color="#4b5563" />
+            </TouchableOpacity>
+
+            {/* Nội dung của modal */}
+            {useScrollView ? (
+              <ScrollView className="w-full mt-4 flex-1 grow">{children}</ScrollView>
+            ) : (
+              <>{children}</>
+            )}
+          </Animated.View>
+        </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
