@@ -81,12 +81,6 @@ export default function CustomerHeader() {
           {/* <CustomerHeaderMenu /> */}
         </View>
       </View>
-      <View className="h-auto dark:bg-black bg-white shadow-md shadow-gray-400/30">
-        {/* Search bar */}
-        <Suspense fallback={<Text>Loading...</Text>}>
-          <CustomerHeaderSearch />
-        </Suspense>
-      </View>
     </View>
   );
 }

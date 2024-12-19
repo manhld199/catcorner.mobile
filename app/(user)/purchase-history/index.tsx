@@ -53,7 +53,7 @@ export default function PurchaseHistoryPage() {
     },
   ];
 
-  const getStatusStyle = (status) => {
+  const getStatusStyle = (status: any) => {
     switch (status) {
       case "Chờ xác nhận":
         return colorScheme === "dark"

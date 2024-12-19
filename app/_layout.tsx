@@ -3,7 +3,7 @@ import "@/global.css";
 
 // import libs
 import { useEffect } from "react";
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView, ScrollView, View } from "react-native";
 import { Slot } from "expo-router";
 import {
   JosefinSans_100Thin,
@@ -65,10 +65,9 @@ export default function RootLayout() {
       <ThemeProvider>
         <SafeAreaView className="w-full h-full bg-white dark:bg-zinc-900 flex">
           <CustomerHeader />
-          <ThemeToggle />
+          {/* <ThemeToggle /> */}
           <Slot />
           <Toast />
-          <CustomerAppbar />
         </SafeAreaView>
       </ThemeProvider>
     </AuthProvider>

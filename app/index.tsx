@@ -61,6 +61,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import ProductCard from "@/components/cards/product-card";
 import { ProductCarousel, ProductCategories } from "@/components";
+import { CustomerAppbar } from "@/partials";
 
 export default function HomeScreen() {
   const petCategories = ["All", "Cat", "Dog", "Turtle", "Bird", "Rabbit"]; // Danh mục
@@ -101,58 +102,61 @@ export default function HomeScreen() {
   ];
 
   return (
-    <ScrollView className="bg-white flex-1 dark:bg-zinc-900">
-      <ProductCarousel images={images} />
+    <>
+      <ScrollView className="bg-white flex-1 dark:bg-zinc-900">
+        <ProductCarousel images={images} />
 
-      {/* Banner */}
-      <View className="mx-4 bg-teal-200 rounded-lg p-4 flex-row justify-between items-center mt-6">
-        <View>
-          <Text className="text-white font-c-bold text-lg">
-            Today's discount
+        {/* Banner */}
+        <View className="mx-4 bg-teal-200 rounded-lg p-4 flex-row justify-between items-center mt-6">
+          <View>
+            <Text className="text-white font-c-bold text-lg">
+              Today's discount
+            </Text>
+            <TouchableOpacity className="mt-2 bg-white px-3 py-1 rounded-lg">
+              <Text className="text-gray-800">More</Text>
+            </TouchableOpacity>
+          </View>
+          <Image
+            source={{
+              uri: "https://cellphones.com.vn/sforum/wp-content/uploads/2024/02/avatar-anh-meo-cute-12.jpg",
+            }}
+            className="w-24 h-24"
+            resizeMode="contain"
+          />
+        </View>
+
+        {/* Pet Categories */}
+        <View className="mt-6">
+          <Text className="mx-4 font-c-bold text-lg dark:text-white">
+            Danh mục sản phẩm
           </Text>
-          <TouchableOpacity className="mt-2 bg-white px-3 py-1 rounded-lg">
-            <Text className="text-gray-800">More</Text>
-          </TouchableOpacity>
-        </View>
-        <Image
-          source={{
-            uri: "https://cellphones.com.vn/sforum/wp-content/uploads/2024/02/avatar-anh-meo-cute-12.jpg",
-          }}
-          className="w-24 h-24"
-          resizeMode="contain"
-        />
-      </View>
-
-      {/* Pet Categories */}
-      <View className="mt-6">
-        <Text className="mx-4 font-c-bold text-lg dark:text-white">
-          Danh mục sản phẩm
-        </Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          className="mt-2 flex-row mx-4 space-x-3"
-        >
-          <ProductCategories />
-        </ScrollView>
-      </View>
-
-      <View className="mt-6">
-        <View className="flex-row justify-between mx-4 mb-2">
-          <Text className="font-c-bold text-lg dark:text-white">
-            Sản phẩm HOT
-          </Text>
-          <TouchableOpacity>
-            <Text className="text-teal-700 dark:text-teal-400">Xem thêm</Text>
-          </TouchableOpacity>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className="mt-2 flex-row mx-4 space-x-3"
+          >
+            <ProductCategories />
+          </ScrollView>
         </View>
 
-        <View className="flex-row flex-wrap gap-3 px-4 mb-6">
-          {products.map((product) => (
-            <ProductCard key={product.product_id_hashed} product={product} />
-          ))}
+        <View className="mt-6">
+          <View className="flex-row justify-between mx-4 mb-2">
+            <Text className="font-c-bold text-lg dark:text-white">
+              Sản phẩm HOT
+            </Text>
+            <TouchableOpacity>
+              <Text className="text-teal-700 dark:text-teal-400">Xem thêm</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View className="flex-row flex-wrap gap-3 px-4 mb-6">
+            {products.map((product) => (
+              <ProductCard key={product.product_id_hashed} product={product} />
+            ))}
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+      <CustomerAppbar />
+    </>
   );
 }

@@ -19,7 +19,7 @@ export default function TabItem({ href, iconName, label }: TabItemProps) {
     isActive && colorScheme === "dark" ? "text-teal-500" : "text-teal-700";
 
   return (
-    <Link href={href} className="flex items-center">
+    <Link href={href as any} className="flex items-center">
       <View className="flex flex-col items-center justify-center space-y-1">
         <Ionicons
           name={iconName}

@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, View, useColorScheme, ActivityIndicator, Image } from "react-native";
+import {
+  ScrollView,
+  View,
+  useColorScheme,
+  ActivityIndicator,
+  Image,
+} from "react-native";
 import { ArrowLeft, Mic, MicOff, Search } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { ExpoSpeechRecognitionModule, useSpeechRecognitionEvent } from "expo-speech-recognition";
+import {
+  ExpoSpeechRecognitionModule,
+  useSpeechRecognitionEvent,
+} from "expo-speech-recognition";
 
 // import components
 import { CardCategory, CardSuggestedProduct } from "@/components";
@@ -14,10 +23,15 @@ import { Input } from "@/components/Input";
 import { ICategory, IProductSuggest } from "@/types/interfaces";
 
 // import utils
-import { RECOMMEND_CATEGORY_URL, RECOMMEND_SEARCH_URL } from "@/utils/constants/urls";
+import {
+  RECOMMEND_CATEGORY_URL,
+  RECOMMEND_SEARCH_URL,
+} from "@/utils/constants/urls";
 import { getData } from "@/utils/functions/handle";
+import { CustomerAppbar } from "@/partials";
 
 export default function SearchPage() {
+  console.log("aaaaa", RECOMMEND_CATEGORY_URL);
   const colorScheme = useColorScheme();
   const [searchColorState, setSearchColorState] = useState<string[]>(
     colorScheme == "light"
@@ -40,7 +54,9 @@ export default function SearchPage() {
 
   const [recognizing, setRecognizing] = useState(false);
   const [transcript, setTranscript] = useState("");
-  const [suggestedProducts, setSuggestedProducts] = useState<IProductSuggest[]>([]); // Dữ liệu sản phẩm
+  const [suggestedProducts, setSuggestedProducts] = useState<IProductSuggest[]>(
+    []
+  ); // Dữ liệu sản phẩm
   const [isProductLoading, setIsProductLoading] = useState(false); // Loading state
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(false); // Loading state
@@ -129,88 +145,98 @@ export default function SearchPage() {
   }, []);
 
   return (
-    <ScrollView className="flex flex-col">
-      <View className="w-full flex flex-col">
-        {/* Input Search */}
-        <LinearGradient className="w-full" colors={searchColorState as any}>
-          <View className="w-full px-2 py-4 flex flex-row gap-2 items-center">
-            <ArrowLeft color="#315475" size={28} />
-            <View className="overflow-hidden flex-1 h-[44px] bg-white dark:bg-zinc-900 border-2 border-pri-7 dark:border-pri-2 rounded-lg flex flex-row gap-2">
-              <Input
-                placeholder="Nhập từ khóa cần tìm..."
-                className="!border-0 flex-1 dark:bg-zinc-900"
-                value={transcript}
-                onChangeText={(text) => setTranscript(text)} // Cập nhật input
-              />
-              <Button
-                variant="none"
-                className="p-1 w-[32px]"
-                onPress={recognizing ? () => ExpoSpeechRecognitionModule.stop() : handleStart}
-              >
-                {recognizing ? (
-                  <MicOff color={micColorState} className="w-full h-full" />
-                ) : (
-                  <Mic color={micColorState} className="w-full h-full" />
-                )}
-              </Button>
-              <Button variant="none" className="w-[48px] h-full bg-pri-7 p-2 rounded-none">
-                <Search color="#fff" className="w-full h-full" />
-              </Button>
+    <>
+      <ScrollView className="flex flex-col">
+        <View className="w-full flex flex-col">
+          {/* Input Search */}
+          <LinearGradient className="w-full" colors={searchColorState as any}>
+            <View className="w-full px-2 py-4 flex flex-row gap-2 items-center">
+              <ArrowLeft color="#315475" size={28} />
+              <View className="overflow-hidden flex-1 h-[44px] bg-white dark:bg-zinc-900 border-2 border-pri-7 dark:border-pri-2 rounded-lg flex flex-row gap-2">
+                <Input
+                  placeholder="Nhập từ khóa cần tìm..."
+                  className="!border-0 flex-1 dark:bg-zinc-900"
+                  value={transcript}
+                  onChangeText={(text) => setTranscript(text)} // Cập nhật input
+                />
+                <Button
+                  variant="none"
+                  className="p-1 w-[32px]"
+                  onPress={
+                    recognizing
+                      ? () => ExpoSpeechRecognitionModule.stop()
+                      : handleStart
+                  }
+                >
+                  {recognizing ? (
+                    <MicOff color={micColorState} className="w-full h-full" />
+                  ) : (
+                    <Mic color={micColorState} className="w-full h-full" />
+                  )}
+                </Button>
+                <Button
+                  variant="none"
+                  className="w-[48px] h-full bg-pri-7 p-2 rounded-none"
+                >
+                  <Search color="#fff" className="w-full h-full" />
+                </Button>
+              </View>
             </View>
-          </View>
-        </LinearGradient>
+          </LinearGradient>
 
-        {/* Suggested Products */}
-        <View className="w-full px-4 py-4 bg-white dark:bg-zinc-900">
+          {/* Suggested Products */}
+          <View className="w-full px-4 py-4 bg-white dark:bg-zinc-900">
+            <Text className="w-full text-center font-c-semibold text-gray-600 dark:text-white">
+              Sản phẩm gợi ý
+            </Text>
+            <View className="w-1/3 h-[1.5px] mx-auto my-2 bg-teal-300"></View>
+            {isProductLoading ? (
+              <ActivityIndicator size="large" color="#00bcd4" />
+            ) : (
+              <View className="flex flex-col gap-2">
+                {suggestedProducts.length > 0 ? (
+                  suggestedProducts.map((product, index) => (
+                    <CardSuggestedProduct key={index} product={product} />
+                  ))
+                ) : (
+                  <View className="w-full flex justify-center items-center">
+                    <View className="w-[250px] h-[250px]">
+                      <Image
+                        source={require("@/assets/images/noti/not-found.png")}
+                        className="w-full h-full"
+                        resizeMode="cover"
+                      />
+                    </View>
+                    <Text className="text-center text-gray-500 dark:text-white">
+                      {transcript
+                        ? `Không có sản phẩm gợi ý cho từ khóa '${transcript}'.`
+                        : "Hãy nhập từ khóa cần tìm."}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            )}
+          </View>
+        </View>
+
+        {/* Categories */}
+        <View className="w-full px-4 py-4 bg-white dark:bg-zinc-900 flex flex-col gap-2">
           <Text className="w-full text-center font-c-semibold text-gray-600 dark:text-white">
-            Sản phẩm gợi ý
+            Sản phẩm theo danh mục
           </Text>
           <View className="w-1/3 h-[1.5px] mx-auto my-2 bg-teal-300"></View>
-          {isProductLoading ? (
+          {isCategoriesLoading ? (
             <ActivityIndicator size="large" color="#00bcd4" />
           ) : (
-            <View className="flex flex-col gap-2">
-              {suggestedProducts.length > 0 ? (
-                suggestedProducts.map((product, index) => (
-                  <CardSuggestedProduct key={index} product={product} />
-                ))
-              ) : (
-                <View className="w-full flex justify-center items-center">
-                  <View className="w-[250px] h-[250px]">
-                    <Image
-                      source={require("@/assets/images/noti/not-found.png")}
-                      className="w-full h-full"
-                      resizeMode="cover"
-                    />
-                  </View>
-                  <Text className="text-center text-gray-500 dark:text-white">
-                    {transcript
-                      ? `Không có sản phẩm gợi ý cho từ khóa '${transcript}'.`
-                      : "Hãy nhập từ khóa cần tìm."}
-                  </Text>
-                </View>
-              )}
+            <View className="w-full flex flex-row flex-wrap justify-between gap-x-2 gap-y-4">
+              {categories.map((category, index) => (
+                <CardCategory key={index} category={category} />
+              ))}
             </View>
           )}
         </View>
-      </View>
-
-      {/* Categories */}
-      <View className="w-full px-4 py-4 bg-white dark:bg-zinc-900 flex flex-col gap-2">
-        <Text className="w-full text-center font-c-semibold text-gray-600 dark:text-white">
-          Sản phẩm theo danh mục
-        </Text>
-        <View className="w-1/3 h-[1.5px] mx-auto my-2 bg-teal-300"></View>
-        {isCategoriesLoading ? (
-          <ActivityIndicator size="large" color="#00bcd4" />
-        ) : (
-          <View className="w-full flex flex-row flex-wrap justify-between gap-x-2 gap-y-4">
-            {categories.map((category, index) => (
-              <CardCategory key={index} category={category} />
-            ))}
-          </View>
-        )}
-      </View>
-    </ScrollView>
+      </ScrollView>
+      <CustomerAppbar />
+    </>
   );
 }
