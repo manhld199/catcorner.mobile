@@ -59,49 +59,53 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
+import ProductCard from "@/components/cards/product-card";
+import { ProductCarousel, ProductCategories } from "@/components";
 
 export default function HomeScreen() {
   const petCategories = ["All", "Cat", "Dog", "Turtle", "Bird", "Rabbit"]; // Danh mục
-  const adoptPets = [
+  const images = [
+    "https://i.pinimg.com/550x/94/7e/db/947edbbf6ced34863fc8702ed29ef79f.jpg",
+    "https://www.thepoetmagazine.org/wp-content/uploads/2024/06/meo-kho-hieu-meme.jpg",
+    "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_1280.jpg",
+  ];
+  const products = [
     {
-      id: 1,
-      name: "Luna",
-      location: "California (2.5km)",
-      image:
-        "https://cellphones.com.vn/sforum/wp-content/uploads/2024/02/avatar-anh-meo-cute-8.jpg", // Placeholder ảnh Luna
-      genderIcon: "male",
+      product_id_hashed: "p1",
+      product_slug: "thuc-an-cho-meo-reflex-plus",
+      product_imgs: [
+        "https://res.cloudinary.com/dmjwq3ebx/image/upload/c_limit,w_640/f_auto/q_auto/v1/SEO_Images/Products/P003/Pate-cho-m%C3%A8o-Reflex-Plus-Lon-400gr-1?_a=BAVAZGDW0", // Link ảnh sản phẩm
+      ],
+      highest_discount: 10,
+      category_name: "Hạt dinh dưỡng",
+      product_name: "Thức ăn cho mèo Reflex Plus Thổ Nhĩ Kỳ",
+      variant_name: ["Cá ngừ", "Thịt gà", "Thịt bò"],
+      lowest_price: 233099,
+      product_price: 258999,
+      sold_quantity: 40,
     },
     {
-      id: 2,
-      name: "Lucy",
-      location: "Frankfurt (1.2km)",
-      image:
-        "https://cellphones.com.vn/sforum/wp-content/uploads/2024/02/avatar-anh-meo-cute-6.jpg", // Placeholder ảnh Lucy
-      genderIcon: "female",
-    },
-    {
-      id: 3,
-      name: "Lucy",
-      location: "Frankfurt (1.2km)",
-      image:
-        "https://cellphones.com.vn/sforum/wp-content/uploads/2024/02/avatar-anh-meo-cute-6.jpg", // Placeholder ảnh Lucy
-      genderIcon: "female",
+      product_id_hashed: "p2",
+      product_slug: "pate-cho-meo-reflex-plus",
+      product_imgs: [
+        "https://res.cloudinary.com/dmjwq3ebx/image/upload/c_limit,w_640/f_auto/q_auto/v1/SEO_Images/Products/P003/Pate-cho-m%C3%A8o-Reflex-Plus-Lon-400gr-1?_a=BAVAZGDW0", // Link ảnh sản phẩm
+      ],
+      highest_discount: 10,
+      category_name: "Pate",
+      product_name: "Pate cho mèo Reflex Plus",
+      variant_name: ["Salmon", "Chicken", "Turkey"],
+      lowest_price: 169739,
+      product_price: 188599,
+      sold_quantity: 133,
     },
   ];
 
   return (
-    <ScrollView className="bg-white flex-1">
-      {/* Thanh tìm kiếm */}
-      <View className="p-4 flex-row items-center">
-        <Ionicons name="search" size={20} color="gray" className="mr-2" />
-        <TextInput
-          placeholder="Search"
-          className="flex-1 bg-gray-100 p-2 rounded-lg"
-        />
-      </View>
+    <ScrollView className="bg-white flex-1 dark:bg-zinc-900">
+      <ProductCarousel images={images} />
 
       {/* Banner */}
-      <View className="mx-4 bg-teal-200 rounded-lg p-4 flex-row justify-between items-center">
+      <View className="mx-4 bg-teal-200 rounded-lg p-4 flex-row justify-between items-center mt-6">
         <View>
           <Text className="text-white font-c-bold text-lg">
             Today's discount
@@ -121,64 +125,31 @@ export default function HomeScreen() {
 
       {/* Pet Categories */}
       <View className="mt-6">
-        <Text className="mx-4 font-c-bold text-lg">Pet Categories</Text>
+        <Text className="mx-4 font-c-bold text-lg dark:text-white">
+          Danh mục sản phẩm
+        </Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           className="mt-2 flex-row mx-4 space-x-3"
         >
-          {petCategories.map((category, index) => (
-            <TouchableOpacity
-              key={index}
-              className={`px-4 py-2 rounded-full ${
-                category === "All" ? "bg-teal-500" : "bg-gray-200"
-              }`}
-            >
-              <Text
-                className={`text-sm ${
-                  category === "All" ? "text-white" : "text-gray-700"
-                }`}
-              >
-                {category}
-              </Text>
-            </TouchableOpacity>
-          ))}
+          <ProductCategories />
         </ScrollView>
       </View>
 
-      {/* Adopt Pet */}
       <View className="mt-6">
         <View className="flex-row justify-between mx-4 mb-2">
-          <Text className="font-c-bold text-lg">Adopt pet</Text>
+          <Text className="font-c-bold text-lg dark:text-white">
+            Sản phẩm HOT
+          </Text>
           <TouchableOpacity>
-            <Text className="text-teal-700">See all</Text>
+            <Text className="text-teal-700 dark:text-teal-400">Xem thêm</Text>
           </TouchableOpacity>
         </View>
 
-        <View className="flex-row flex-wrap gap-3 px-4">
-          {adoptPets.map((pet) => (
-            <View
-              key={pet.id}
-              className="bg-white rounded-lg shadow p-2 mb-2"
-              style={{ width: "48%" }}
-            >
-              <Image
-                source={{ uri: pet.image }}
-                className="h-40 w-full rounded-lg"
-                resizeMode="cover"
-              />
-              <TouchableOpacity className="absolute right-2 top-2 bg-white p-1 rounded-full shadow">
-                <Ionicons name="heart-outline" size={20} color="red" />
-              </TouchableOpacity>
-              <Text className="mt-2 font-c-bold">{pet.name}</Text>
-              <Text className="text-gray-500 text-xs">{pet.location}</Text>
-              <Ionicons
-                name={pet.genderIcon === "male" ? "male" : "female"}
-                size={16}
-                color={pet.genderIcon === "male" ? "blue" : "pink"}
-                className="mt-1"
-              />
-            </View>
+        <View className="flex-row flex-wrap gap-3 px-4 mb-6">
+          {products.map((product) => (
+            <ProductCard key={product.product_id_hashed} product={product} />
           ))}
         </View>
       </View>
