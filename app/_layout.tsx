@@ -24,6 +24,7 @@ import {
 } from "@expo-google-fonts/josefin-sans";
 import * as SplashScreen from "expo-splash-screen";
 import Toast from "react-native-toast-message";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // import components
 import { ThemeToggle } from "@/components";
@@ -53,9 +54,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
-    }
+    if (loaded || error) SplashScreen.hideAsync();
   }, [loaded, error]);
 
   if (!loaded && !error) {
