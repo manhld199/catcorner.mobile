@@ -1,6 +1,6 @@
 // import libs
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { View, Image, ScrollView, ActivityIndicator, TouchableOpacity } from "react-native";
 import Swiper from "react-native-swiper";
 import { ChevronRight, MessageCircleMore, ShoppingCart, Star } from "lucide-react-native";
@@ -21,8 +21,11 @@ import { IProductDetail, IProductVariant } from "@/types/interfaces";
 
 // import styles
 import { injectedCSS } from "./injected-css";
+import { CART_PRODUCTS, PURCHASE_PRODUCTS } from "@/utils/constants/variables";
+import Toast from "react-native-toast-message";
 
 export default function ProductDetailPage() {
+  const router = useRouter();
   const { id, pid } = useLocalSearchParams();
   const [currentIndex, setCurrentIndex] = useState<number>(1);
   const [productData, setProductData] = useState<IProductDetail>();
@@ -40,9 +43,11 @@ export default function ProductDetailPage() {
       try {
         setIsProductLoading(true);
         const { data, message } = await getData(
-          `${PRODUCT_DETAIL_URL}/${encodeURIComponent((pid as string).replaceAll(" ", "+"))}`
+          `${PRODUCT_DETAIL_URL}/${encodeURIComponent(
+            ((pid || "") as string).replaceAll(" ", "+")
+          )}`
         );
-        console.log("ressssssss", data.data.product);
+        // console.log("ressssssss", data.data.product);
         setProductData(data.data.product);
         setCurrentVariant(data.data.product.product_variants[0]);
       } catch (error) {
@@ -91,8 +96,8 @@ export default function ProductDetailPage() {
           </View>
 
           {/* Variant */}
-          <View className="mt-4 px-2 flex-1 flex-row gap-2">
-            {productData?.product_variants.map((item, index) => (
+          <View className="mt-4 px-4 flex-1 flex-row gap-2">
+            {(productData?.product_variants || []).map((item, index) => (
               <TouchableOpacity
                 key={`product variant img${index}`}
                 className={`${
@@ -106,7 +111,7 @@ export default function ProductDetailPage() {
           </View>
 
           {/* Info */}
-          <View className="mt-4 px-2 flex flex-col gap-2">
+          <View className="mt-4 px-4 flex flex-col gap-2">
             {(currentVariant?.variant_discount_percent || 0) > 0 ? (
               <View className="flex flex-row gap-2 items-center">
                 <Text className="text-3xl font-c-semibold text-teal-400">
@@ -119,7 +124,7 @@ export default function ProductDetailPage() {
                 <Text className="text-base line-through text-gray-600">
                   {convertNumberToVND(currentVariant?.variant_price || 0)}
                 </Text>
-                <Text className="text-base text-red-500 px-2 bg-red-100 rounded-lg">
+                <Text className="text-base text-red-500 px-4 bg-red-100 rounded-lg">
                   -{currentVariant?.variant_discount_percent}%
                 </Text>
               </View>
@@ -146,7 +151,7 @@ export default function ProductDetailPage() {
         </View>
 
         {/* Voucher */}
-        <View className="mt-4 py-4 px-2 bg-white flex flex-col gap-4">
+        <View className="mt-4 py-4 px-4 bg-white flex flex-col gap-4">
           <TouchableOpacity
             className="flex flex-row justify-between items-center"
             onPress={() => setShowCouponModal(true)}
@@ -179,7 +184,7 @@ export default function ProductDetailPage() {
 
         {/* Description */}
         <TouchableOpacity
-          className="mt-4 py-4 px-2 bg-white flex flex-col gap-4"
+          className="mt-4 py-4 px-4 bg-white flex flex-col gap-4"
           onPress={() => setShowDesModal(true)}
         >
           <View className="flex flex-row justify-between items-center">
@@ -222,7 +227,7 @@ export default function ProductDetailPage() {
 
         {/* Specification */}
         <TouchableOpacity
-          className="mt-4 py-4 px-2 bg-white flex flex-col gap-4"
+          className="mt-4 py-4 px-4 bg-white flex flex-col gap-4"
           onPress={() => setShowSpeModal(true)}
         >
           <View className="flex flex-row justify-between items-center">
@@ -272,7 +277,7 @@ export default function ProductDetailPage() {
 
         {/* Reviews */}
         <TouchableOpacity
-          className="mt-4 py-4 px-2 bg-white flex flex-col gap-4 mb-[112px]"
+          className="mt-4 py-4 px-4 bg-white flex flex-col gap-4 mb-[112px]"
           onPress={() => setShowReviewModal(true)}
         >
           <View className="flex flex-row justify-between items-center">
@@ -337,7 +342,7 @@ export default function ProductDetailPage() {
       </ScrollView>
 
       {/* App bar */}
-      <View className="w-full absolute bottom-[40px] flex flex-row items-center bg-white">
+      <View className="w-full absolute bottom-[52px] flex flex-row items-center bg-white">
         <TouchableOpacity className="w-1/5 h-[52px] p-2 bg-white flex justify-center items-center">
           <MessageCircleMore color="#315475" size={24} />
         </TouchableOpacity>
@@ -352,12 +357,22 @@ export default function ProductDetailPage() {
 
         <PurchaseInfo
           title="Thông tin sản phẩm"
+          action={() => {
+            Toast.show({
+              type: "success",
+              text1: "Success!!!",
+              text2: "Thêm giỏ hàng thành công.",
+            });
+            setShowCartModal(false);
+          }}
           actionTitle="Thêm vào giỏ hàng"
           currentVariant={currentVariant}
           productVariants={productData?.product_variants || []}
           setCurrentVariant={setCurrentVariant}
           setShowModal={setShowCartModal}
           showModal={showCartModal}
+          productId={pid as string}
+          storageName={CART_PRODUCTS}
         />
 
         {/* Mua hang */}
@@ -379,11 +394,18 @@ export default function ProductDetailPage() {
         <PurchaseInfo
           title="Thông tin sản phẩm"
           actionTitle="Mua ngay"
+          action={() => {
+            console.log("aaaaaaaaaaa");
+            setShowCartModal(false);
+            router.push("/purchase");
+          }}
           currentVariant={currentVariant}
           productVariants={productData?.product_variants || []}
           setCurrentVariant={setCurrentVariant}
           setShowModal={setShowBuyModal}
           showModal={showBuyModal}
+          productId={pid as string}
+          storageName={PURCHASE_PRODUCTS}
         />
       </View>
     </View>

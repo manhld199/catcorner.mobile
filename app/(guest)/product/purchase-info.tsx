@@ -9,25 +9,35 @@ import { InputQuantity, ModalBottomSheet } from "@/components";
 import { convertNumberToVND } from "@/utils/functions/convert";
 
 // import types
-import { IProductVariant } from "@/types/interfaces";
+import { IProductVariant, IPurchaseProduct } from "@/types/interfaces";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState } from "react";
 
 export default function PurchaseInfo({
   title,
+  action,
   actionTitle,
   showModal,
   setShowModal,
   currentVariant,
   productVariants,
   setCurrentVariant,
+  productId,
+  storageName,
 }: {
   title: string;
+  action: () => void;
   actionTitle: string;
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   currentVariant: IProductVariant | undefined;
   productVariants: IProductVariant[];
   setCurrentVariant: React.Dispatch<React.SetStateAction<IProductVariant | undefined>>;
+  productId: string;
+  storageName: string;
 }) {
+  const [quantity, setQuantity] = useState<number>(1);
+
   return (
     <ModalBottomSheet visible={showModal} onClose={() => setShowModal(false)} title={title}>
       <View className="flex flex-col gap-4">
@@ -85,10 +95,67 @@ export default function PurchaseInfo({
 
         <View className="flex flex-row justify-between">
           <Text className="text-lg font-c-semibold">Số lượng</Text>
-          <InputQuantity min={1} max={currentVariant?.variant_stock_quantity || 0} />
+          <InputQuantity
+            min={1}
+            max={currentVariant?.variant_stock_quantity || 0}
+            onChange={setQuantity}
+          />
         </View>
 
-        <TouchableOpacity className="w-full h-[40px] bg-pri-7 rounded-lg flex justify-center items-center">
+        <TouchableOpacity
+          className="w-full h-[40px] bg-pri-7 rounded-lg flex justify-center items-center"
+          onPress={async () => {
+            try {
+              console.log("Bắt đầu xử lý");
+
+              // Lấy dữ liệu hiện tại từ AsyncStorage
+              const currentStorage = await AsyncStorage.getItem(storageName);
+              // console.log("currentStorage", currentStorage);
+
+              // Parse dữ liệu hiện tại
+              const parsedCurrentStorage: IPurchaseProduct[] =
+                JSON.parse(currentStorage || "{}")?.products || [];
+
+              // console.log("parsedCurrentStorage", parsedCurrentStorage);
+
+              // Kiểm tra nếu sản phẩm đã tồn tại trong mảng
+              const productIndex = parsedCurrentStorage.findIndex(
+                (product) => product.product_hashed_id === productId
+              );
+
+              if (productIndex > -1) {
+                // Nếu sản phẩm đã tồn tại, cập nhật thông tin
+                parsedCurrentStorage[productIndex] = {
+                  ...parsedCurrentStorage[productIndex],
+                  quantity,
+                  variant_id: currentVariant?._id || "",
+                };
+                // console.log("Cập nhật sản phẩm trong mảng");
+              } else {
+                // Nếu sản phẩm chưa tồn tại, thêm mới vào mảng
+                parsedCurrentStorage.push({
+                  product_hashed_id: productId,
+                  quantity,
+                  variant_id: currentVariant?._id || "",
+                });
+                // console.log("Thêm sản phẩm mới vào mảng");
+              }
+
+              // console.log("products sau xử lý", parsedCurrentStorage);
+
+              // Lưu lại mảng đã cập nhật vào AsyncStorage
+              await AsyncStorage.setItem(
+                storageName,
+                JSON.stringify({ updatedAt: Date.now(), products: parsedCurrentStorage })
+              );
+
+              // console.log("Lưu trữ thành công");
+              action(); // Gọi hành động tiếp theo nếu cần
+            } catch (error) {
+              console.error("Lỗi trong xử lý:", error);
+            }
+          }}
+        >
           <Text className="font-c-semibold !text-xl text-white">{actionTitle}</Text>
         </TouchableOpacity>
       </View>

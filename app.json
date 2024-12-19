@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "catcorner-mobile",
-    "slug": "catcorner-mobile",
+    "name": "catcorner",
+    "slug": "catcorner",
+    "scheme": "catcorner",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
