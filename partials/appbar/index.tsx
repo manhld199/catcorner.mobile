@@ -3,8 +3,8 @@ import TabItem from "./tab-item"; // Đường dẫn tới TabItem
 
 const tabData = [
   { href: "/", iconName: "home", label: "Home" },
-  { href: "/favorite", iconName: "heart", label: "Favorite" },
-  { href: "/chats", iconName: "chatbubble", label: "Chats" },
+  { href: "/login", iconName: "heart", label: "Login" },
+  { href: "/verify-otp", iconName: "chatbubble", label: "Signup" },
   { href: "/search", iconName: "search", label: "Search" },
   { href: "/profile", iconName: "person", label: "Profile" },
 ];

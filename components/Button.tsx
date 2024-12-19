@@ -20,6 +20,7 @@ const buttonVariants = cva(
         // custom button variant
         "rounded-pri1": "bg-pri-1 rounded-full",
         "rounded-border": "bg-transparent rounded-full border-[1px] border-black",
+        none: "",
       },
       size: {
         default: "h-10 px-4 py-2 native:h-12 native:px-5 native:py-3",
@@ -40,7 +41,7 @@ const buttonVariants = cva(
 );
 
 const buttonTextVariants = cva(
-  "web:whitespace-nowrap text-sm native:text-base font-medium text-foreground web:transition-colors",
+  "web:whitespace-nowrap text-base native:text-base font-medium text-foreground web:transition-colors",
   {
     variants: {
       variant: {
@@ -54,6 +55,7 @@ const buttonTextVariants = cva(
         // custom text variants
         "rounded-pri1": "text-white text-center",
         "rounded-border": "w-1/2 !text-xl text-gray-600",
+        none: "",
       },
       size: {
         default: "",

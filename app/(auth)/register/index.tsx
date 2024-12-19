@@ -1,7 +1,7 @@
 // import libs
 import React, { useContext, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Link, useRouter } from "expo-router";
+import { Link } from "expo-router";
 
 // import components
 import { Input } from "@/components/Input";
@@ -12,18 +12,10 @@ import { Text } from "@/components/Text";
 // import providers
 import { AuthContext } from "@/providers";
 
-interface IUser {
-  user_id?: string;
-  user_name?: string;
-  email: string;
-  user_role?: string;
-  user_avt?: string;
-  password?: string;
-}
+// import types
+import { IUser } from "@/types/interfaces";
 
 const Register = () => {
-  const router = useRouter();
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -51,9 +43,9 @@ const Register = () => {
 
   const validateFirstName = (text: string) => {
     setFirstName(text);
-    if (text === "") setErrors((prev) => ({ ...prev, firstName: "First name is required." }));
+    if (text === "") setErrors((prev) => ({ ...prev, firstName: "Hãy nhập tên." }));
     else if (!text.match(nameRegex)) {
-      setErrors((prev) => ({ ...prev, firstName: "First name must contain only letters." }));
+      setErrors((prev) => ({ ...prev, firstName: "Tên chỉ được chứa các chữ cái." }));
     } else {
       setErrors((prev) => ({ ...prev, firstName: "" }));
     }
@@ -61,9 +53,9 @@ const Register = () => {
 
   const validateLastName = (text: string) => {
     setLastName(text);
-    if (text === "") setErrors((prev) => ({ ...prev, lastName: "Last name is required." }));
+    if (text === "") setErrors((prev) => ({ ...prev, lastName: "Hãy nhập họ." }));
     else if (!text.match(nameRegex)) {
-      setErrors((prev) => ({ ...prev, lastName: "Last name must contain only letters." }));
+      setErrors((prev) => ({ ...prev, lastName: "Họ chỉ được chứa các chữ cái." }));
     } else {
       setErrors((prev) => ({ ...prev, lastName: "" }));
     }
@@ -72,7 +64,7 @@ const Register = () => {
   const validateEmail = (text: string) => {
     setEmail(text);
     if (!text.match(emailRegex)) {
-      setErrors((prev) => ({ ...prev, email: "Please enter a valid email address." }));
+      setErrors((prev) => ({ ...prev, email: "Hãy nhập địa chỉ Email hợp lệ." }));
     } else {
       setErrors((prev) => ({ ...prev, email: "" }));
     }
@@ -81,7 +73,7 @@ const Register = () => {
   const validatePassword = (text: string) => {
     setPassword(text);
     if (text.length < 6) {
-      setErrors((prev) => ({ ...prev, password: "Password must be at least 6 characters." }));
+      setErrors((prev) => ({ ...prev, password: "Mật khẩu phải có ít nhất 6 ký tự." }));
     } else {
       setErrors((prev) => ({ ...prev, password: "" }));
     }
@@ -90,9 +82,9 @@ const Register = () => {
   const validateConfirmPassword = (text: string) => {
     setConfirmPassword(text);
     if (text !== password) {
-      setErrors((prev) => ({ ...prev, confirmPassword: "Password does not match." }));
+      setErrors((prev) => ({ ...prev, confirmPassword: "Mật khẩu xác nhận không trùng khớp." }));
     } else if (text === "") {
-      setErrors((prev) => ({ ...prev, confirmPassword: "Confirm password is required" }));
+      setErrors((prev) => ({ ...prev, confirmPassword: "Hãy nhập mật khẩu xác nhận." }));
     } else {
       setErrors((prev) => ({ ...prev, confirmPassword: "" }));
     }
@@ -104,7 +96,7 @@ const Register = () => {
     else
       setErrors((prev) => ({
         ...prev,
-        agreeTerm: "You must agree to the terms and conditions.",
+        agreeTerm: "Bạn phải đồng ý với các điều khoản.",
       }));
   };
 
@@ -121,52 +113,52 @@ const Register = () => {
 
     // Kiểm tra First Name
     if (firstName === "") {
-      newErrors.firstName = "First name is required.";
+      newErrors.firstName = "Hãy nhập tên.";
       valid = false;
     } else if (!firstName.match(nameRegex)) {
-      newErrors.firstName = "First name must contain only letters.";
+      newErrors.firstName = "Tên chỉ được chứa các chữ cái.";
       valid = false;
     }
 
     // Kiểm tra Last Name
     if (!lastName) {
-      newErrors.lastName = "Last name is required.";
+      newErrors.lastName = "Hãy nhập họ.";
       valid = false;
     } else if (!lastName.match(nameRegex)) {
-      newErrors.lastName = "Last name must contain only letters.";
+      newErrors.lastName = "Họ chỉ được chứa các chữ cái.";
       valid = false;
     }
 
     // Kiểm tra Email
     if (!email) {
-      newErrors.email = "Email is required.";
+      newErrors.email = "Hãy nhập địa chỉ Email.";
       valid = false;
     } else if (!email.match(emailRegex)) {
-      newErrors.email = "Please enter a valid email address.";
+      newErrors.email = "Hãy nhập địa chỉ Email hợp lệ.";
       valid = false;
     }
 
     // Kiểm tra Password
     if (!password) {
-      newErrors.password = "Password is required.";
+      newErrors.password = "Hãy nhập mật khẩu.";
       valid = false;
     } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
+      newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự.";
       valid = false;
     }
 
     // Kiểm tra Confirm Password
     if (!confirmPassword) {
-      newErrors.confirmPassword = "Confirm password is required.";
+      newErrors.confirmPassword = "Hãy nhập lại mật khẩu.";
       valid = false;
     } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Password does not match.";
+      newErrors.confirmPassword = "Mật khẩu xác nhận không trùng khớp.";
       valid = false;
     }
 
     // Kiểm tra Agree to Terms
     if (!agreeTerm) {
-      newErrors.agreeTerm = "You must agree to the terms and conditions.";
+      newErrors.agreeTerm = "Bạn phải đồng ý với các điều khoản.";
       valid = false;
     }
 
@@ -191,22 +183,20 @@ const Register = () => {
     <ScrollView className="p-4">
       <View className="flex flex-col gap-4">
         <View className="flex flex-col gap-1">
-          <Text className="w-full text-center text-4xl font-c-bold">Create your account</Text>
-          <Text className="text-center text-red-500">
-            Vui lòng không để trống các mục đánh dấu *
-          </Text>
+          <Text className="w-full text-center text-4xl font-c-bold">Tạo tài khoản</Text>
+          <Text className="text-center text-red-500">Hãy điền đủ các mục đánh dấu *</Text>
         </View>
 
         {/* First Name and Last Name */}
         <View className="flex flex-col gap-2">
           <Text className="text-gray-600 dark:text-white font-c-semibold">
-            <Text className="text-red-500">*</Text> First Name:
+            <Text className="text-red-500">*</Text> Tên:
           </Text>
 
           <Input
             value={firstName}
             onChangeText={validateFirstName}
-            placeholder="Enter first name..."
+            placeholder="Nhập tên..."
             className={`placeholder:text-sm ${
               errors.firstName ? "border-red-500 placeholder:text-red-500" : ""
             }`}
@@ -218,13 +208,13 @@ const Register = () => {
 
         <View className="flex flex-col gap-2">
           <Text className="text-gray-600 dark:text-white font-c-semibold">
-            <Text className="text-red-500">*</Text> Last Name:
+            <Text className="text-red-500">*</Text> Họ:
           </Text>
 
           <Input
             value={lastName}
             onChangeText={validateLastName}
-            placeholder="Enter last name..."
+            placeholder="Nhập họ..."
             className={`placeholder:text-sm ${
               errors.lastName ? "border-red-500 placeholder:text-red-500" : ""
             }`}
@@ -245,7 +235,7 @@ const Register = () => {
             onChangeText={validateEmail}
             inputMode="email"
             keyboardType="email-address"
-            placeholder="Enter email address..."
+            placeholder="Nhập địa chỉ Email..."
             className={`placeholder:text-sm ${
               errors.email ? "border-red-500 placeholder:text-red-500" : ""
             }`}
@@ -256,14 +246,14 @@ const Register = () => {
         {/* Password */}
         <View className="flex flex-col gap-2">
           <Text className="text-gray-600 dark:text-white font-c-semibold">
-            <Text className="text-red-500">*</Text> Password:
+            <Text className="text-red-500">*</Text> Mật khẩu:
           </Text>
 
           <Input
             value={password}
             onChangeText={validatePassword}
             secureTextEntry
-            placeholder="Enter password..."
+            placeholder="Nhập mật khẩu..."
             className={`placeholder:text-sm ${
               errors.password ? "border-red-500 placeholder:text-red-500" : ""
             }`}
@@ -276,15 +266,15 @@ const Register = () => {
 
         {/* Confirm Password */}
         <View className="flex flex-col gap-2">
-          <Text className="w-[150px] text-gray-600 dark:text-white font-c-semibold">
-            <Text className="text-red-500">*</Text> Confirm password:
+          <Text className="text-gray-600 dark:text-white font-c-semibold">
+            <Text className="text-red-500">*</Text> Mật khẩu xác nhận:
           </Text>
 
           <Input
             value={confirmPassword}
             onChangeText={validateConfirmPassword}
             secureTextEntry
-            placeholder="Enter confirm password..."
+            placeholder="Hãy nhập lại mật khẩu..."
             className={`placeholder:text-sm ${
               errors.confirmPassword ? "border-red-500 placeholder:text-red-500" : ""
             }`}
@@ -296,34 +286,37 @@ const Register = () => {
         </View>
 
         {/* Terms and Subscription */}
-        <View className="flex flex-row gap-2">
+        <View className="flex flex-row gap-3 items-center">
           <Checkbox
             checked={agreeTerm}
             onCheckedChange={validateAgreeTerm}
             className={errors.agreeTerm ? "border-red-500" : ""}
           />
           <Text
-            className={`text-gray-600 dark:text-white ${errors.agreeTerm ? "text-red-500" : ""}`}
+            className={`flex-1 text-gray-600 dark:text-white ${
+              errors.agreeTerm ? "text-red-500" : ""
+            }`}
           >
-            Agree to our{" "}
+            Bạn đồng ý với{" "}
             <Link href="/term-of-use" className="underline">
-              Terms of use
+              Điều khoản sử dụng
             </Link>{" "}
-            and{" "}
+            và{" "}
             <Link href="/privacy-policy" className="underline">
-              Privacy Policy
-            </Link>
+              Chính sách bảo mật
+            </Link>{" "}
+            của CatCorner.
           </Text>
         </View>
 
-        <View className="flex flex-row gap-2">
+        <View className="flex flex-row gap-3 items-center">
           <Checkbox checked={agreeSubscribe} onCheckedChange={setAgreeSubscribe} />
-          <Text className="text-gray-600 dark:text-white">Subscribe to our monthly newsletter</Text>
+          <Text className="text-gray-600 dark:text-white">Đăng ký nhận ưu đãi hằng tháng!</Text>
         </View>
 
         {/* Submit Button */}
         <Button variant="rounded-pri1" size="2xl" onPress={handleSubmit}>
-          <Text className="font-c-bold">Sign up</Text>
+          <Text className="font-c-bold">Đăng ký</Text>
         </Button>
       </View>
     </ScrollView>

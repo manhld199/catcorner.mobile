@@ -6,30 +6,25 @@ import Toast from "react-native-toast-message";
 
 // import libs
 import { getData, postData } from "@/utils/functions/handle";
-import { AUTH_LOGIN_URL, AUTH_REGISTER_URL, AUTH_ME_URL } from "@/utils/constants/urls";
+import {
+  AUTH_LOGIN_URL,
+  AUTH_REGISTER_URL,
+  AUTH_ME_URL,
+  AUTH_FORGOT_URL,
+  AUTH_VERIFY_OTP_URL,
+  AUTH_VERIFY_EMAIL_URL,
+  AUTH_RESET_URL,
+} from "@/utils/constants/urls";
 import { getAccessToken, saveTokens } from "@/lib/authStorage";
 
-interface IUser {
-  user_id?: string;
-  user_name?: string;
-  email: string;
-  user_role?: string;
-  user_avt?: string;
-  password?: string;
-}
-
-export interface IAuthContext {
-  user: IUser | null;
-  register: (user: IUser) => void;
-  login: (user: IUser) => void;
-  logout: () => void;
-}
+// import types
+import { IAuthContext, IUser } from "@/types/interfaces";
 
 export const AuthContext = createContext<IAuthContext | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
-  const [user, setUser] = useState<IUser | null>(null);
+  const [userInfo, setUserInfo] = useState<IUser | null>(null);
 
   const checkAuthState = async () => {
     try {
@@ -38,16 +33,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const storedUser = await AsyncStorage.getItem("user");
 
       if (!token || !storedUser) {
-        setUser(null);
+        setUserInfo(null);
         return;
       }
 
       // Kiểm tra token hợp lệ nếu cần (thông qua API `/auth/me` hoặc giải mã JWT)
       const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
+      setUserInfo(parsedUser);
     } catch (err) {
       console.log("Failed to check auth state: ", err);
-      setUser(null);
+      setUserInfo(null);
     }
   };
 
@@ -61,12 +56,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       // console.log("{ data, message }", { data, message });
 
-      if (!data)
+      if (!data) {
         Toast.show({
           type: "error",
           text1: "Oops!!!",
           text2: message || "Đăng nhập thất bại. Vui lòng thử lại sau!",
         });
+
+        return;
+      }
 
       await saveTokens(data.data.token, data.data.refreshToken);
 
@@ -78,7 +76,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         user_avt: data.data.user.user_role,
       };
 
-      setUser(userData);
+      setUserInfo(userData);
 
       // Lưu thông tin người dùng vào AsyncStorage
       await AsyncStorage.setItem("user", JSON.stringify(userData));
@@ -90,6 +88,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
 
       router.push("/");
+
+      return;
     } catch (err) {
       console.log("Failed: ", err);
       Toast.show({
@@ -97,13 +97,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         text1: "Oops!!!",
         text2: "Có lỗi xảy ra. Vui lòng thử lại sau!",
       });
+
+      return;
     }
   };
 
   const logout = async () => {
     try {
       await AsyncStorage.clear(); // Xóa tất cả token và dữ liệu lưu trữ
-      setUser(null);
+      setUserInfo(null);
 
       Toast.show({
         type: "success",
@@ -144,8 +146,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
 
       router.push({
-        pathname: "/verify-email",
-        params: { email: encodeURIComponent(user.email), token: data.data.token },
+        pathname: "/verify-otp",
+        params: {
+          type: "register",
+          email: encodeURIComponent(user.email as string),
+          token: data.data.token,
+        },
       });
     } catch (err) {
       console.log("Failed: ", err);
@@ -157,8 +163,152 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const verifyEmail = async (user: IUser) => {
+    if (!user.email || !user.token) {
+      Toast.show({
+        type: "error",
+        text1: "Oops!!!",
+        text2: "Xác thực Email thất bại, vui lòng thử lại sau!",
+      });
+
+      router.push("/register");
+      return;
+    }
+
+    // console.log("tokekkkkkkkn", token);
+    const { data, message } = await getData(
+      `${AUTH_VERIFY_EMAIL_URL}?token=${user.token}&mobile=true`
+    );
+    // console.log("verifyRes", verifyRes);
+
+    if (!data) {
+      Toast.show({
+        type: "error",
+        text1: "Oops!!!",
+        text2: "Xác thực Email thất bại, vui lòng thử lại sau!",
+      });
+
+      router.push("/register");
+      return;
+    }
+
+    Toast.show({
+      type: "success",
+      text1: "Success!!!",
+      text2: "Xác thực Email thành công!",
+    });
+
+    router.push("/login");
+    return;
+  };
+
+  const forgotPassword = async (user: IUser) => {
+    try {
+      const { data, message } = await postData(AUTH_FORGOT_URL, user);
+      // console.log("aaaaaaaaaa2");
+      // console.log("aaaaaaaaaa1", user.email, data);
+
+      if (!data) {
+        Toast.show({
+          type: "error",
+          text1: "Oops!!!",
+          text2: message || "Đặt lại mật khẩu thất bại. Vui lòng thử lại sau!",
+        });
+
+        return;
+      }
+
+      // console.log("aaaaaaaaaa3");
+      Toast.show({
+        type: "success",
+        text1: "Success!!!",
+        text2: message || "Đặt lại mật khẩu thành công. Vui lòng xác thực Email!",
+      });
+
+      router.push({
+        pathname: "/verify-otp",
+        params: { type: "forgot", email: encodeURIComponent(user.email as string) },
+      });
+
+      return;
+    } catch (err) {
+      console.log("Failed: ", err);
+      Toast.show({
+        type: "error",
+        text1: "Oops!!!",
+        text2: "Có lỗi xảy ra. Vui lòng thử lại sau!",
+      });
+
+      return;
+    }
+  };
+
+  const verifyOtp = async (user: IUser) => {
+    if (!user.otp || !user.email) return false;
+
+    const otpRes = await postData(AUTH_VERIFY_OTP_URL, { otp: user.otp, email: user.email });
+    // console.log("otpRes", otpRes);
+
+    if (!otpRes.data)
+      return {
+        data: null,
+        message: otpRes.message || "Xác thực OTP thất bại. Vui lòng thử lại sau!!!",
+      };
+
+    return { data: otpRes.data, message: otpRes.data.data.message || "Xác thực OTP thành công!" };
+  };
+
+  const resetPassword = async (user: IUser) => {
+    if (!user.reset_token || !user.new_password) {
+      Toast.show({
+        type: "error",
+        text1: "Oops!!!",
+        text2: "Đặt lại mật khẩu thất bại, vui lòng thử lại sau!",
+      });
+
+      router.push("/forgot-password");
+      return;
+    }
+
+    const { data, message } = await postData(AUTH_RESET_URL, {
+      resetToken: user.reset_token,
+      new_password: user.new_password,
+    });
+
+    if (!data) {
+      Toast.show({
+        type: "error",
+        text1: "Oops!!!",
+        text2: "Đặt lại mật khẩu thất bại, vui lòng thử lại sau!",
+      });
+
+      router.push("/register");
+      return;
+    }
+
+    Toast.show({
+      type: "success",
+      text1: "Success!!!",
+      text2: "Đặt lại mật khẩu thành công!",
+    });
+
+    router.push("/login");
+    return;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, register }}>
+    <AuthContext.Provider
+      value={{
+        userInfo,
+        login,
+        logout,
+        register,
+        forgotPassword,
+        verifyEmail,
+        verifyOtp,
+        resetPassword,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
