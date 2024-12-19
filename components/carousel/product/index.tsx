@@ -10,19 +10,18 @@ export default function Carousel({ images }: CarouselProps) {
   return (
     <View className="flex-1">
       <Swiper
-        showsButtons={true}
         showsPagination={true}
         autoplay={true}
-        autoplayTimeout={4.5}
+        autoplayTimeout={5}
         activeDotColor="#0d9488" // Màu dot hiển thị active
-        containerStyle={{ height: 200 }} // Chiều cao Carousel
+        containerStyle={{ height: 200 }}
       >
         {images.map((image, index) => (
           <View key={index} className="flex justify-center items-center">
             <Image
               source={{ uri: image }}
               resizeMode="cover"
-              className="h-full w-full rounded-lg"
+              className="h-full w-full"
             />
           </View>
         ))}

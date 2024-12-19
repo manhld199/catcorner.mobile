@@ -16,3 +16,4 @@ export { default as InputQuantity } from "./inputs/quantity";
 
 // Others
 export { default as StarGroup } from "./star-group";
+export { default as ArrowBack } from "./arrow-back";

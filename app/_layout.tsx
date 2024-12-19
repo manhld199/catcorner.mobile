@@ -65,7 +65,7 @@ export default function RootLayout() {
       <ThemeProvider>
         <SafeAreaView className="w-full h-full bg-white dark:bg-zinc-900 flex">
           <CustomerHeader />
-          {/* <ThemeToggle /> */}
+          <ThemeToggle />
           <Slot />
           <Toast />
         </SafeAreaView>
