@@ -63,7 +63,7 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <SafeAreaView className="w-full h-full bg-white dark:bg-zinc-900 flex">
+        <SafeAreaView className="w-full h-full flex">
           <CustomerHeader />
           <ThemeToggle />
           <Slot />

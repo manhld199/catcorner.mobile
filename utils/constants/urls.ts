@@ -13,3 +13,4 @@ export const RECOMMEND_CATEGORY_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/gu
 
 // Product
 export const PRODUCT_DETAIL_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/guest/product`;
+export const PRODUCT_ORDER_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/guest/productList/getOrderProducts`;

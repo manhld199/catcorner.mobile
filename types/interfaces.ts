@@ -149,3 +149,18 @@ export interface ICartProduct {
   product_slug?: string;
   product_variants?: IProductVariant[];
 }
+
+export interface IProductOrder {
+  _id: string;
+  product_name: string;
+  product_slug: string;
+  product_variant: IProductVariant;
+  quantity: number;
+}
+
+export interface IAddress {
+  province: string;
+  district: string;
+  ward: string;
+  street: string;
+}
