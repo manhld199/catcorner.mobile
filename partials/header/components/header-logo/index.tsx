@@ -1,9 +1,15 @@
+<<<<<<< HEAD
 import { router } from "expo-router";
+=======
+import { useRouter } from "expo-router";
+>>>>>>> c3a798c5b3305f4aca1da53354a7734c81c5fac6
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useColorScheme } from "react-native"; // Quản lý theme trên React Native
 
 export default function CustomerHeaderLogo() {
+  const router = useRouter();
+
   const [mounted, setMounted] = useState(false);
   const systemTheme = useColorScheme(); // `light` hoặc `dark`
 

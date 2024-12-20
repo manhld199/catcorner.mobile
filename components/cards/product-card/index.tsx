@@ -22,9 +22,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Discount Badge */}
       {product.highest_discount && (
         <View className="absolute top-2 left-2 bg-red-600 px-2 py-1 rounded z-10">
-          <Text className="text-white text-xs font-bold">
-            -{product.highest_discount}%
-          </Text>
+          <Text className="text-white text-xs font-c-bold">-{product.highest_discount}%</Text>
         </View>
       )}
 
@@ -45,7 +43,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Product Name */}
       <View>
         <Text
-          className="font-bold text-gray-900 dark:text-white text-base mb-2 line-clamp-2"
+          className="font-c-bold text-gray-900 dark:text-white text-base mb-2 line-clamp-2"
           numberOfLines={2}
           ellipsizeMode="tail"
         >
@@ -84,28 +82,24 @@ export default function ProductCard({ product }: ProductCardProps) {
               {variant}
             </Text>
           ))}
-        {Array.isArray(product.variant_name) &&
-          product.variant_name.length > 3 && (
-            <Text className="px-2 py-1 text-xs bg-gray-100 text-gray-500 rounded-full">
-              ...
-            </Text>
-          )}
+        {Array.isArray(product.variant_name) && product.variant_name.length > 3 && (
+          <Text className="px-2 py-1 text-xs bg-gray-100 text-gray-500 rounded-full">...</Text>
+        )}
       </View>
 
       {/* Price */}
       <View className="flex-row items-center justify-between w-full">
-        {product.lowest_price &&
-        product.lowest_price !== product.product_price ? (
+        {product.lowest_price && product.lowest_price !== product.product_price ? (
           <>
             <Text className="text-sm text-gray-500 line-through">
               {convertNumberToVND(product.product_price)}
             </Text>
-            <Text className="text-base font-bold text-red-600">
+            <Text className="text-base font-c-bold text-red-600">
               {convertNumberToVND(product.lowest_price)}
             </Text>
           </>
         ) : (
-          <Text className="text-base font-bold text-red-600">
+          <Text className="text-base font-c-bold text-red-600">
             {convertNumberToVND(product.product_price)}
           </Text>
         )}
