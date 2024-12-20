@@ -145,8 +145,7 @@ export default function SearchPage() {
         <View className="w-full flex flex-col">
           {/* Input Search */}
           <LinearGradient className="w-full" colors={searchColorState as any}>
-            <View className="w-full px-2 py-4 flex flex-row gap-2 items-center">
-              <ArrowLeft color="#315475" size={28} />
+            <View className="w-full p-4 flex flex-row gap-2 items-center">
               <View className="overflow-hidden flex-1 h-[44px] bg-white dark:bg-zinc-900 border-2 border-pri-7 dark:border-pri-2 rounded-lg flex flex-row gap-2">
                 <Input
                   placeholder="Nhập từ khóa cần tìm..."

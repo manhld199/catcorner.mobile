@@ -1,8 +1,11 @@
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useColorScheme } from "react-native"; // Quản lý theme trên React Native
 
 export default function CustomerHeaderLogo() {
+  const router = useRouter();
+
   const [mounted, setMounted] = useState(false);
   const systemTheme = useColorScheme(); // `light` hoặc `dark`
 
@@ -18,7 +21,7 @@ export default function CustomerHeaderLogo() {
   return (
     <TouchableOpacity
       style={{ flexDirection: "row", alignItems: "center" }}
-      onPress={() => console.log("Logo clicked")}
+      onPress={() => router.push("/")}
     >
       {/* Logo mobile */}
       <View style={{ display: "flex" }}>
