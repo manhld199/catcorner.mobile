@@ -6,11 +6,17 @@ import { Link } from "expo-router";
 import { Text } from "@/components/Text";
 import { ICategory } from "@/types/interfaces";
 
-export default function CardCategory({ category }: { category: ICategory }) {
+export default function CardCategory({
+  category,
+  className,
+}: {
+  category: ICategory;
+  className?: string;
+}) {
   return (
     <Link
       href={`/categories/${encodeURIComponent(category.category_id_hashed)}` as any}
-      className="w-[30%] pb-2 bg-pri-5 dark:bg-pri-7 rounded-md"
+      className={`w-[30%] pb-2 bg-pri-5 dark:bg-pri-7 rounded-md ${className}`}
     >
       <View className="w-full flex flex-col justify-center items-center gap-2">
         {/* Container cho hình ảnh */}

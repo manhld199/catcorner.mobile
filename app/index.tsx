@@ -1,19 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
+import { View, ScrollView, Image, TouchableOpacity, ActivityIndicator } from "react-native";
 import ProductCard from "@/components/cards/product-card";
 import { CardCategory, ProductCarousel, ProductCategories } from "@/components";
 import { CustomerAppbar } from "@/partials";
 import { Text } from "@/components/Text";
-import {
-  PRODUCT_LIST_NEWEST_URL,
-  ALL_CATEGORIES_URL,
-} from "@/utils/constants/urls";
+import { PRODUCT_LIST_NEWEST_URL, RECOMMEND_CATEGORY_URL } from "@/utils/constants/urls";
 import { ICategory, IProductProps } from "@/types/interfaces";
 import { getData } from "@/utils/functions/handle";
 
@@ -35,7 +26,7 @@ export default function HomeScreen() {
       try {
         setIsProductLoading(true);
         const { data, message } = await getData(PRODUCT_LIST_NEWEST_URL);
-        console.log(data);
+        // console.log(data);
         if (!data.data) {
           console.error("Lỗi khi lấy sản phẩm mới nhất:", message);
           return;
@@ -55,17 +46,11 @@ export default function HomeScreen() {
     const fetchCategories = async () => {
       try {
         setIsCategoriesLoading(true);
-        const { data, message } = await getData(ALL_CATEGORIES_URL);
-
-        if (data.data) {
-          setCategories(data.data.categories);
-        } else {
-          console.error("Dữ liệu danh mục không hợp lệ:", message);
-          setCategories([]);
-        }
+        const { data, message } = await getData(RECOMMEND_CATEGORY_URL);
+        // console.log("ressssssss", data.data);
+        setCategories(data.data);
       } catch (error) {
-        console.error("Lỗi khi fetch danh mục:", error);
-        setCategories([]);
+        console.error("Fetch error:", error);
       } finally {
         setIsCategoriesLoading(false);
       }
@@ -99,17 +84,21 @@ export default function HomeScreen() {
 
         {/* Danh mục */}
         <View className="mt-6">
-          <Text className="mx-4 font-c-bold text-lg dark:text-white">
-            Danh mục sản phẩm
-          </Text>
+          <Text className="mx-4 font-c-bold text-lg dark:text-white">Danh mục sản phẩm</Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             className="mt-2 flex-row mx-4 space-x-3"
           >
-            {categories.length > 0 ? (
-              categories.map((category, index) => (
-                <ProductCategories key={index} category={category} />
+            {(categories || []).length > 0 ? (
+              (categories || []).map((category, index) => (
+                <View className="mr-2">
+                  <CardCategory
+                    key={index}
+                    category={category}
+                    className="min-w-[120px] p-2 w-full"
+                  />
+                </View>
               ))
             ) : (
               <Text className="text-center text-gray-600 dark:text-gray-400">
@@ -122,9 +111,7 @@ export default function HomeScreen() {
         {/* Sản phẩm HOT */}
         <View className="mt-6">
           <View className="flex-row justify-between mx-4 mb-2">
-            <Text className="font-c-bold text-lg dark:text-white">
-              Sản phẩm mới nhất
-            </Text>
+            <Text className="font-c-bold text-lg dark:text-white">Sản phẩm mới nhất</Text>
             <TouchableOpacity>
               <Text className="text-teal-700 dark:text-teal-400">Xem thêm</Text>
             </TouchableOpacity>
@@ -137,12 +124,9 @@ export default function HomeScreen() {
             </View>
           ) : (
             <View className="flex-row flex-wrap gap-3 px-4 mb-6">
-              {products.length > 0 ? (
-                products.map((product) => (
-                  <ProductCard
-                    key={product.product_id_hashed}
-                    product={product}
-                  />
+              {(products || []).length > 0 ? (
+                (products || []).map((product) => (
+                  <ProductCard key={product.product_id_hashed} product={product} />
                 ))
               ) : (
                 <Text className="text-center text-gray-600 dark:text-gray-400">
