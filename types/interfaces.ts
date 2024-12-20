@@ -122,7 +122,7 @@ export interface IProductProps {
   product_name: string;
   product_slug: string;
   product_avg_rating: number;
-  product_imgs: string[];
+  product_img: string;
   product_short_description: string;
   product_description: string;
   product_specifications: IProductSpecification[];

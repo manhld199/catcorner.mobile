@@ -7,42 +7,71 @@ import {
   ActivityIndicator,
 } from "react-native";
 import ProductCard from "@/components/cards/product-card";
-import { ProductCarousel, ProductCategories } from "@/components";
+import { CardCategory, ProductCarousel, ProductCategories } from "@/components";
 import { CustomerAppbar } from "@/partials";
 import { Text } from "@/components/Text";
-import { PRODUCT_LIST_NEWEST_URL } from "@/utils/constants/urls";
-import { IProductProps } from "@/types/interfaces";
+import {
+  PRODUCT_LIST_NEWEST_URL,
+  ALL_CATEGORIES_URL,
+} from "@/utils/constants/urls";
+import { ICategory, IProductProps } from "@/types/interfaces";
 import { getData } from "@/utils/functions/handle";
 
 export default function HomeScreen() {
   const [products, setProducts] = useState<IProductProps[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isProductLoading, setIsProductLoading] = useState(false); // Loading state
+  const [categories, setCategories] = useState<ICategory[]>([]);
+
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(false); // Loading state
   const images = [
     "https://i.pinimg.com/550x/94/7e/db/947edbbf6ced34863fc8702ed29ef79f.jpg",
     "https://www.thepoetmagazine.org/wp-content/uploads/2024/06/meo-kho-hieu-meme.jpg",
     "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_1280.jpg",
   ];
 
-  // console.log("API: ", PRODUCT_LIST_NEWEST_URL);
   // Fetch sản phẩm từ API
   useEffect(() => {
     const fetchNewestProducts = async () => {
       try {
-        setLoading(true);
+        setIsProductLoading(true);
         const { data, message } = await getData(PRODUCT_LIST_NEWEST_URL);
-        if (!data) {
+        console.log(data);
+        if (!data.data) {
           console.error("Lỗi khi lấy sản phẩm mới nhất:", message);
           return;
         }
-        setProducts(data.products || []);
+        setProducts(data.data || []);
       } catch (error) {
         console.error("Lỗi khi gọi API sản phẩm mới nhất:", error);
       } finally {
-        setLoading(false);
+        setIsProductLoading(false);
       }
     };
 
     fetchNewestProducts();
+  }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setIsCategoriesLoading(true);
+        const { data, message } = await getData(ALL_CATEGORIES_URL);
+
+        if (data.data) {
+          setCategories(data.data.categories);
+        } else {
+          console.error("Dữ liệu danh mục không hợp lệ:", message);
+          setCategories([]);
+        }
+      } catch (error) {
+        console.error("Lỗi khi fetch danh mục:", error);
+        setCategories([]);
+      } finally {
+        setIsCategoriesLoading(false);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
   return (
@@ -68,7 +97,7 @@ export default function HomeScreen() {
           />
         </View>
 
-        {/* Pet Categories */}
+        {/* Danh mục */}
         <View className="mt-6">
           <Text className="mx-4 font-c-bold text-lg dark:text-white">
             Danh mục sản phẩm
@@ -78,7 +107,15 @@ export default function HomeScreen() {
             showsHorizontalScrollIndicator={false}
             className="mt-2 flex-row mx-4 space-x-3"
           >
-            <ProductCategories />
+            {categories.length > 0 ? (
+              categories.map((category, index) => (
+                <ProductCategories key={index} category={category} />
+              ))
+            ) : (
+              <Text className="text-center text-gray-600 dark:text-gray-400">
+                Không có danh mục nào.
+              </Text>
+            )}
           </ScrollView>
         </View>
 
@@ -94,7 +131,7 @@ export default function HomeScreen() {
           </View>
 
           {/* Hiển thị trạng thái loading */}
-          {loading ? (
+          {isProductLoading ? (
             <View className="items-center justify-center py-6">
               <ActivityIndicator size="large" color="#00bfa5" />
             </View>
@@ -103,7 +140,7 @@ export default function HomeScreen() {
               {products.length > 0 ? (
                 products.map((product) => (
                   <ProductCard
-                    key={product.product_id_hashed} // Đảm bảo key là duy nhất
+                    key={product.product_id_hashed}
                     product={product}
                   />
                 ))

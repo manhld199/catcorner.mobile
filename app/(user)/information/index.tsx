@@ -10,7 +10,7 @@ import {
 import { Text } from "@/components/Text";
 import { Link, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { ArrowBack } from "@/components";
+import { ArrowBack, ArrowBackFix } from "@/components";
 
 export default function UserInformationPage() {
   const router = useRouter(); // Lấy router object để điều hướng
@@ -20,16 +20,7 @@ export default function UserInformationPage() {
       {/* Header */}
       <View className="relative bg-gradient-to-r from-pink-500 to-purple-500 h-64 items-center justify-center dark:from-gray-800 dark:to-gray-900">
         {/* Nút Back */}
-        <TouchableOpacity
-          onPress={() => router.back()}
-          className="absolute top-8 left-4"
-        >
-          <Ionicons
-            name="arrow-back-outline"
-            size={20}
-            color={colorScheme === "dark" ? "white" : "black"}
-          />
-        </TouchableOpacity>
+        <ArrowBackFix />
 
         <Image
           source={{

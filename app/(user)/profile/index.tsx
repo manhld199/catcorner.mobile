@@ -1,9 +1,16 @@
 import React from "react";
 import { View, Image, FlatList, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import { useContext, useEffect, useState } from "react";
+
+// Import components
 import { CustomerAppbar } from "@/partials";
 import { Text } from "@/components/Text";
+
+// import providers
+import { AuthContext } from "@/providers";
+
 const options = [
   {
     id: 1,
@@ -32,6 +39,7 @@ const options = [
 ];
 
 export default function ProfilePage() {
+  const { userInfo } = useContext(AuthContext) || { userInfo: {} };
   return (
     <>
       <View className="flex-1 bg-white dark:bg-gray-900 py-6">

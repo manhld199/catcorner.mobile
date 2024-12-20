@@ -16,5 +16,7 @@ export const PRODUCT_DETAIL_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/guest/
 export const PRODUCT_ORDER_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/guest/productList/getOrderProducts`;
 
 // Product List
-
 export const PRODUCT_LIST_NEWEST_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/guest/productList/getNewestProducts`;
+
+// Categories
+export const ALL_CATEGORIES_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/guest/categories`;

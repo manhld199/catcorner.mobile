@@ -23,3 +23,4 @@ export { default as SelectDefault } from "./selects/default";
 // Others
 export { default as StarGroup } from "./star-group";
 export { default as ArrowBack } from "./arrow-back";
+export { default as ArrowBackFix } from "./arrow-back-fixed";

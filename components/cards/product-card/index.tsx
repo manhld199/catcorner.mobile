@@ -4,6 +4,7 @@ import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@/components/Text";
 import { IProductProps } from "@/types/interfaces";
+import { convertNumberToVND } from "@/utils/functions/convert";
 
 interface ProductCardProps {
   product: IProductProps;
@@ -11,7 +12,11 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
-      href={`/${product.product_slug}?pid=${product.product_id_hashed}` as any}
+      href={
+        `/product/${product.product_slug}?pid=${encodeURIComponent(
+          product.product_id_hashed
+        )}` as any
+      }
       className="relative rounded-xl bg-white shadow shadow-gray-200 dark:bg-gray-800 w-[48%] p-4"
     >
       {/* Discount Badge */}
@@ -25,7 +30,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       {/* Product Image */}
       <Image
-        source={{ uri: product.product_imgs[0] }}
+        source={{ uri: product.product_img }}
         alt={product.product_slug}
         className="h-28 w-full object-contain rounded-md mb-2"
       />
@@ -69,19 +74,22 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       {/* Variants */}
       <View className="flex-row flex-wrap gap-1">
-        {product.variant_name.slice(0, 2).map((variant, index) => (
-          <Text
-            key={index}
-            className="px-2 py-1 text-[8px] border border-teal-600 rounded-full text-teal-600"
-          >
-            {variant}
-          </Text>
-        ))}
-        {product.variant_name.length > 3 && (
-          <Text className="px-2 py-1 text-xs bg-gray-100 text-gray-500 rounded-full">
-            ...
-          </Text>
-        )}
+        {Array.isArray(product.variant_name) &&
+          product.variant_name.length > 1 &&
+          product.variant_name.slice(0, 2).map((variant, index) => (
+            <Text
+              key={index}
+              className="px-2 py-1 text-[8px] border border-teal-600 rounded-full text-teal-600"
+            >
+              {variant}
+            </Text>
+          ))}
+        {Array.isArray(product.variant_name) &&
+          product.variant_name.length > 3 && (
+            <Text className="px-2 py-1 text-xs bg-gray-100 text-gray-500 rounded-full">
+              ...
+            </Text>
+          )}
       </View>
 
       {/* Price */}
@@ -90,15 +98,15 @@ export default function ProductCard({ product }: ProductCardProps) {
         product.lowest_price !== product.product_price ? (
           <>
             <Text className="text-sm text-gray-500 line-through">
-              {product.product_price.toLocaleString()}đ
+              {convertNumberToVND(product.product_price)}
             </Text>
             <Text className="text-base font-bold text-red-600">
-              {product.lowest_price.toLocaleString()}đ
+              {convertNumberToVND(product.lowest_price)}
             </Text>
           </>
         ) : (
           <Text className="text-base font-bold text-red-600">
-            {product.product_price.toLocaleString()}đ
+            {convertNumberToVND(product.product_price)}
           </Text>
         )}
       </View>
