@@ -48,17 +48,13 @@ export default function ProfilePage() {
           <View className="rounded-full overflow-hidden border-2 border-teal-600">
             <Image
               source={{
-                uri: "https://haycafe.vn/wp-content/uploads/2022/03/Anh-chan-dung-nam.jpg",
+                uri: "https://dogily.vn/wp-content/swift-ai/images/wp-content/uploads/2021/08/tuoi-tho-meo-munchkin-jpg.webp",
               }}
               className="w-24 h-24"
             />
           </View>
-          <Text className="font-bold text-lg mt-4 dark:text-white">
-            Phan Nguyễn Hải Yến
-          </Text>
-          <Text className="text-gray-500 dark:text-gray-400">
-            pnhaiyen@gmail.com
-          </Text>
+          <Text className="font-bold text-lg mt-4 dark:text-white">Phan Nguyễn Hải Yến</Text>
+          <Text className="text-gray-500 dark:text-gray-400">pnhaiyen@gmail.com</Text>
           <Link
             href="/edit-information"
             className="bg-pri-1 dark:bg-teal-600 px-6 py-3 rounded-full mt-2"
@@ -86,9 +82,7 @@ export default function ProfilePage() {
                         name={item.icon as any}
                         size={20}
                         color={isLogout ? "red" : "#6b7280"}
-                        className={
-                          isLogout ? "dark:text-red-500" : "dark:text-gray-300"
-                        }
+                        className={isLogout ? "dark:text-red-500" : "dark:text-gray-300"}
                       />
                     </View>
                     <Text

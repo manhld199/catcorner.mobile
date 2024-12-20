@@ -92,12 +92,8 @@ export default function HomeScreen() {
           >
             {(categories || []).length > 0 ? (
               (categories || []).map((category, index) => (
-                <View className="mr-2">
-                  <CardCategory
-                    key={index}
-                    category={category}
-                    className="min-w-[120px] p-2 w-full"
-                  />
+                <View className="mr-2" key={index}>
+                  <CardCategory category={category} className="min-w-[120px] p-2 w-full" />
                 </View>
               ))
             ) : (
@@ -123,7 +119,7 @@ export default function HomeScreen() {
               <ActivityIndicator size="large" color="#00bfa5" />
             </View>
           ) : (
-            <View className="flex-row flex-wrap gap-3 px-4 mb-6">
+            <View className="w-full flex flex-row flex-wrap justify-between gap-x-2 gap-y-4">
               {(products || []).length > 0 ? (
                 (products || []).map((product) => (
                   <ProductCard key={product.product_id_hashed} product={product} />

@@ -6,6 +6,7 @@ import {
   Image,
   Platform,
   Modal,
+  TextInput,
 } from "react-native";
 
 import { Text } from "@/components/Text";
@@ -22,7 +23,7 @@ export default function EditUserInformationPage() {
   const [gender, setGender] = useState("Nữ");
   const [dob, setDob] = useState(new Date(2003, 11, 23));
   const [avatar, setAvatar] = useState(
-    "https://haycafe.vn/wp-content/uploads/2022/03/Anh-chan-dung-nam.jpg"
+    "https://dogily.vn/wp-content/swift-ai/images/wp-content/uploads/2021/08/tuoi-tho-meo-munchkin-jpg.webp"
   );
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showGenderModal, setShowGenderModal] = useState(false);
@@ -33,8 +34,7 @@ export default function EditUserInformationPage() {
   };
 
   const pickImage = async () => {
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
       alert("Bạn cần cấp quyền để chọn ảnh!");
       return;
@@ -66,9 +66,7 @@ export default function EditUserInformationPage() {
         <TouchableOpacity onPress={() => router.back()}>
           <Text className="text-teal-500 dark:text-teal-400">Hủy</Text>
         </TouchableOpacity>
-        <Text className="font-bold text-lg text-gray-800 dark:text-white">
-          Chỉnh sửa
-        </Text>
+        <Text className="font-bold text-lg text-gray-800 dark:text-white">Chỉnh sửa</Text>
         <TouchableOpacity onPress={saveChanges}>
           <Text className="text-teal-500 dark:text-teal-400">Lưu</Text>
         </TouchableOpacity>
@@ -94,10 +92,8 @@ export default function EditUserInformationPage() {
       <View className="px-6">
         {/* Email */}
         <View className="mb-4">
-          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">
-            EMAIL CỦA BẠN
-          </Text>
-          <Input
+          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">EMAIL CỦA BẠN</Text>
+          <TextInput
             value={email}
             editable={false}
             className="border-b border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white text-sm pb-2"
@@ -106,34 +102,28 @@ export default function EditUserInformationPage() {
 
         {/* Số điện thoại */}
         <View className="mb-4 relative">
-          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">
-            SỐ ĐIỆN THOẠI
-          </Text>
-          <Input
+          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">SỐ ĐIỆN THOẠI</Text>
+          <TextInput
             value={phone}
             onChangeText={setPhone}
             className="border-b border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white text-sm pb-2 pr-10"
           />
-          <Ionicons
+          {/* <Ionicons
             name="pencil-outline"
             size={16}
             color="gray"
             style={{ position: "absolute", right: 0, bottom: 2 }}
-          />
+          /> */}
         </View>
 
         {/* Giới tính */}
         <View className="mb-4">
-          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">
-            GIỚI TÍNH
-          </Text>
+          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">GIỚI TÍNH</Text>
           <TouchableOpacity
             onPress={() => setShowGenderModal(true)}
             className="border-b border-gray-300 dark:border-gray-700 pb-2 flex-row items-center justify-between"
           >
-            <Text className="text-gray-800 dark:text-white text-sm">
-              {gender}
-            </Text>
+            <Text className="text-gray-800 dark:text-white text-sm">{gender}</Text>
             <Ionicons
               name="chevron-down-outline"
               size={16}
@@ -145,9 +135,7 @@ export default function EditUserInformationPage() {
 
         {/* Ngày sinh */}
         <View className="mb-4">
-          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">
-            NGÀY SINH
-          </Text>
+          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">NGÀY SINH</Text>
           <TouchableOpacity
             onPress={() => setShowDatePicker(true)}
             className="border-b border-gray-300 dark:border-gray-700 pb-2 flex-row items-center justify-between"

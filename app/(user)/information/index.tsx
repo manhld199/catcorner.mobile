@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  View,
-  Image,
-  TextInput,
-  ScrollView,
-  TouchableOpacity,
-  useColorScheme,
-} from "react-native";
+import { View, Image, TextInput, ScrollView, TouchableOpacity, useColorScheme } from "react-native";
 import { Text } from "@/components/Text";
 import { Link, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,16 +17,12 @@ export default function UserInformationPage() {
 
         <Image
           source={{
-            uri: "https://haycafe.vn/wp-content/uploads/2022/03/Anh-chan-dung-nam.jpg",
+            uri: "https://dogily.vn/wp-content/swift-ai/images/wp-content/uploads/2021/08/tuoi-tho-meo-munchkin-jpg.webp",
           }}
           className="w-24 h-24 rounded-full  border-2 border-teal-600 dark:border-teal-400"
         />
-        <Text className="font-bold text-lg mt-4 dark:text-white">
-          Phan Nguyễn Hải Yến
-        </Text>
-        <Text className="text-gray-500 dark:text-gray-400">
-          pnhaiyen@gmail.com
-        </Text>
+        <Text className="font-bold text-lg mt-4 dark:text-white">Phan Nguyễn Hải Yến</Text>
+        <Text className="text-gray-500 dark:text-gray-400">pnhaiyen@gmail.com</Text>
         <Link
           href="/edit-information"
           className="bg-pri-1 dark:bg-teal-600 px-6 py-3 rounded-full mt-2"
@@ -46,9 +35,7 @@ export default function UserInformationPage() {
       <View className="px-6">
         {/* Email */}
         <View className="mb-4">
-          <Text className="text-gray-400 text-xs mb-1 dark:text-gray-500">
-            EMAIL CỦA BẠN
-          </Text>
+          <Text className="text-gray-400 text-xs mb-1 dark:text-gray-500">EMAIL CỦA BẠN</Text>
           <TextInput
             value="pnhaiyen@gmail.com"
             editable={false}
@@ -58,9 +45,7 @@ export default function UserInformationPage() {
 
         {/* Mật khẩu */}
         <View className="mb-4">
-          <Text className="text-gray-400 text-xs mb-1 dark:text-gray-500">
-            MẬT KHẨU CỦA BẠN
-          </Text>
+          <Text className="text-gray-400 text-xs mb-1 dark:text-gray-500">MẬT KHẨU CỦA BẠN</Text>
           <TextInput
             value="••••••••••"
             secureTextEntry={true}
@@ -83,9 +68,7 @@ export default function UserInformationPage() {
 
         {/* Giới tính */}
         <View className="mb-4">
-          <Text className="text-gray-400 text-xs mb-1 dark:text-gray-500">
-            GIỚI TÍNH
-          </Text>
+          <Text className="text-gray-400 text-xs mb-1 dark:text-gray-500">GIỚI TÍNH</Text>
           <TextInput
             value="Nữ"
             editable={false}
@@ -95,9 +78,7 @@ export default function UserInformationPage() {
 
         {/* Ngày sinh */}
         <View className="mb-4">
-          <Text className="text-gray-400 text-xs mb-1 dark:text-gray-500">
-            NGÀY SINH
-          </Text>
+          <Text className="text-gray-400 text-xs mb-1 dark:text-gray-500">NGÀY SINH</Text>
           <TextInput
             value="23/12/2003"
             editable={false}
