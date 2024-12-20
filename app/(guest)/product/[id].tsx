@@ -1,14 +1,30 @@
 // import libs
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { View, Image, ScrollView, ActivityIndicator, TouchableOpacity } from "react-native";
+import {
+  View,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import Swiper from "react-native-swiper";
-import { ChevronRight, MessageCircleMore, ShoppingCart, Star } from "lucide-react-native";
+import {
+  ChevronRight,
+  MessageCircleMore,
+  ShoppingCart,
+  Star,
+} from "lucide-react-native";
 import { WebView } from "react-native-webview";
 
 // import components
 import { Text } from "@/components/Text";
-import { CardCoupon, CardReview, ModalBottomSheet, StarGroup } from "@/components";
+import {
+  CardCoupon,
+  CardReview,
+  ModalBottomSheet,
+  StarGroup,
+} from "@/components";
 import PurchaseInfo from "./purchase-info";
 
 // import utils
@@ -60,7 +76,8 @@ export default function ProductDetailPage() {
     fetchProduct();
   }, []);
 
-  if (isProductLoading) return <ActivityIndicator size="large" color="#00bcd4" />;
+  if (isProductLoading)
+    return <ActivityIndicator size="large" color="#00bcd4" />;
 
   return (
     <View className="relative">
@@ -82,7 +99,10 @@ export default function ProductDetailPage() {
               style={{ height: 250 }}
             >
               {productData?.product_imgs.map((item, index) => (
-                <View key={`product img ${index}`} className="items-center justify-center">
+                <View
+                  key={`product img ${index}`}
+                  className="items-center justify-center"
+                >
                   <Image source={{ uri: item }} className="w-full h-full" />
                 </View>
               ))}
@@ -101,11 +121,16 @@ export default function ProductDetailPage() {
               <TouchableOpacity
                 key={`product variant img${index}`}
                 className={`${
-                  currentVariant?._id == item._id ? "border-2 rounded-lg border-teal-400" : ""
+                  currentVariant?._id == item._id
+                    ? "border-2 rounded-lg border-teal-400"
+                    : ""
                 }`}
                 onPress={() => setCurrentVariant(item)}
               >
-                <Image source={{ uri: item.variant_img }} className="w-[60px] h-[60px]" />
+                <Image
+                  source={{ uri: item.variant_img }}
+                  className="w-[60px] h-[60px]"
+                />
               </TouchableOpacity>
             ))}
           </View>
@@ -198,7 +223,10 @@ export default function ProductDetailPage() {
           <View className="w-full h-[200px]">
             <WebView
               originWhitelist={["*"]}
-              source={{ html: productData?.product_description || "<p>No description</p>" }}
+              source={{
+                html:
+                  productData?.product_description || "<p>No description</p>",
+              }}
               className="w-full h-full"
               scalesPageToFit={false}
               injectedJavaScript={injectedCSS}
@@ -216,7 +244,9 @@ export default function ProductDetailPage() {
         >
           <WebView
             originWhitelist={["*"]}
-            source={{ html: productData?.product_description || "<p>No description</p>" }}
+            source={{
+              html: productData?.product_description || "<p>No description</p>",
+            }}
             className="w-full h-full"
             scrollEnabled={true}
             nestedScrollEnabled={true}
@@ -239,17 +269,23 @@ export default function ProductDetailPage() {
           </View>
 
           <View className="w-full flex flex-col gap-2">
-            {(productData?.product_specifications || []).slice(0, 3).map((item, index) => (
-              <View
-                key={`product spe ${index}`}
-                className={`w-full flex flex-row gap-2 pb-2 ${
-                  index == 2 ? "border-none" : "border-b-[1px] border-gray-200"
-                }`}
-              >
-                <Text className="w-[49%] text-gray-600 font-c-medium">{item.name}</Text>
-                <Text className="w-1/2">{item.value}</Text>
-              </View>
-            ))}
+            {(productData?.product_specifications || [])
+              .slice(0, 3)
+              .map((item, index) => (
+                <View
+                  key={`product spe ${index}`}
+                  className={`w-full flex flex-row gap-2 pb-2 ${
+                    index == 2
+                      ? "border-none"
+                      : "border-b-[1px] border-gray-200"
+                  }`}
+                >
+                  <Text className="w-[49%] text-gray-600 font-c-medium">
+                    {item.name}
+                  </Text>
+                  <Text className="w-1/2">{item.value}</Text>
+                </View>
+              ))}
           </View>
         </TouchableOpacity>
 
@@ -263,12 +299,15 @@ export default function ProductDetailPage() {
               <View
                 key={`product spe ${index}`}
                 className={`w-full flex flex-row gap-2 pb-2 ${
-                  index == (productData?.product_specifications || []).length - 1
+                  index ==
+                  (productData?.product_specifications || []).length - 1
                     ? "border-none"
                     : "border-b-[1px] border-gray-200"
                 }`}
               >
-                <Text className="w-1/2 text-gray-600 font-c-medium">{item.name}</Text>
+                <Text className="w-1/2 text-gray-600 font-c-medium">
+                  {item.name}
+                </Text>
                 <Text>{item.value}</Text>
               </View>
             ))}
@@ -289,7 +328,10 @@ export default function ProductDetailPage() {
           </View>
 
           <View className="flex flex-row gap-2 items-center">
-            <StarGroup rating={productData?.product_avg_rating.rating_point || 0} starSize={18} />
+            <StarGroup
+              rating={productData?.product_avg_rating.rating_point || 0}
+              starSize={18}
+            />
             <Text className="text-red-500">
               {productData?.product_avg_rating.rating_point || 0}/5
             </Text>
@@ -384,7 +426,8 @@ export default function ProductDetailPage() {
           <Text className="font-c-semibold text-white">
             {convertNumberToVND(
               currentVariant?.variant_discount_percent
-                ? (currentVariant.variant_price * (100 - currentVariant.variant_discount_percent)) /
+                ? (currentVariant.variant_price *
+                    (100 - currentVariant.variant_discount_percent)) /
                     100
                 : currentVariant?.variant_price || 0
             )}
@@ -395,7 +438,6 @@ export default function ProductDetailPage() {
           title="Thông tin sản phẩm"
           actionTitle="Mua ngay"
           action={() => {
-            console.log("aaaaaaaaaaa");
             setShowCartModal(false);
             router.push("/purchase");
           }}

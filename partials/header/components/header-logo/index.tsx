@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { router } from "expo-router";
-=======
 import { useRouter } from "expo-router";
->>>>>>> c3a798c5b3305f4aca1da53354a7734c81c5fac6
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useColorScheme } from "react-native"; // Quản lý theme trên React Native
