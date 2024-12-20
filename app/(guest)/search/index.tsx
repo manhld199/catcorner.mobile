@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, View, useColorScheme, ActivityIndicator, Image } from "react-native";
+import {
+  ScrollView,
+  View,
+  useColorScheme,
+  ActivityIndicator,
+  Image,
+} from "react-native";
 import { ArrowLeft, Mic, MicOff, Search } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { ExpoSpeechRecognitionModule, useSpeechRecognitionEvent } from "expo-speech-recognition";
+import {
+  ExpoSpeechRecognitionModule,
+  useSpeechRecognitionEvent,
+} from "expo-speech-recognition";
 
 // import components
 import { CardCategory, CardSuggestedProduct } from "@/components";
@@ -14,7 +23,10 @@ import { Input } from "@/components/Input";
 import { ICategory, IProductSuggest } from "@/types/interfaces";
 
 // import utils
-import { RECOMMEND_CATEGORY_URL, RECOMMEND_SEARCH_URL } from "@/utils/constants/urls";
+import {
+  RECOMMEND_CATEGORY_URL,
+  RECOMMEND_SEARCH_URL,
+} from "@/utils/constants/urls";
 import { getData } from "@/utils/functions/handle";
 import { CustomerAppbar } from "@/partials";
 import Toast from "react-native-toast-message";
@@ -42,7 +54,9 @@ export default function SearchPage() {
 
   const [recognizing, setRecognizing] = useState(false);
   const [transcript, setTranscript] = useState("");
-  const [suggestedProducts, setSuggestedProducts] = useState<IProductSuggest[]>([]); // Dữ liệu sản phẩm
+  const [suggestedProducts, setSuggestedProducts] = useState<IProductSuggest[]>(
+    []
+  ); // Dữ liệu sản phẩm
   const [isProductLoading, setIsProductLoading] = useState(false); // Loading state
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(false); // Loading state
@@ -157,7 +171,11 @@ export default function SearchPage() {
                 <Button
                   variant="none"
                   className="p-1 w-[32px]"
-                  onPress={recognizing ? () => ExpoSpeechRecognitionModule.stop() : handleStart}
+                  onPress={
+                    recognizing
+                      ? () => ExpoSpeechRecognitionModule.stop()
+                      : handleStart
+                  }
                 >
                   {recognizing ? (
                     <MicOff color={micColorState} className="w-full h-full" />
@@ -165,7 +183,10 @@ export default function SearchPage() {
                     <Mic color={micColorState} className="w-full h-full" />
                   )}
                 </Button>
-                <Button variant="none" className="w-[48px] h-full bg-pri-7 p-2 rounded-none">
+                <Button
+                  variant="none"
+                  className="w-[48px] h-full bg-pri-7 p-2 rounded-none"
+                >
                   <Search color="#fff" className="w-full h-full" />
                 </Button>
               </View>
@@ -217,7 +238,7 @@ export default function SearchPage() {
             <ActivityIndicator size="large" color="#00bcd4" />
           ) : (
             <View className="w-full flex flex-row flex-wrap justify-between gap-x-2 gap-y-4">
-              {categories.map((category, index) => (
+              {(categories || []).map((category, index) => (
                 <CardCategory key={index} category={category} />
               ))}
             </View>

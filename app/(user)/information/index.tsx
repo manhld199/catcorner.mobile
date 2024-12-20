@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ArrowBack, ArrowBackFix } from "@/components";
 
 export default function UserInformationPage() {
-  const router = useRouter(); // Lấy router object để điều hướng
+  const router = useRouter();
   const colorScheme = useColorScheme();
   return (
     <ScrollView className="flex-1 bg-white dark:bg-black">

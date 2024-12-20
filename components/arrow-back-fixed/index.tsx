@@ -3,7 +3,7 @@ import { TouchableOpacity, useColorScheme } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
-export default function ArrowBack() {
+export default function ArrowBackFix() {
   const router = useRouter();
   const colorScheme = useColorScheme();
   return (
