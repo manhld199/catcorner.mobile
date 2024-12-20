@@ -25,12 +25,9 @@ import {
 import * as SplashScreen from "expo-splash-screen";
 import Toast from "react-native-toast-message";
 
-// import components
-import { ThemeToggle } from "@/components";
-
 // import providers
 import { AuthProvider, ThemeProvider } from "@/providers";
-import { CustomerAppbar, CustomerHeader } from "@/partials";
+import { CustomerHeader } from "@/partials";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -65,7 +62,6 @@ export default function RootLayout() {
       <ThemeProvider>
         <SafeAreaView className="w-full h-full flex">
           <CustomerHeader />
-          <ThemeToggle />
           <Slot />
           <Toast />
         </SafeAreaView>

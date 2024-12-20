@@ -1,4 +1,5 @@
 export { default as ThemeToggle } from "./toggles/toggle-theme";
+export { default as SwitchTheme } from "./toggles/theme-switch";
 
 // Cards
 export { default as CardSuggestedProduct } from "./cards/suggested-product";

@@ -1,9 +1,9 @@
 import React from "react";
-import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
+import { View, Image, FlatList, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { CustomerAppbar } from "@/partials";
-
+import { Text } from "@/components/Text";
 const options = [
   {
     id: 1,
@@ -21,13 +21,13 @@ const options = [
     id: 3,
     title: "Cài đặt",
     icon: "settings-outline",
-    link: "/#",
+    link: "/settings",
   },
   {
     id: 4,
     title: "Đăng xuất",
     icon: "log-out-outline",
-    link: "/#", // Đăng xuất không cần chuyển trang thực tế, có thể thêm logic logout
+    link: "/#",
   },
 ];
 

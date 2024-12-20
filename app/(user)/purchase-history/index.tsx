@@ -1,12 +1,13 @@
+import { ArrowBack } from "@/components";
 import React, { useState } from "react";
 import {
   View,
-  Text,
   TouchableOpacity,
   FlatList,
   Image,
   useColorScheme,
 } from "react-native";
+import { Text } from "@/components/Text";
 
 export default function PurchaseHistoryPage() {
   const [selectedTab, setSelectedTab] = useState("Tất cả");
@@ -28,7 +29,7 @@ export default function PurchaseHistoryPage() {
       product: {
         image:
           "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg",
-        name: "INTO YOU Má Hồng Cushion Dạng Kem",
+        name: "Pate cho mèo Royal Canin",
         sku: "CB02",
         quantity: 1,
         originalPrice: 300000,
@@ -43,7 +44,7 @@ export default function PurchaseHistoryPage() {
       product: {
         image:
           "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg",
-        name: "INTO YOU Má Hồng Cushion Dạng Kem",
+        name: "Pate cho mèo Royal Canin",
         sku: "CB02",
         quantity: 1,
         originalPrice: 300000,
@@ -84,163 +85,179 @@ export default function PurchaseHistoryPage() {
       : orders.filter((order) => order.status === selectedTab);
 
   return (
-    <View
-      className={`flex-1 ${
-        colorScheme === "dark" ? "bg-gray-900" : "bg-white"
-      }`}
-    >
-      {/* Tabs */}
+    <View className="flex-1 bg-white dark:bg-black px-4 py-6">
+      <View className="flex-row items-center mb-6">
+        <ArrowBack />
+        <Text className="text-lg font-bold text-black dark:text-white ml-4">
+          Lịch sử đặt hàng
+        </Text>
+      </View>
       <View
-        className={`border-b ${
-          colorScheme === "dark" ? "border-gray-700" : "border-gray-200"
+        className={`flex-1 ${
+          colorScheme === "dark" ? "bg-gray-900" : "bg-white"
         }`}
       >
-        <FlatList
-          horizontal
-          data={tabs}
-          keyExtractor={(item) => item}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingHorizontal: 16,
-            alignItems: "center",
-          }}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => setSelectedTab(item)}
-              className={`px-4 py-4 ${
-                selectedTab === item
-                  ? "border-b-2 border-orange-600"
-                  : "border-b-2 border-transparent"
-              }`}
-            >
-              <Text
-                className={`text-sm ${
-                  selectedTab === item
-                    ? "text-orange-600 font-bold"
-                    : colorScheme === "dark"
-                    ? "text-gray-400"
-                    : "text-gray-600"
-                }`}
-              >
-                {item}
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
-      </View>
-
-      {/* Orders */}
-      <View className="flex-1">
-        {filteredOrders.length === 0 ? (
-          <View className="flex-1 items-center justify-center">
-            <Text
-              className={`${
-                colorScheme === "dark" ? "text-gray-400" : "text-gray-500"
-              }`}
-            >
-              Không có đơn hàng nào!
-            </Text>
-          </View>
-        ) : (
+        {/* Tabs */}
+        <View
+          className={`border-b ${
+            colorScheme === "dark" ? "border-gray-700" : "border-gray-200"
+          }`}
+        >
           <FlatList
-            data={filteredOrders}
-            keyExtractor={(item) => item.id.toString()}
+            horizontal
+            data={tabs}
+            keyExtractor={(item) => item}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingHorizontal: 16,
+              alignItems: "center",
+            }}
             renderItem={({ item }) => (
-              <View
-                className={`p-4 border-b ${
-                  colorScheme === "dark" ? "border-gray-700" : "border-gray-200"
+              <TouchableOpacity
+                onPress={() => setSelectedTab(item)}
+                className={`px-4 py-4 ${
+                  selectedTab === item
+                    ? "border-b-2 border-orange-600"
+                    : "border-b-2 border-transparent"
                 }`}
               >
-                <View className="flex-row justify-between items-center mb-2">
-                  <Text
-                    className={`${
-                      colorScheme === "dark" ? "text-gray-300" : "text-gray-800"
-                    } font-bold`}
-                  >
-                    {item.order_id}
-                  </Text>
-                  <Text
-                    className={`text-sm px-3 py-1 rounded-full ${getStatusStyle(
-                      item.status
-                    )}`}
-                  >
-                    {item.status}
-                  </Text>
-                </View>
+                <Text
+                  className={`text-sm ${
+                    selectedTab === item
+                      ? "text-orange-600 font-bold"
+                      : colorScheme === "dark"
+                      ? "text-gray-400"
+                      : "text-gray-600"
+                  }`}
+                >
+                  {item}
+                </Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
 
-                {/* Product Info */}
-                <View className="flex-row items-center mb-2">
-                  <Image
-                    source={{ uri: item.product.image }}
-                    className="w-16 h-16 rounded-md"
-                  />
-                  <View className="ml-4 flex-1">
+        {/* Orders */}
+        <View className="flex-1">
+          {filteredOrders.length === 0 ? (
+            <View className="flex-1 items-center justify-center">
+              <Text
+                className={`${
+                  colorScheme === "dark" ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                Không có đơn hàng nào!
+              </Text>
+            </View>
+          ) : (
+            <FlatList
+              data={filteredOrders}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <View
+                  className={`p-4 border-b ${
+                    colorScheme === "dark"
+                      ? "border-gray-700"
+                      : "border-gray-200"
+                  }`}
+                >
+                  <View className="flex-row justify-between items-center mb-2">
                     <Text
                       className={`${
                         colorScheme === "dark"
                           ? "text-gray-300"
                           : "text-gray-800"
-                      } font-medium mb-1`}
-                      numberOfLines={2}
-                    >
-                      {item.product.name}
-                    </Text>
-                    <Text
-                      className={`${
-                        colorScheme === "dark"
-                          ? "text-gray-400"
-                          : "text-gray-500"
-                      }`}
-                    >
-                      {item.product.sku}
-                    </Text>
-                    <Text
-                      className={`${
-                        colorScheme === "dark"
-                          ? "text-gray-400"
-                          : "text-gray-500"
-                      }`}
-                    >
-                      x{item.product.quantity}
-                    </Text>
-                  </View>
-                </View>
-
-                {/* Pricing */}
-                <View className="mb-2">
-                  <View className="flex-row justify-between items-center">
-                    <Text
-                      className={`${
-                        colorScheme === "dark"
-                          ? "text-gray-500"
-                          : "text-gray-400"
-                      } line-through`}
-                    >
-                      {item.product.originalPrice.toLocaleString()}đ
-                    </Text>
-                    <Text
-                      className={`${
-                        colorScheme === "dark" ? "text-red-300" : "text-red-500"
                       } font-bold`}
                     >
-                      {item.product.discountedPrice.toLocaleString()}đ
+                      {item.order_id}
+                    </Text>
+                    <Text
+                      className={`text-sm px-3 py-1 rounded-full ${getStatusStyle(
+                        item.status
+                      )}`}
+                    >
+                      {item.status}
                     </Text>
                   </View>
-                  <Text
-                    className={`${
-                      colorScheme === "dark" ? "text-gray-300" : "text-gray-800"
-                    } mt-1`}
-                  >
-                    Tổng số tiền ({item.product.quantity} sản phẩm):{" "}
-                    <Text className="font-bold text-red-500">
-                      {item.total.toLocaleString()}đ
+
+                  {/* Product Info */}
+                  <View className="flex-row items-center mb-2">
+                    <Image
+                      source={{ uri: item.product.image }}
+                      className="w-16 h-16 rounded-md"
+                    />
+                    <View className="ml-4 flex-1">
+                      <Text
+                        className={`${
+                          colorScheme === "dark"
+                            ? "text-gray-300"
+                            : "text-gray-800"
+                        } font-medium mb-1`}
+                        numberOfLines={2}
+                      >
+                        {item.product.name}
+                      </Text>
+                      <Text
+                        className={`${
+                          colorScheme === "dark"
+                            ? "text-gray-400"
+                            : "text-gray-500"
+                        }`}
+                      >
+                        {item.product.sku}
+                      </Text>
+                      <Text
+                        className={`${
+                          colorScheme === "dark"
+                            ? "text-gray-400"
+                            : "text-gray-500"
+                        }`}
+                      >
+                        x{item.product.quantity}
+                      </Text>
+                    </View>
+                  </View>
+
+                  {/* Pricing */}
+                  <View className="mb-2">
+                    <View className="flex-row justify-between items-center">
+                      <Text
+                        className={`${
+                          colorScheme === "dark"
+                            ? "text-gray-500"
+                            : "text-gray-400"
+                        } line-through`}
+                      >
+                        {item.product.originalPrice.toLocaleString()}đ
+                      </Text>
+                      <Text
+                        className={`${
+                          colorScheme === "dark"
+                            ? "text-red-300"
+                            : "text-red-500"
+                        } font-bold`}
+                      >
+                        {item.product.discountedPrice.toLocaleString()}đ
+                      </Text>
+                    </View>
+                    <Text
+                      className={`${
+                        colorScheme === "dark"
+                          ? "text-gray-300"
+                          : "text-gray-800"
+                      } mt-1`}
+                    >
+                      Tổng số tiền ({item.product.quantity} sản phẩm):{" "}
+                      <Text className="font-bold text-red-500">
+                        {item.total.toLocaleString()}đ
+                      </Text>
                     </Text>
-                  </Text>
+                  </View>
                 </View>
-              </View>
-            )}
-          />
-        )}
+              )}
+            />
+          )}
+        </View>
       </View>
     </View>
   );

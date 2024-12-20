@@ -5,6 +5,7 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  useColorScheme,
 } from "react-native";
 import { Text } from "@/components/Text";
 import { Link, useRouter } from "expo-router";
@@ -13,13 +14,22 @@ import { ArrowBack } from "@/components";
 
 export default function UserInformationPage() {
   const router = useRouter(); // Lấy router object để điều hướng
-
+  const colorScheme = useColorScheme();
   return (
     <ScrollView className="flex-1 bg-white dark:bg-black">
       {/* Header */}
       <View className="relative bg-gradient-to-r from-pink-500 to-purple-500 h-64 items-center justify-center dark:from-gray-800 dark:to-gray-900">
         {/* Nút Back */}
-        <ArrowBack />
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="absolute top-8 left-4"
+        >
+          <Ionicons
+            name="arrow-back-outline"
+            size={20}
+            color={colorScheme === "dark" ? "white" : "black"}
+          />
+        </TouchableOpacity>
 
         <Image
           source={{

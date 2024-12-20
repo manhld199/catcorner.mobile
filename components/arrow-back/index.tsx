@@ -7,10 +7,7 @@ export default function ArrowBack() {
   const router = useRouter();
   const colorScheme = useColorScheme();
   return (
-    <TouchableOpacity
-      onPress={() => router.back()}
-      className="absolute top-8 left-4"
-    >
+    <TouchableOpacity onPress={() => router.back()}>
       <Ionicons
         name="arrow-back-outline"
         size={20}

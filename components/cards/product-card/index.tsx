@@ -1,28 +1,17 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Image } from "react-native";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { Text } from "@/components/Text";
+import { IProductProps } from "@/types/interfaces";
 
 interface ProductCardProps {
-  product: {
-    product_id_hashed: string;
-    product_slug: string;
-    product_imgs: string[];
-    highest_discount?: number;
-    category_name: string;
-    product_name: string;
-    variant_name: string[];
-    lowest_price?: number;
-    product_price: number;
-    rating?: number;
-    sold_quantity?: number;
-  };
+  product: IProductProps;
 }
-
 export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
-      href="/#"
+      href={`/${product.product_slug}?pid=${product.product_id_hashed}` as any}
       className="relative rounded-xl bg-white shadow shadow-gray-200 dark:bg-gray-800 w-[48%] p-4"
     >
       {/* Discount Badge */}
@@ -43,7 +32,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       {/* Product Category */}
       <View>
-        <Text className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full self-start mb-2">
+        <Text className="text-[10px] text-gray-500 bg-gray-100 px-2 py-1 rounded-full self-start mb-2">
           {product.category_name}
         </Text>
       </View>
@@ -51,7 +40,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Product Name */}
       <View>
         <Text
-          className="font-bold text-gray-900 dark:text-white text-sm mb-2 line-clamp-2"
+          className="font-bold text-gray-900 dark:text-white text-base mb-2 line-clamp-2"
           numberOfLines={2}
           ellipsizeMode="tail"
         >
@@ -60,22 +49,26 @@ export default function ProductCard({ product }: ProductCardProps) {
       </View>
 
       {/* Rating and Sold */}
-      <View className="flex-row items-center space-x-1 mb-2">
+      {/* <View className="flex-row items-center space-x-1 mb-2">
         {Array.from({ length: 5 }).map((_, index) => (
           <Ionicons
             key={index}
-            name={index < (product.rating ?? 0) ? "star" : "star-outline"}
+            name={
+              index < (product.product_rating.rating_point ?? 0)
+                ? "star"
+                : "star-outline"
+            }
             size={14}
             color="gold"
           />
         ))}
         <Text className="text-xs text-gray-500">
-          ({product.sold_quantity} sold)
+          ({product.product_sold_quantity} sold)
         </Text>
-      </View>
+      </View> */}
 
       {/* Variants */}
-      <View className="flex-row flex-wrap gap-1 my-2">
+      <View className="flex-row flex-wrap gap-1">
         {product.variant_name.slice(0, 2).map((variant, index) => (
           <Text
             key={index}
@@ -92,7 +85,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </View>
 
       {/* Price */}
-      <View className="flex-row items-center justify-between w-ful">
+      <View className="flex-row items-center justify-between w-full">
         {product.lowest_price &&
         product.lowest_price !== product.product_price ? (
           <>
