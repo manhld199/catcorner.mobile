@@ -3,7 +3,7 @@ import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 
 // Import components
 import { Text } from "@/components/Text";
@@ -24,6 +24,7 @@ import {
   CircleCheck,
   CircleDollarSign,
   MinusCircle,
+  ShieldCheck,
   TicketMinus,
   UserRound,
   UserRoundPen,
@@ -54,38 +55,36 @@ export default function PurchasePage() {
     street: "",
   });
   const [paymentMethod, setPaymentMethod] = useState<"cod" | "onl">("cod");
+  const [timeLeft, setTimeLeft] = useState<number>(120);
 
   useEffect(() => {
     const getPurchaseProducts = async () => {
       try {
-        // Lấy dữ liệu từ AsyncStorage
         const storageData = await AsyncStorage.getItem(PURCHASE_PRODUCTS);
 
         if (storageData) {
           const parsedData = JSON.parse(storageData);
 
-          // Kiểm tra nếu có `updatedAt`
           if (parsedData?.updatedAt) {
             const currentTime = Date.now();
-            const timeDifference = currentTime - parsedData.updatedAt;
+            const timeElapsed = Math.floor((currentTime - parsedData.updatedAt) / 1000);
+            const remainingTime = 120 - timeElapsed;
 
-            // 5 phút = 5 * 60 * 1000 milliseconds
-            if (timeDifference > 5 * 60 * 1000) {
+            if (remainingTime <= 0) {
+              // Hết thời gian
               AsyncStorage.removeItem(PURCHASE_PRODUCTS);
-
               Toast.show({
                 type: "error",
                 text1: "Oops!!!",
                 text2: "Phiên thanh toán đã quá hạn, vui lòng thử lại sau!",
               });
-
               router.back();
               return;
             }
-          }
 
-          // Cập nhật state với danh sách sản phẩm
-          setPurchaseProducts(parsedData.products || []);
+            setTimeLeft(remainingTime); // Cập nhật thời gian còn lại
+            setPurchaseProducts(parsedData.products || []);
+          }
         }
       } catch (error) {
         console.error("Lỗi khi tải dữ liệu từ AsyncStorage:", error);
@@ -94,6 +93,29 @@ export default function PurchasePage() {
 
     getPurchaseProducts();
   }, [router]);
+
+  // Đếm ngược thời gian
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 1) {
+          // Hết thời gian
+          AsyncStorage.removeItem(PURCHASE_PRODUCTS);
+          Toast.show({
+            type: "error",
+            text1: "Oops!!!",
+            text2: "Phiên thanh toán đã quá hạn, vui lòng thử lại sau!",
+          });
+          clearInterval(interval);
+          router.back();
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval); // Clear interval khi component unmount
+  }, []);
 
   useEffect(() => {
     const getOrderProducts = async () => {
@@ -369,7 +391,7 @@ export default function PurchasePage() {
         </ModalBottomSheet>
 
         {/* Payment detail */}
-        <View className="mt-4 p-4 bg-white flex flex-col gap-4">
+        <View className="mt-4 p-4 mb-[124px] bg-white flex flex-col gap-4">
           <Text className="font-c-semibold">Chi tiết thanh toán</Text>
           <View className="flex flex-row justify-between items-center">
             <Text>Tổng tiền hàng</Text>
@@ -408,12 +430,34 @@ export default function PurchasePage() {
 
           <View className="px-4 border-b-[1px] border-gray-100"></View>
 
-          <View className="mb-4 flex flex-row justify-between items-center">
+          <View className="flex flex-row justify-between items-center">
             <Text>Tổng thanh toán</Text>
             <Text>{convertNumberToVND(1000000)}</Text>
           </View>
         </View>
       </ScrollView>
+
+      <View className="w-full h-[64px] absolute bottom-[52px] flex flex-row items-center gap-1 bg-white">
+        <ShieldCheck color="rgb(34 197 94)" size={18} />
+        <Text className="w-3/6 text-sm">
+          {" "}
+          Bạn đồng ý với{" "}
+          <Link href={"/term-of-service"} className="underline text-blue-500">
+            Điều khoản dịch vụ
+          </Link>{" "}
+          và{" "}
+          <Link href={"/privacy-policy"} className="underline text-blue-500">
+            Chính sách quyền riêng tư
+          </Link>{" "}
+          .
+        </Text>
+
+        {/* Mua hang */}
+        <TouchableOpacity className="flex-1 h-full p-2 bg-teal-500 flex justify-center items-center">
+          <Text className="font-c-semibold text-white">Mua hàng ({timeLeft}s)</Text>
+          <Text className="font-c-semibold text-white">{convertNumberToVND(1000000)}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

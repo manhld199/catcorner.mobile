@@ -11,7 +11,7 @@ import { convertNumberToVND } from "@/utils/functions/convert";
 // import types
 import { IProductVariant, IPurchaseProduct } from "@/types/interfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 
 export default function PurchaseInfo({
   title,
@@ -47,19 +47,24 @@ export default function PurchaseInfo({
           </View>
           <View className="flex flex-col gap-2">
             {(currentVariant?.variant_discount_percent || 0) > 0 ? (
-              <View className="flex flex-row gap-2 items-center">
-                <Text className="text-2xl font-c-semibold text-teal-400">
-                  {convertNumberToVND(
-                    currentVariant?.variant_discount_percent
-                      ? (currentVariant.variant_price *
-                          (100 - currentVariant.variant_discount_percent)) /
-                          100
-                      : currentVariant?.variant_price || 0
-                  )}
-                </Text>
+              <View className="flex flex-col gap-2">
                 <Text className="line-through text-base font-c-regular text-gray-600">
                   {convertNumberToVND(currentVariant?.variant_price || 0)}
                 </Text>
+                <View className="flex flex-row gap-2 items-center">
+                  <Text className="text-2xl font-c-semibold text-teal-400">
+                    {convertNumberToVND(
+                      currentVariant?.variant_discount_percent
+                        ? (currentVariant.variant_price *
+                            (100 - currentVariant.variant_discount_percent)) /
+                            100
+                        : currentVariant?.variant_price || 0
+                    )}
+                  </Text>
+                  <Text className="h-7 text-base text-red-500 px-4 bg-red-100 rounded-lg">
+                    -{currentVariant?.variant_discount_percent}%
+                  </Text>
+                </View>
               </View>
             ) : (
               <Text className="text-2xl font-c-semibold text-pri-6">
