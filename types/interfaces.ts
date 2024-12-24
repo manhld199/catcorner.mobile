@@ -151,7 +151,7 @@ export interface ICartProduct {
 }
 
 export interface IProductOrder {
-  _id: string;
+  product_hashed_id: string;
   product_name: string;
   product_slug: string;
   product_variant: IProductVariant;

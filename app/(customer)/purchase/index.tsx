@@ -9,13 +9,13 @@ import { Link, useRouter } from "expo-router";
 import { Text } from "@/components/Text";
 
 // import types
-import { IAddress, IProductOrder, IPurchaseProduct } from "@/types/interfaces";
+import { IAddress, IProductOrder, IPurchaseProduct, IUser } from "@/types/interfaces";
 
 // import providers
 import { AuthContext } from "@/providers";
 
 // import utils
-import { PURCHASE_PRODUCTS } from "@/utils/constants/variables";
+import { PAYMENT_PRODUCTS, PURCHASE_PRODUCTS } from "@/utils/constants/variables";
 import { postData } from "@/utils/functions/handle";
 import { PRODUCT_ORDER_URL } from "@/utils/constants/urls";
 import { CardCoupon, CardProductOrder, ModalBottomSheet, SelectAddress } from "@/components";
@@ -38,7 +38,7 @@ import React from "react";
 
 export default function PurchasePage() {
   const router = useRouter();
-  const { userInfo } = useContext(AuthContext) || { userInfo: {} };
+  const { userInfo } = useContext(AuthContext) || { userInfo: null };
 
   const [purchaseProducts, setPurchaseProducts] = useState<IPurchaseProduct[]>([]);
   const [orderProducts, setOrderProducts] = useState<IProductOrder[]>([]);
@@ -55,6 +55,7 @@ export default function PurchasePage() {
     street: "",
   });
   const [paymentMethod, setPaymentMethod] = useState<"cod" | "onl">("cod");
+  const [note, setNote] = useState<string>("");
   const [timeLeft, setTimeLeft] = useState<number>(120);
 
   useEffect(() => {
@@ -139,6 +140,60 @@ export default function PurchasePage() {
 
     getOrderProducts();
   }, [purchaseProducts]);
+
+  const handlePayment = async () => {
+    try {
+      // console.log("Bắt đầu xử lý thanh toán...");
+
+      const orderData = {
+        user_id: userInfo ? userInfo.user_id : undefined,
+        order_products: orderProducts.map((product) => ({
+          product_hashed_id: product.product_hashed_id,
+          variant_id: product.product_variant._id,
+          quantity: product.quantity,
+          unit_price: product.product_variant.variant_price,
+          discount_percent: product.product_variant.variant_discount_percent,
+        })),
+        order_buyer: {
+          name: userName,
+          phone_number: userPhone,
+          address: userAddress,
+        },
+        order_note: note,
+        // total_product_cost:
+      };
+
+      // Xóa dữ liệu PAYMENT_PRODUCTS cũ
+      await AsyncStorage.removeItem(PAYMENT_PRODUCTS);
+      // console.log("Đã xóa PAYMENT_PRODUCTS cũ");
+
+      // Chuẩn bị dữ liệu mới để lưu
+      const newPaymentData = {
+        updatedAt: Date.now(),
+        products: purchaseProducts.map((product) => ({
+          product_hashed_id: product.product_hashed_id,
+          quantity: product.quantity,
+          variant_id: product.variant_id || "",
+        })),
+        buyerInfo: {
+          buyerName: userName,
+          buyerPhone: userPhone,
+          buyerAddress: userAddress,
+        },
+        amount: 2000,
+        cancelUrl: "catcorner://",
+        returnUrl: "catcorner://",
+      };
+
+      // Lưu lại PAYMENT_PRODUCTS mới
+      await AsyncStorage.setItem(PAYMENT_PRODUCTS, JSON.stringify(newPaymentData));
+      // console.log("Đã lưu PAYMENT_PRODUCTS mới:", newPaymentData);
+
+      router.push("/payment");
+    } catch (error) {
+      console.error("Lỗi trong handlePayment:", error);
+    }
+  };
 
   // console.log("purchaseProducts", purchaseProducts);
   // console.log("orderProducts", orderProducts);
@@ -442,18 +497,21 @@ export default function PurchasePage() {
         <Text className="w-3/6 text-sm">
           {" "}
           Bạn đồng ý với{" "}
-          <Link href={"/term-of-service"} className="underline text-blue-500">
+          <Link href={"/term-of-service" as any} className="underline text-blue-500">
             Điều khoản dịch vụ
           </Link>{" "}
           và{" "}
-          <Link href={"/privacy-policy"} className="underline text-blue-500">
+          <Link href={"/privacy-policy" as any} className="underline text-blue-500">
             Chính sách quyền riêng tư
           </Link>{" "}
           .
         </Text>
 
         {/* Mua hang */}
-        <TouchableOpacity className="flex-1 h-full p-2 bg-teal-500 flex justify-center items-center">
+        <TouchableOpacity
+          className="flex-1 h-full p-2 bg-teal-500 flex justify-center items-center"
+          onPress={handlePayment}
+        >
           <Text className="font-c-semibold text-white">Mua hàng ({timeLeft}s)</Text>
           <Text className="font-c-semibold text-white">{convertNumberToVND(1000000)}</Text>
         </TouchableOpacity>
