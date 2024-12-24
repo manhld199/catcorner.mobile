@@ -16,11 +16,13 @@ export default function ProductCard({ product }: ProductCardProps) {
     <TouchableOpacity
       onPress={() =>
         router.push(
-          `/product/${product.product_slug}?pid=${encodeURIComponent(product.product_id_hashed)}`
+          `/product/${product.product_slug}?pid=${encodeURIComponent(
+            product.product_id_hashed
+          )}`
         )
       }
       // className="w-[48%] bg-pri-5 dark:bg-pri-7 rounded-md"
-      className="rounded-xl bg-white shadow shadow-gray-200 dark:bg-gray-800 w-[48%]"
+      className="rounded-xl bg-white shadow-md shadow-gray-400 dark:bg-gray-800 w-[48%]"
     >
       <View className="relative w-full p-4 flex flex-col justify-center items-center gap-2">
         {/* Discount Badge */}
@@ -80,14 +82,18 @@ export default function ProductCard({ product }: ProductCardProps) {
                 {variant}
               </Text>
             ))}
-          {Array.isArray(product.variant_name) && product.variant_name.length > 3 && (
-            <Text className="px-2 py-1 text-xs bg-gray-100 text-gray-500 rounded-full">...</Text>
-          )}
+          {Array.isArray(product.variant_name) &&
+            product.variant_name.length > 3 && (
+              <Text className="px-2 py-1 text-xs bg-gray-100 text-gray-500 rounded-full">
+                ...
+              </Text>
+            )}
         </View>
 
         {/* Price */}
         <View className="flex-row items-center justify-between w-full">
-          {product.lowest_price && product.lowest_price !== product.product_price ? (
+          {product.lowest_price &&
+          product.lowest_price !== product.product_price ? (
             <>
               <Text className="text-sm text-gray-500 line-through">
                 {convertNumberToVND(product.product_price)}

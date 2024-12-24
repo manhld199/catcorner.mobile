@@ -39,10 +39,22 @@ const options = [
 ];
 
 export default function ProfilePage() {
-  const { userInfo } = useContext(AuthContext) || { userInfo: {} };
+  const { userInfo } = useContext(AuthContext) || {};
+
   return (
     <>
       <View className="flex-1 bg-white dark:bg-gray-900 py-6">
+        {userInfo ? (
+          <>
+            <Text>ID: {userInfo.user_id}</Text>
+            <Text>Email: {userInfo.email}</Text>
+            <Text>Name: {userInfo.user_name}</Text>
+            <Text>Role: {userInfo.user_role}</Text>
+            <Text>Avatar: {userInfo.user_avt}</Text>
+          </>
+        ) : (
+          <Text>Loading user information...</Text>
+        )}
         {/* Profile Info */}
         <View className="items-center mb-6">
           <View className="rounded-full overflow-hidden border-2 border-teal-600">
@@ -53,8 +65,12 @@ export default function ProfilePage() {
               className="w-24 h-24"
             />
           </View>
-          <Text className="font-bold text-lg mt-4 dark:text-white">Phan Nguyễn Hải Yến</Text>
-          <Text className="text-gray-500 dark:text-gray-400">pnhaiyen@gmail.com</Text>
+          <Text className="font-bold text-lg mt-4 dark:text-white">
+            Phan Nguyễn Hải Yến
+          </Text>
+          <Text className="text-gray-500 dark:text-gray-400">
+            pnhaiyen@gmail.com
+          </Text>
           <Link
             href="/edit-information"
             className="bg-pri-1 dark:bg-teal-600 px-6 py-3 rounded-full mt-2"
@@ -82,7 +98,9 @@ export default function ProfilePage() {
                         name={item.icon as any}
                         size={20}
                         color={isLogout ? "red" : "#6b7280"}
-                        className={isLogout ? "dark:text-red-500" : "dark:text-gray-300"}
+                        className={
+                          isLogout ? "dark:text-red-500" : "dark:text-gray-300"
+                        }
                       />
                     </View>
                     <Text

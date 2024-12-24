@@ -155,7 +155,7 @@ export default function SearchPage() {
 
   return (
     <>
-      <ScrollView className="flex flex-col">
+      <ScrollView className="flex flex-col mb-20">
         <View className="w-full flex flex-col">
           {/* Input Search */}
           <LinearGradient className="w-full" colors={searchColorState as any}>

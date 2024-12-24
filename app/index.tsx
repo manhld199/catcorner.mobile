@@ -70,7 +70,7 @@ export default function HomeScreen() {
 
   return (
     <>
-      <ScrollView className="bg-white flex-1 dark:bg-zinc-900">
+      <ScrollView className="bg-white flex-1 dark:bg-zinc-900 mb-20">
         {/* Carousel */}
         <ProductCarousel images={images} />
 
