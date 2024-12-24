@@ -1,71 +1,69 @@
 {
-  "expo": {
-    "name": "catcorner",
-    "slug": "catcorner",
-    "scheme": "catcorner",
-    "version": "1.0.0",
-    "orientation": "portrait",
+  "name": "catcorner",
+  "slug": "catcorner",
+  "scheme": "catcorner",
+  "version": "1.0.0",
+  "orientation": "portrait",
+  "icon": "./assets/images/icon.png",
+  "userInterfaceStyle": "automatic",
+  "platforms": [
+    "ios",
+    "android",
+    "web"
+  ],
+  "assetBundlePatterns": [
+    "**/*"
+  ],
+  "web": {
+    "bundler": "metro",
+    "output": "static",
+    "favicon": "./assets/images/favicon.png"
+  },
+  "android": {
+    "permissions": [
+      "android.permission.RECORD_AUDIO"
+    ],
+    "package": "com.anonymous.catcornermobile",
+    "adaptiveIcon": {
+      "foregroundImage": "./assets/images/adaptive-icon.png",
+      "backgroundImage": "./assets/images/adaptive-icon.png",
+      "monochromeImage": "./assets/images/adaptive-icon.png",
+      "backgroundColor": "#FFFFFF"
+    },
     "icon": "./assets/images/icon.png",
-    "userInterfaceStyle": "automatic",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
+    "favicon": "./assets/images/favicon.png"
+  },
+  "plugins": [
+    "expo-router",
+    [
+      "expo-splash-screen",
+      {
+        "image": "./assets/images/splash.png",
+        "imageWidth": 200,
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff"
+      }
     ],
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+    "expo-font",
+    [
+      "expo-speech-recognition",
+      {
+        "microphonePermission": "Allow $(PRODUCT_NAME) to use the microphone.",
+        "speechRecognitionPermission": "Allow $(PRODUCT_NAME) to use speech recognition.",
+        "androidSpeechServicePackages": [
+          "com.google.android.googlequicksearchbox"
+        ]
+      }
+    ]
+  ],
+  "experiments": {
+    "typedRoutes": true
+  },
+  "ios": {
+    "infoPlist": {
+      "NSSpeechRecognitionUsageDescription": "Allow $(PRODUCT_NAME) to use speech recognition.",
+      "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to use the microphone."
     },
-    "android": {
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ],
-      "package": "com.anonymous.catcornermobile",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundImage": "./assets/images/adaptive-icon.png",
-        "monochromeImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      },
-      "icon": "./assets/images/icon.png",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/splash.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
-        }
-      ],
-      "expo-font",
-      [
-        "expo-speech-recognition",
-        {
-          "microphonePermission": "Allow $(PRODUCT_NAME) to use the microphone.",
-          "speechRecognitionPermission": "Allow $(PRODUCT_NAME) to use speech recognition.",
-          "androidSpeechServicePackages": [
-            "com.google.android.googlequicksearchbox"
-          ]
-        }
-      ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    },
-    "ios": {
-      "infoPlist": {
-        "NSSpeechRecognitionUsageDescription": "Allow $(PRODUCT_NAME) to use speech recognition.",
-        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to use the microphone."
-      },
-      "bundleIdentifier": "com.anonymous.catcornermobile"
-    }
+    "bundleIdentifier": "com.anonymous.catcornermobile"
   }
 }

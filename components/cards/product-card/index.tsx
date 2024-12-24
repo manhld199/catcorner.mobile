@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@/components/Text";
 import { IProductProps } from "@/types/interfaces";
 import { convertNumberToVND } from "@/utils/functions/convert";
+import { StarGroup } from "@/components";
 
 interface ProductCardProps {
   product: IProductProps;
@@ -22,19 +23,21 @@ export default function ProductCard({ product }: ProductCardProps) {
         )
       }
       // className="w-[48%] bg-pri-5 dark:bg-pri-7 rounded-md"
-      className="rounded-xl bg-white shadow-md shadow-gray-400 dark:bg-gray-800 w-[48%]"
+      className="rounded-xl bg-white shadow shadow-gray-400 dark:bg-gray-800 w-[48%]"
     >
       <View className="relative w-full p-4 flex flex-col justify-center items-center gap-2">
         {/* Discount Badge */}
-        {/* {product.highest_discount && (
+        {product.highest_discount && (
           <View className="absolute top-2 left-2 bg-red-600 px-2 py-1 rounded z-10">
-            <Text className="text-white text-xs font-c-bold">-{product.highest_discount}%</Text>
+            <Text className="text-white text-xs font-c-bold">
+              -{product.highest_discount}%
+            </Text>
           </View>
-        )} */}
+        )}
 
-        <View className="absolute top-2 left-2 bg-red-600 px-2 py-1 rounded z-10">
+        {/* <View className="absolute top-2 left-2 bg-red-600 px-2 py-1 rounded z-10">
           <Text className="text-white text-xs font-c-bold">-20%</Text>
-        </View>
+        </View> */}
 
         {/* Product Image */}
         {/* Container cho hình ảnh */}
@@ -58,17 +61,24 @@ export default function ProductCard({ product }: ProductCardProps) {
         </Text>
 
         {/* Rating and Sold */}
-        {/* <View className="flex-row items-center space-x-1 mb-2">
-          {Array.from({ length: 5 }).map((_, index) => (
+        <View className="w-full flex-row justify-start  items-center space-x-1 mb-2">
+          <StarGroup
+            rating={product?.product_rating?.rating_point || 0}
+            starSize={16}
+          />
+          {/* {Array.from({ length: 5 }).map((_, index) => (
             <Ionicons
               key={index}
-              name={index < (product.product_rating.rating_point ?? 0) ? "star" : "star-outline"}
+              name={index < (product?.product_rating?.rating_point || 0) ? "star" : "star-outline"}
               size={14}
               color="gold"
             />
-          ))}
-          <Text className="text-xs text-gray-500">({product.product_sold_quantity} sold)</Text>
-        </View> */}
+          ))} */}
+          <Text className="text-xs text-gray-500">
+            {" "}
+            ({product.product_sold_quantity} sold)
+          </Text>
+        </View>
 
         {/* Variants */}
         <View className="flex-row flex-wrap gap-1">
