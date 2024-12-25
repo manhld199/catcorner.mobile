@@ -5,6 +5,7 @@ import { Plus, Minus } from "lucide-react-native";
 
 // import compoents
 import { Input } from "../../Input";
+import { useColorScheme } from "nativewind";
 
 interface QuantityInputProps {
   value?: number; // Giá trị ban đầu
@@ -21,6 +22,7 @@ const QuantityInput: React.FC<QuantityInputProps> = ({
   step = 1,
   onChange,
 }) => {
+  const { colorScheme } = useColorScheme();
   const [quantity, setQuantity] = useState(value);
 
   // Hàm cập nhật giá trị
@@ -62,17 +64,28 @@ const QuantityInput: React.FC<QuantityInputProps> = ({
       {/* Nút giảm */}
       <TouchableOpacity
         onPress={handleDecrease}
-        className={`w-10 h-full flex justify-center items-center rounded-l-md border-[1px] border-gray-200 ${
-          quantity <= min ? "" : "bg-gray-100"
+        className={`w-10 h-full flex justify-center items-center rounded-l-md border-[1px] border-gray-200 dark:border-gray-400 ${
+          quantity <= min ? "" : "bg-gray-100 dark:bg-pri-6"
         }`}
         disabled={quantity <= min}
       >
-        <Minus size={18} color={quantity > min ? "#000" : "#ccc"} />
+        <Minus
+          size={18}
+          color={
+            quantity > min
+              ? colorScheme == "light"
+                ? "#000"
+                : "#ccc"
+              : colorScheme == "light"
+              ? "#000"
+              : "#ccc"
+          }
+        />
       </TouchableOpacity>
 
       {/* Input */}
       <Input
-        className="w-16 !h-full text-center text-lg border border-gray-200 rounded-none"
+        className="w-16 !h-full text-center text-lg border border-gray-200 dark:border-gray-400 rounded-none"
         value={quantity.toString()}
         keyboardType="numeric"
         onChangeText={handleInputChange}
@@ -82,12 +95,23 @@ const QuantityInput: React.FC<QuantityInputProps> = ({
       {/* Nút tăng */}
       <TouchableOpacity
         onPress={handleIncrease}
-        className={`w-10 h-full flex justify-center items-center rounded-r-md border-[1px] border-gray-200 ${
-          quantity >= max ? "" : "bg-gray-100"
+        className={`w-10 h-full flex justify-center items-center rounded-r-md border-[1px] border-gray-200 dark:border-gray-400 ${
+          quantity >= max ? "" : "bg-gray-100 dark:bg-pri-6"
         }`}
         disabled={quantity >= max}
       >
-        <Plus size={18} color={quantity < max ? "#000" : "#ccc"} />
+        <Plus
+          size={18}
+          color={
+            quantity < max
+              ? colorScheme == "light"
+                ? "#000"
+                : "#ccc"
+              : colorScheme == "light"
+              ? "#000"
+              : "#ccc"
+          }
+        />
       </TouchableOpacity>
     </View>
   );

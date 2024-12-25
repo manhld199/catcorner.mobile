@@ -92,7 +92,7 @@ export const ModalBottomSheet: React.FC<BottomSheetModalProps> = ({
 
   return (
     <Modal transparent animationType="none" visible={visible} onRequestClose={closeModal}>
-      <View className="flex-1 bg-black/20">
+      <View className="flex-1 bg-black/20 dark:bg-black/60">
         {/* Nền xám bấm để đóng */}
         <TouchableWithoutFeedback onPress={closeModal}>
           <View className="flex-1" />
@@ -100,7 +100,7 @@ export const ModalBottomSheet: React.FC<BottomSheetModalProps> = ({
 
         {/* Nội dung modal */}
         <Animated.View
-          className={`${modalHeight ? modalHeight : "h-1/2"} w-full bg-white ${
+          className={`${modalHeight ? modalHeight : "h-1/2"} w-full bg-white dark:bg-zinc-900 ${
             modalHeight === "h-full" ? "pt-4" : "rounded-t-xl pt-2.5"
           } px-4`}
           {...panResponder.panHandlers}

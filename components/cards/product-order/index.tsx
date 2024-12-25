@@ -12,15 +12,17 @@ import { convertNumberToVND } from "@/utils/functions/convert";
 
 export default function CardProductOrder({ product }: { product: IProductOrder }) {
   return (
-    <View className="p-2 bg-pri-5 rounded-lg flex flex-row gap-4">
-      <View className="w-[100px] aspect-square rounded-lg border-[1px] border-gray-200 overflow-hidden bg-white">
+    <View className="p-2 bg-pri-5 dark:bg-pri-6 rounded-lg flex flex-row gap-4">
+      <View className="w-[100px] aspect-square rounded-lg border-[1px] border-gray-200 dark:border-gray-100 overflow-hidden bg-white dark:bg-gray-700">
         <Image source={{ uri: product.product_variant.variant_img }} className="w-full h-full" />
       </View>
 
       <View className="flex-1 flex flex-col justify-between">
         <View className="flex flex-col gap-1">
           <Text className="line-clamp-1">{product.product_name}</Text>
-          <Text className="text-gray-600">Phân loại: {product.product_variant.variant_name}</Text>
+          <Text className="text-gray-600 dark:text-gray-300">
+            Phân loại: {product.product_variant.variant_name}
+          </Text>
         </View>
 
         <View className="flex flex-row justify-between">
@@ -33,7 +35,7 @@ export default function CardProductOrder({ product }: { product: IProductOrder }
                     100
                 )}
               </Text>
-              <Text className="text-base text-gray-600 line-through">
+              <Text className="text-base text-gray-600 dark:text-gray-300 line-through">
                 {convertNumberToVND(product.product_variant.variant_price)}
               </Text>
             </View>

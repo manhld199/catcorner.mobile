@@ -6,7 +6,7 @@ import StarGroup from "../../star-group";
 export default function CardReview({ type = 1 }: { type?: number }) {
   if (type == 1)
     return (
-      <View className="w-full h-[100px] p-4 bg-pri-5 rounded-lg flex flex-row gap-2">
+      <View className="w-full h-[100px] p-4 bg-pri-5 dark:bg-pri-6 rounded-lg flex flex-row gap-2">
         <View className="flex-1 flex flex-col gap-2">
           <Text className="line-clamp-2">
             CardReviewCardReviewCardReviewCardReviewCardReviewCardReview
@@ -38,7 +38,7 @@ export default function CardReview({ type = 1 }: { type?: number }) {
     );
   else if (type == 2)
     return (
-      <View className="w-full p-4 bg-pri-5 rounded-lg flex flex-col gap-2">
+      <View className="w-full p-4 bg-pri-5 dark:bg-pri-6 rounded-lg flex flex-col gap-2">
         <View className="flex flex-row gap-2 items-center">
           <View className="w-[40px] aspect-square">
             <Image

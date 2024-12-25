@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import addressData from "./data.json";
 import { IAddress } from "@/types/interfaces";
 import { Input } from "@/components/Input";
-import { SelectDefault } from "@/components";
+import Select from "../default"; // Sử dụng component Select custom
 
 // Khai báo kiểu cho props
 interface AddressSelectProps {
@@ -12,9 +12,9 @@ interface AddressSelectProps {
 }
 
 export default function AddressSelect({ value, onChange }: AddressSelectProps) {
-  const [selectedProvince, setSelectedProvince] = useState<string | null>(value?.province || "");
-  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(value?.district || "");
-  const [selectedWard, setSelectedWard] = useState<string | null>(value?.ward || "");
+  const [selectedProvince, setSelectedProvince] = useState<string>(value?.province || "");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>(value?.district || "");
+  const [selectedWard, setSelectedWard] = useState<string>(value?.ward || "");
   const [street, setStreet] = useState(value?.street || "");
 
   const provinces = addressData.map((province) => ({
@@ -36,15 +36,12 @@ export default function AddressSelect({ value, onChange }: AddressSelectProps) {
         .find((province) => province.Name === selectedProvince)
         ?.Districts.find((district) => district.Name === selectedDistrict)
         ?.Wards.map((ward) => ({
-          label: ward.Name,
-          value: ward.Name,
+          label: (ward as any).Name,
+          value: (ward as any).Name,
         }))
     : [];
 
-  const updateAddress = (
-    key: "province" | "district" | "ward" | "street",
-    value: string | null
-  ) => {
+  const updateAddress = (key: "province" | "district" | "ward" | "street", value: string) => {
     const newAddress = {
       province: selectedProvince,
       district: selectedDistrict,
@@ -66,9 +63,9 @@ export default function AddressSelect({ value, onChange }: AddressSelectProps) {
   };
 
   return (
-    <View className="flex flex-row flex-wrap gap-2 justify-between">
-      <View className="w-[49%] flex flex-col gap-2">
-        <Text className="font-c-semibold text-gray-700 mb-2">Số nhà</Text>
+    <View className="flex-row flex-wrap justify-between gap-2">
+      <View className="w-[49%]">
+        <Text className="text-lg text-black dark:text-white font-c-medium mb-1">Số nhà</Text>
         <Input
           placeholder="Nhập số nhà"
           value={street}
@@ -79,9 +76,11 @@ export default function AddressSelect({ value, onChange }: AddressSelectProps) {
         />
       </View>
 
-      <View className="w-[49%] flex flex-col gap-2">
-        <Text className="font-c-semibold text-gray-700 mb-2">Tỉnh/Thành phố</Text>
-        <SelectDefault
+      <View className="w-[49%]">
+        <Text className="text-lg text-black dark:text-white font-c-medium mb-1">
+          Tỉnh/Thành phố
+        </Text>
+        <Select
           items={provinces}
           value={selectedProvince}
           onValueChange={(value) => {
@@ -91,10 +90,10 @@ export default function AddressSelect({ value, onChange }: AddressSelectProps) {
         />
       </View>
 
-      <View className="w-[49%] flex flex-col gap-2">
-        <Text className="font-c-semibold text-gray-700 mb-2">Quận/Huyện</Text>
-        <SelectDefault
-          items={districts}
+      <View className="w-[49%]">
+        <Text className="text-lg text-black dark:text-white font-c-medium mb-1">Quận/Huyện</Text>
+        <Select
+          items={districts as any}
           value={selectedDistrict}
           onValueChange={(value) => {
             setSelectedDistrict(value);
@@ -104,10 +103,10 @@ export default function AddressSelect({ value, onChange }: AddressSelectProps) {
         />
       </View>
 
-      <View className="w-[49%] flex flex-col gap-2">
-        <Text className="font-c-semibold text-gray-700 mb-2">Phường/Xã</Text>
-        <SelectDefault
-          items={wards}
+      <View className="w-[49%]">
+        <Text className="text-lg text-black dark:text-white font-c-medium mb-1">Phường/Xã</Text>
+        <Select
+          items={wards as any}
           value={selectedWard}
           onValueChange={(value) => {
             setSelectedWard(value);

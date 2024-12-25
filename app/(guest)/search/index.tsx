@@ -3,12 +3,14 @@ import { ScrollView, View, useColorScheme, ActivityIndicator, Image } from "reac
 import { ArrowLeft, Mic, MicOff, Search } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ExpoSpeechRecognitionModule, useSpeechRecognitionEvent } from "expo-speech-recognition";
+import Toast from "react-native-toast-message";
 
 // import components
 import { CardCategory, CardSuggestedProduct } from "@/components";
 import { Button } from "@/components/Button";
 import { Text } from "@/components/Text";
 import { Input } from "@/components/Input";
+import { CustomerAppbar } from "@/partials";
 
 // import interfaces
 import { ICategory, IProductSuggest } from "@/types/interfaces";
@@ -16,8 +18,6 @@ import { ICategory, IProductSuggest } from "@/types/interfaces";
 // import utils
 import { RECOMMEND_CATEGORY_URL, RECOMMEND_SEARCH_URL } from "@/utils/constants/urls";
 import { getData } from "@/utils/functions/handle";
-import { CustomerAppbar } from "@/partials";
-import Toast from "react-native-toast-message";
 
 export default function SearchPage() {
   const colorScheme = useColorScheme();
@@ -174,7 +174,7 @@ export default function SearchPage() {
           {/* Suggested Products */}
           <View className="w-full px-4 py-4 bg-white dark:bg-zinc-900">
             <Text className="w-full text-center font-c-semibold text-gray-600 dark:text-white">
-              Sản phẩm gợi ý
+              Kết quả tìm kiếm
             </Text>
             <View className="w-1/3 h-[1.5px] mx-auto my-2 bg-teal-300"></View>
             {isProductLoading ? (
