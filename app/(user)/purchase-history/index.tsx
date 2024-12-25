@@ -52,6 +52,36 @@ export default function PurchaseHistoryPage() {
       },
       total: 196000,
     },
+    {
+      id: 3,
+      order_id: "#ĐH000000002",
+      status: "Đã giao",
+      product: {
+        image:
+          "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg",
+        name: "Pate cho mèo Royal Canin",
+        sku: "CB02",
+        quantity: 1,
+        originalPrice: 300000,
+        discountedPrice: 204000,
+      },
+      total: 196000,
+    },
+    {
+      id: 4,
+      order_id: "#ĐH000000002",
+      status: "Đã hủy",
+      product: {
+        image:
+          "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg",
+        name: "Pate cho mèo Royal Canin",
+        sku: "CB02",
+        quantity: 1,
+        originalPrice: 300000,
+        discountedPrice: 204000,
+      },
+      total: 196000,
+    },
   ];
 
   const getStatusStyle = (status: any) => {

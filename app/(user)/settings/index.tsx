@@ -38,7 +38,6 @@ export default function SettingsPage() {
     { id: 7, icon: "document-outline", label: "Cookies Policy" },
     { id: 8, icon: "mail-outline", label: "Contact" },
     { id: 9, icon: "chatbox-ellipses-outline", label: "Feedback" },
-    { id: 10, icon: "log-out-outline", label: "Logout" },
   ];
 
   return (

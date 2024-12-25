@@ -20,6 +20,9 @@ export interface IUser {
   new_password?: string;
   token?: string;
   otp?: string;
+  user_phone?: string;
+  user_gender?: String;
+  user_birthday?: Date;
 }
 
 export interface IProductSuggest {
@@ -163,4 +166,11 @@ export interface IAddress {
   district: string;
   ward: string;
   street: string;
+}
+
+export interface IOption {
+  id: number;
+  title: string;
+  icon: string;
+  link: string;
 }
