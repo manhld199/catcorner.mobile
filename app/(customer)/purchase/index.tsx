@@ -15,9 +15,9 @@ import { IAddress, IProductOrder, IPurchaseProduct, IUser } from "@/types/interf
 import { AuthContext } from "@/providers";
 
 // import utils
-import { PAYMENT_PRODUCTS, PURCHASE_PRODUCTS } from "@/utils/constants/variables";
+import { PAYMENT_PRODUCTS, PURCHASE_PRODUCTS, SHIPPING_COST } from "@/utils/constants/variables";
 import { postData } from "@/utils/functions/handle";
-import { PRODUCT_ORDER_URL } from "@/utils/constants/urls";
+import { ORDERS_URL, PRODUCT_ORDER_URL } from "@/utils/constants/urls";
 import { CardCoupon, CardProductOrder, ModalBottomSheet, SelectAddress } from "@/components";
 import {
   ChevronRight,
@@ -56,7 +56,7 @@ export default function PurchasePage() {
   });
   const [paymentMethod, setPaymentMethod] = useState<"cod" | "onl">("cod");
   const [note, setNote] = useState<string>("");
-  const [timeLeft, setTimeLeft] = useState<number>(120);
+  const [timeLeft, setTimeLeft] = useState<number>(300);
 
   useEffect(() => {
     const getPurchaseProducts = async () => {
@@ -143,9 +143,19 @@ export default function PurchasePage() {
 
   const handlePayment = async () => {
     try {
-      // console.log("Bắt đầu xử lý thanh toán...");
+      // Xóa dữ liệu PAYMENT_PRODUCTS cũ
+      await AsyncStorage.removeItem(PAYMENT_PRODUCTS);
+      // console.log("Đã xóa PAYMENT_PRODUCTS cũ");
 
-      const orderData = {
+      const orderId = `#DH${Date.now()}${
+        userInfo
+          ? `.#${userInfo.user_id}`
+          : `.#guest${userPhone}_${Math.round(Math.random() * 1000)}`
+      }`;
+
+      // Chuẩn bị dữ liệu mới để lưu
+      const newPaymentData = {
+        order_id: orderId,
         user_id: userInfo ? userInfo.user_id : undefined,
         order_products: orderProducts.map((product) => ({
           product_hashed_id: product.product_hashed_id,
@@ -159,31 +169,14 @@ export default function PurchasePage() {
           phone_number: userPhone,
           address: userAddress,
         },
-        order_note: note,
-        // total_product_cost:
+        order_note: note == "" ? undefined : note,
+        shipping_cost: SHIPPING_COST,
+        paymentMethod,
+        cancelUrl: "catcorner://purchase-history?selectedTab=unpaid",
+        returnUrl: `catcorner://order-success?orderId=${orderId}`,
       };
 
-      // Xóa dữ liệu PAYMENT_PRODUCTS cũ
-      await AsyncStorage.removeItem(PAYMENT_PRODUCTS);
-      // console.log("Đã xóa PAYMENT_PRODUCTS cũ");
-
-      // Chuẩn bị dữ liệu mới để lưu
-      const newPaymentData = {
-        updatedAt: Date.now(),
-        products: purchaseProducts.map((product) => ({
-          product_hashed_id: product.product_hashed_id,
-          quantity: product.quantity,
-          variant_id: product.variant_id || "",
-        })),
-        buyerInfo: {
-          buyerName: userName,
-          buyerPhone: userPhone,
-          buyerAddress: userAddress,
-        },
-        amount: 2000,
-        cancelUrl: "catcorner://",
-        returnUrl: "catcorner://",
-      };
+      // console.log("newPaymentData", newPaymentData);
 
       // Lưu lại PAYMENT_PRODUCTS mới
       await AsyncStorage.setItem(PAYMENT_PRODUCTS, JSON.stringify(newPaymentData));

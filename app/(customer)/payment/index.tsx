@@ -31,6 +31,7 @@ export default function PaymentPage() {
         }
 
         const paymentData = JSON.parse(storedData);
+        console.log("paymentData", paymentData);
 
         const response = await fetch(
           `${process.env.EXPO_PUBLIC_BACKEND_URL}/payos/create-payment-link`,
