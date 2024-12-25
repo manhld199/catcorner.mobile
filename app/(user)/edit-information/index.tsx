@@ -20,10 +20,14 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { AuthContext } from "@/providers";
 import { CHANGE_PROFILE_URL } from "@/utils/constants/urls";
 import { putData } from "@/utils/functions/handle";
+import { IUser } from "@/types/interfaces";
 
 export default function EditUserInformationPage() {
   const router = useRouter();
-  const { userInfo, updateUserInfo } = useContext(AuthContext) || {};
+  const { userInfo, updateUserInfo } = useContext(AuthContext) || {
+    login: async (user: IUser) => {},
+    updateUserInfo: async (user: IUser) => {},
+  };
 
   // Khởi tạo state với dữ liệu từ userInfo hoặc placeholder
   const [email, setEmail] = useState(userInfo?.email || "");
@@ -70,14 +74,12 @@ export default function EditUserInformationPage() {
 
         await updateUserInfo(updatedUser);
 
-        Alert.alert("Thành công", "Thông tin đã được cập nhật.");
         router.push("/information");
       } else {
         Alert.alert("Lỗi", message || "Không thể cập nhật thông tin.");
       }
     } catch (error) {
       console.error("Update Error:", error);
-      Alert.alert("Lỗi", "Đã xảy ra lỗi trong quá trình cập nhật.");
     } finally {
       setLoading(false);
     }

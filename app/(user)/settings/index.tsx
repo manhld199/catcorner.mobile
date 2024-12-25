@@ -1,20 +1,23 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, TouchableOpacity, ScrollView, Switch } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useColorScheme } from "nativewind";
 import { ArrowBack, SwitchTheme } from "@/components";
 import { Text } from "@/components/Text";
 import { useRouter } from "expo-router"; // Import useRouter
+import { AuthContext } from "@/providers";
 
 export default function SettingsPage() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const { colorScheme } = useColorScheme();
   const router = useRouter(); // Initialize router
+  const { userInfo } = useContext(AuthContext) || {}; // Get userInfo from AuthContext
 
   const toggleNotifications = () => {
     setNotificationsEnabled((prev) => !prev);
   };
 
+  // Các tùy chọn cài đặt
   const settingsOptions = [
     {
       id: 1,
@@ -33,12 +36,16 @@ export default function SettingsPage() {
       label: "Chế độ tối",
       action: <SwitchTheme />,
     },
-    {
-      id: 3,
-      icon: "key-outline",
-      label: "Đổi mật khẩu",
-      onPress: () => router.push("/change-password"), // Navigate to /change-password
-    },
+    ...(userInfo
+      ? [
+          {
+            id: 3,
+            icon: "key-outline",
+            label: "Đổi mật khẩu",
+            onPress: () => router.push("/change-password"), // Navigate to /change-password
+          },
+        ]
+      : []), // Chỉ thêm mục "Đổi mật khẩu" khi có userInfo
     { id: 4, icon: "star-outline", label: "Đánh giá ứng dụng" },
     { id: 5, icon: "lock-closed-outline", label: "Chính sách bảo mật" },
     { id: 6, icon: "document-text-outline", label: "Điều khoản sử dụng" },
