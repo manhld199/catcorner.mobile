@@ -7,6 +7,7 @@ export interface IAuthContext {
   logout: () => any;
   verifyEmail: (user: IUser) => any;
   verifyOtp: (user: IUser) => any;
+  updateUserInfo: (user: IUser) => any;
 }
 
 export interface IUser {
@@ -20,9 +21,9 @@ export interface IUser {
   new_password?: string;
   token?: string;
   otp?: string;
-  user_phone?: string;
-  user_gender?: String;
-  user_birthday?: Date;
+  user_phone_number?: string;
+  user_gender?: string;
+  user_birth_day?: Date;
 }
 
 export interface IProductSuggest {

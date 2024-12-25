@@ -4,10 +4,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useColorScheme } from "nativewind";
 import { ArrowBack, SwitchTheme } from "@/components";
 import { Text } from "@/components/Text";
+import { useRouter } from "expo-router"; // Import useRouter
 
 export default function SettingsPage() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const { colorScheme } = useColorScheme();
+  const router = useRouter(); // Initialize router
 
   const toggleNotifications = () => {
     setNotificationsEnabled((prev) => !prev);
@@ -17,7 +19,7 @@ export default function SettingsPage() {
     {
       id: 1,
       icon: "notifications-outline",
-      label: "Notification",
+      label: "Thông báo",
       action: (
         <Switch
           value={notificationsEnabled}
@@ -28,16 +30,20 @@ export default function SettingsPage() {
     {
       id: 2,
       icon: "moon-outline",
-      label: "Dark Mode",
+      label: "Chế độ tối",
       action: <SwitchTheme />,
     },
-    { id: 3, icon: "star-outline", label: "Rate App" },
-    { id: 4, icon: "share-social-outline", label: "Share App" },
-    { id: 5, icon: "lock-closed-outline", label: "Privacy Policy" },
-    { id: 6, icon: "document-text-outline", label: "Terms and Conditions" },
-    { id: 7, icon: "document-outline", label: "Cookies Policy" },
-    { id: 8, icon: "mail-outline", label: "Contact" },
-    { id: 9, icon: "chatbox-ellipses-outline", label: "Feedback" },
+    {
+      id: 3,
+      icon: "key-outline",
+      label: "Đổi mật khẩu",
+      onPress: () => router.push("/change-password"), // Navigate to /change-password
+    },
+    { id: 4, icon: "star-outline", label: "Đánh giá ứng dụng" },
+    { id: 5, icon: "lock-closed-outline", label: "Chính sách bảo mật" },
+    { id: 6, icon: "document-text-outline", label: "Điều khoản sử dụng" },
+    { id: 8, icon: "mail-outline", label: "Liên hệ với chúng tôi" },
+    { id: 9, icon: "chatbox-ellipses-outline", label: "Khiếu nại" },
   ];
 
   return (
@@ -57,14 +63,18 @@ export default function SettingsPage() {
             key={item.id}
             className="flex-row items-center justify-between py-4 border-b border-gray-200 dark:border-gray-700"
             onPress={() => {
-              if (!item.action) alert(`${item.label} clicked!`);
+              if (item.onPress) {
+                item.onPress(); // Trigger navigation or other action
+              } else if (!item.action) {
+                alert(`${item.label} clicked!`);
+              }
             }}
           >
             <View className="flex-row items-center">
               <Ionicons
                 name={item.icon as any}
                 size={20}
-                color={colorScheme === "dark" ? "white" : "black"} // Hiển thị màu tùy vào trạng thái dark mode
+                color={colorScheme === "dark" ? "white" : "black"}
                 className="mr-4"
               />
               <Text className="text-gray-800 dark:text-gray-300 text-base">

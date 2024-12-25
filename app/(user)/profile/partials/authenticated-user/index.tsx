@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { View, Image, FlatList, TouchableOpacity } from "react-native";
+import React, { useContext, useState } from "react";
+import { View, Image, FlatList, TouchableOpacity, Modal } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { IOption, IUser } from "@/types/interfaces";
@@ -17,6 +17,12 @@ export default function AuthenticatedUser({
   options,
 }: AuthenticatedUserProps) {
   const { logout } = useContext(AuthContext) || {};
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const handleLogout = () => {
+    setShowLogoutModal(false); // Đóng popup
+    logout?.(); // Chỉ gọi logout nếu nó được định nghĩa
+  };
 
   return (
     <>
@@ -53,9 +59,9 @@ export default function AuthenticatedUser({
         renderItem={({ item }) => {
           const isLogout = item.title === "Đăng xuất"; // Kiểm tra nếu là nút Đăng xuất
           return isLogout ? (
-            // Gắn sự kiện `logout` vào nút Đăng xuất
+            // Mở Modal xác nhận khi nhấn nút Đăng xuất
             <TouchableOpacity
-              onPress={logout}
+              onPress={() => setShowLogoutModal(true)}
               className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100 dark:border-gray-800"
             >
               <View className="flex-row items-center">
@@ -98,6 +104,43 @@ export default function AuthenticatedUser({
         }}
         contentContainerStyle={{ paddingBottom: 20 }}
       />
+
+      {/* Logout Confirmation Modal */}
+      <Modal
+        visible={showLogoutModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowLogoutModal(false)}
+      >
+        <View className="flex-1 justify-center items-center bg-black/50 bg-opacity-50">
+          <View className="bg-white dark:bg-gray-800 w-3/4 rounded-lg p-6">
+            <Text className="font-c-bold text-lg mb-4 text-gray-800 dark:text-white">
+              Xác nhận đăng xuất
+            </Text>
+            <Text className="text-gray-500 mb-6">
+              Bạn có chắc chắn muốn đăng xuất không?
+            </Text>
+            <View className="flex-row justify-between">
+              <TouchableOpacity
+                onPress={() => setShowLogoutModal(false)}
+                className="bg-gray-300 dark:bg-gray-600 py-3 w-32 rounded-lg"
+              >
+                <Text className="text-gray-800 dark:text-white text-center text-sm">
+                  Hủy
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleLogout}
+                className="bg-red-500 py-3 w-32 rounded-lg text-center"
+              >
+                <Text className="text-white text-center text-sm">
+                  Đăng xuất
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 }

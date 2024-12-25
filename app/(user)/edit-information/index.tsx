@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { getAccessToken } from "@/lib/authStorage";
 import {
   View,
   ScrollView,
@@ -6,58 +7,88 @@ import {
   Image,
   Platform,
   Modal,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 
 import { Text } from "@/components/Text";
 import { Input1 } from "@/components/TextInput";
-import { Input } from "@/components/Input";
 import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { AuthContext } from "@/providers";
+import { CHANGE_PROFILE_URL } from "@/utils/constants/urls";
+import { putData } from "@/utils/functions/handle";
 
 export default function EditUserInformationPage() {
   const router = useRouter();
-  const { userInfo } = useContext(AuthContext) || {}; // Lấy thông tin người dùng từ AuthContext
+  const { userInfo, updateUserInfo } = useContext(AuthContext) || {};
 
   // Khởi tạo state với dữ liệu từ userInfo hoặc placeholder
   const [email, setEmail] = useState(userInfo?.email || "");
-  const [phone, setPhone] = useState(userInfo?.user_phone || "");
+  const [phone, setPhone] = useState(userInfo?.user_phone_number || "");
   const [gender, setGender] = useState(userInfo?.user_gender || "");
   const [dob, setDob] = useState(
-    userInfo?.user_birthday ? new Date(userInfo.user_birthday) : null
+    userInfo?.user_birth_day ? new Date(userInfo.user_birth_day) : null
   );
   const [avatar, setAvatar] = useState(
     userInfo?.user_avt ||
-      "https://dogily.vn/wp-content/swift-ai/images/wp-content/uploads/2021/08/tuoi-tho-meo-munchkin-jpg.webp" // Avatar mặc định nếu không có
+      "https://dogily.vn/wp-content/swift-ai/images/wp-content/uploads/2021/08/tuoi-tho-meo-munchkin-jpg.webp"
   );
-
+  const [loading, setLoading] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showGenderModal, setShowGenderModal] = useState(false);
 
-  // Cập nhật dữ liệu khi userInfo thay đổi
-  useEffect(() => {
-    setEmail(userInfo?.email || "");
-    setPhone(userInfo?.user_phone || "");
-    setGender(userInfo?.user_gender || "");
-    setDob(userInfo?.user_birthday ? new Date(userInfo.user_birthday) : null);
-    setAvatar(
-      userInfo?.user_avt ||
-        "https://dogily.vn/wp-content/swift-ai/images/wp-content/uploads/2021/08/tuoi-tho-meo-munchkin-jpg.webp"
-    );
-  }, [userInfo]);
+  const saveChanges = async () => {
+    setLoading(true);
 
-  const saveChanges = () => {
-    alert("Thông tin đã được lưu!");
-    router.push("/information");
+    const payload = {
+      email,
+      user_phone_number: phone,
+      user_gender: gender,
+      user_birth_day: dob ? dob.toISOString().split("T")[0] : null,
+      user_avt: avatar,
+    };
+
+    try {
+      const token = await getAccessToken();
+      if (!token) {
+        Alert.alert("Lỗi", "Không tìm thấy token. Vui lòng đăng nhập lại.");
+        setLoading(false);
+        return;
+      }
+
+      const { data, message } = await putData(
+        CHANGE_PROFILE_URL,
+        payload,
+        token
+      );
+
+      if (data) {
+        const updatedUser = data.data.user || payload;
+
+        await updateUserInfo(updatedUser);
+
+        Alert.alert("Thành công", "Thông tin đã được cập nhật.");
+        router.push("/information");
+      } else {
+        Alert.alert("Lỗi", message || "Không thể cập nhật thông tin.");
+      }
+    } catch (error) {
+      console.error("Update Error:", error);
+      Alert.alert("Lỗi", "Đã xảy ra lỗi trong quá trình cập nhật.");
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // Hàm chọn ảnh
   const pickImage = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
-      alert("Bạn cần cấp quyền để chọn ảnh!");
+      Alert.alert("Quyền truy cập", "Bạn cần cấp quyền để chọn ảnh.");
       return;
     }
 
@@ -102,6 +133,15 @@ export default function EditUserInformationPage() {
           <Text className="text-teal-500 dark:text-teal-400">Lưu</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Loading Indicator */}
+      {loading && (
+        <ActivityIndicator
+          size="large"
+          color="#00ff00"
+          style={{ marginTop: 20 }}
+        />
+      )}
 
       {/* Avatar */}
       <View className="items-center mt-6 mb-6">
@@ -174,10 +214,10 @@ export default function EditUserInformationPage() {
             animationType="fade"
             onRequestClose={() => setShowGenderModal(false)}
           >
-            <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
+            <View className="flex-1 justify-center items-center bg-black/50">
               <View className="bg-white dark:bg-gray-800 w-3/4 rounded-lg p-6">
                 <Text className="font-bold text-lg mb-4 text-gray-800 dark:text-white">
-                  Chọn Giới Tính
+                  Chọn giới tính
                 </Text>
                 {["Nam", "Nữ", "Khác"].map((option) => (
                   <TouchableOpacity

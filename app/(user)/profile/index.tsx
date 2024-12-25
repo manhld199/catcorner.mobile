@@ -60,7 +60,6 @@ const pre_options = [
 
 export default function ProfilePage() {
   const { userInfo } = useContext(AuthContext) || {};
-
   return (
     <>
       <View className="flex-1 bg-white dark:bg-gray-900 py-6">

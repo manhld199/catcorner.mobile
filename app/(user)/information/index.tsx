@@ -32,7 +32,16 @@ export default function UserInformationPage() {
       {/* Header */}
       <View className="relative bg-gradient-to-r from-pink-500 to-purple-500 h-64 items-center justify-center dark:from-gray-800 dark:to-gray-900">
         {/* Nút Back */}
-        <ArrowBackFix />
+        <TouchableOpacity
+          onPress={() => router.push("/profile")}
+          className="absolute top-8 left-4"
+        >
+          <Ionicons
+            name="arrow-back-outline"
+            size={20}
+            color={colorScheme === "dark" ? "white" : "black"}
+          />
+        </TouchableOpacity>
         <Image
           source={{
             uri:
@@ -63,7 +72,7 @@ export default function UserInformationPage() {
             EMAIL CỦA BẠN
           </Text>
           <Input1
-            value={userInfo.email || "Chưa cập nhật"} // Hiển thị email từ userInfo
+            value={userInfo.email || "Chưa cập nhật"}
             editable={false}
             className="border-b border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white text-sm pb-2"
           />
@@ -75,7 +84,7 @@ export default function UserInformationPage() {
             SỐ ĐIỆN THOẠI CỦA BẠN
           </Text>
           <Input1
-            value={userInfo.user_phone || "Chưa cập nhật"}
+            value={userInfo.user_phone_number || "Chưa cập nhật"}
             editable={false}
             className="border-b border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white text-sm pb-2"
           />
@@ -87,7 +96,7 @@ export default function UserInformationPage() {
             GIỚI TÍNH
           </Text>
           <Input1
-            value={"Chưa cập nhật"}
+            value={userInfo.user_gender || "Chưa cập nhật"}
             editable={false}
             className="border-b border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white pb-2"
           />
@@ -99,7 +108,11 @@ export default function UserInformationPage() {
             NGÀY SINH
           </Text>
           <Input1
-            value={"Chưa cập nhật"}
+            value={
+              userInfo.user_birth_day
+                ? new Date(userInfo.user_birth_day).toLocaleDateString("vi-VN")
+                : "Chưa cập nhật"
+            }
             editable={false}
             className="border-b border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white pb-2"
           />
