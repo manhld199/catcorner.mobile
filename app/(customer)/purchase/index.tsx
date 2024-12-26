@@ -1,12 +1,25 @@
 // import libs
 import { Image, ScrollView, TouchableOpacity, View } from "react-native";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 import { Link, useRouter } from "expo-router";
+import {
+  ChevronRight,
+  CircleCheck,
+  CircleDollarSign,
+  MinusCircle,
+  ShieldCheck,
+  TicketMinus,
+  UserRound,
+  WalletMinimal,
+} from "lucide-react-native";
 
 // Import components
 import { Text } from "@/components/Text";
+import { CardCoupon, CardProductOrder, ModalBottomSheet, SelectAddress } from "@/components";
+import { Textarea } from "@/components/Textarea";
+import { Input } from "@/components/Input";
 
 // import types
 import { IAddress, IProductOrder, IPurchaseProduct, IUser } from "@/types/interfaces";
@@ -17,24 +30,8 @@ import { AuthContext } from "@/providers";
 // import utils
 import { PAYMENT_PRODUCTS, PURCHASE_PRODUCTS, SHIPPING_COST } from "@/utils/constants/variables";
 import { postData } from "@/utils/functions/handle";
-import { ORDERS_URL, PRODUCT_ORDER_URL } from "@/utils/constants/urls";
-import { CardCoupon, CardProductOrder, ModalBottomSheet, SelectAddress } from "@/components";
-import {
-  ChevronRight,
-  CircleCheck,
-  CircleDollarSign,
-  MinusCircle,
-  ShieldCheck,
-  TicketMinus,
-  UserRound,
-  UserRoundPen,
-  Wallet,
-  WalletMinimal,
-} from "lucide-react-native";
-import { Textarea } from "@/components/Textarea";
+import { PRODUCT_ORDER_URL } from "@/utils/constants/urls";
 import { convertNumberToVND } from "@/utils/functions/convert";
-import { Input } from "@/components/Input";
-import React from "react";
 
 export default function PurchasePage() {
   const router = useRouter();
@@ -65,15 +62,16 @@ export default function PurchasePage() {
 
         if (storageData) {
           const parsedData = JSON.parse(storageData);
+          await AsyncStorage.removeItem(PURCHASE_PRODUCTS);
 
           if (parsedData?.updatedAt) {
             const currentTime = Date.now();
             const timeElapsed = Math.floor((currentTime - parsedData.updatedAt) / 1000);
-            const remainingTime = 120 - timeElapsed;
+            const remainingTime = timeLeft - timeElapsed;
 
             if (remainingTime <= 0) {
               // Hết thời gian
-              AsyncStorage.removeItem(PURCHASE_PRODUCTS);
+              await AsyncStorage.removeItem(PURCHASE_PRODUCTS);
               Toast.show({
                 type: "error",
                 text1: "Oops!!!",
@@ -97,18 +95,20 @@ export default function PurchasePage() {
 
   // Đếm ngược thời gian
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
           // Hết thời gian
-          AsyncStorage.removeItem(PURCHASE_PRODUCTS);
-          Toast.show({
-            type: "error",
-            text1: "Oops!!!",
-            text2: "Phiên thanh toán đã quá hạn, vui lòng thử lại sau!",
-          });
-          clearInterval(interval);
-          router.back();
+          (async () => {
+            await AsyncStorage.removeItem(PURCHASE_PRODUCTS);
+            Toast.show({
+              type: "error",
+              text1: "Oops!!!",
+              text2: "Phiên thanh toán đã quá hạn, vui lòng thử lại sau!",
+            });
+            clearInterval(interval);
+            router.back();
+          })();
           return 0;
         }
         return prevTime - 1;
@@ -143,6 +143,39 @@ export default function PurchasePage() {
 
   const handlePayment = async () => {
     try {
+      // Kiểm tra các trường bắt buộc
+      if (!userName.trim()) {
+        Toast.show({
+          type: "error",
+          text1: "Lỗi!!!",
+          text2: "Vui lòng nhập họ và tên người nhận.",
+        });
+        return;
+      }
+
+      if (!userPhone.trim()) {
+        Toast.show({
+          type: "error",
+          text1: "Lỗi!!!",
+          text2: "Vui lòng nhập số điện thoại người nhận.",
+        });
+        return;
+      }
+
+      if (
+        !userAddress.province.trim() ||
+        !userAddress.district.trim() ||
+        !userAddress.ward.trim() ||
+        !userAddress.street.trim()
+      ) {
+        Toast.show({
+          type: "error",
+          text1: "Lỗi!!!",
+          text2: "Vui lòng cung cấp đầy đủ địa chỉ người nhận.",
+        });
+        return;
+      }
+
       // Xóa dữ liệu PAYMENT_PRODUCTS cũ
       await AsyncStorage.removeItem(PAYMENT_PRODUCTS);
       // console.log("Đã xóa PAYMENT_PRODUCTS cũ");
@@ -171,9 +204,9 @@ export default function PurchasePage() {
         },
         order_note: note == "" ? undefined : note,
         shipping_cost: SHIPPING_COST,
-        paymentMethod,
-        cancelUrl: "catcorner://purchase-history?selectedTab=unpaid",
-        returnUrl: `catcorner://order-success?orderId=${orderId}`,
+        payment_method: paymentMethod,
+        cancel_url: "catcorner://purchase-history?selectedTab=unpaid",
+        return_url: `catcorner://order-success?orderId=${orderId}`,
       };
 
       // console.log("newPaymentData", newPaymentData);
@@ -193,9 +226,10 @@ export default function PurchasePage() {
   // console.log("userInfo", userInfo);
 
   return (
-    <View className="bg-bg-1 relative">
+    <View className="bg-bg-1 dark:bg-zinc-800 relative">
       <ScrollView>
-        <View className="mt-4 p-4 flex flex-col gap-4 bg-white ">
+        {/* Product */}
+        <View className="mt-4 p-4 flex flex-col gap-4 bg-white dark:bg-zinc-900 ">
           <Text className="font-c-semibold">Sản phẩm</Text>
 
           {orderProducts.map((product, index) => (
@@ -208,7 +242,7 @@ export default function PurchasePage() {
               Tổng số tiền ({orderProducts.reduce((acc, curr) => acc + curr.quantity, 0)} sản phẩm)
             </Text>
             <View className="flex flex-row gap-2 items-center">
-              <Text className="text-base text-gray-600 line-through">
+              <Text className="text-base text-gray-600 dark:text-gray-400 line-through">
                 {convertNumberToVND(
                   orderProducts.reduce(
                     (acc, curr) => acc + curr.quantity * curr.product_variant.variant_price,
@@ -216,7 +250,7 @@ export default function PurchasePage() {
                   )
                 )}
               </Text>
-              <Text className="text-xl text-teal-300 font-c-bold">
+              <Text className="text-xl text-teal-600 dark:text-teal-400 font-c-bold">
                 {convertNumberToVND(
                   orderProducts.reduce(
                     (acc, curr) =>
@@ -234,7 +268,7 @@ export default function PurchasePage() {
         </View>
 
         {/* Address */}
-        <View className="mt-4 p-4 bg-white flex flex-col gap-4">
+        <View className="mt-4 p-4 bg-white dark:bg-zinc-900 flex flex-col gap-4">
           <TouchableOpacity
             className="flex flex-row justify-between items-center"
             onPress={() => setShowAddressModal(true)}
@@ -243,7 +277,7 @@ export default function PurchasePage() {
               <View className="w-full flex flex-row justify-between">
                 <Text className="font-c-semibold">Thông tin người nhận</Text>
                 <View className="flex flex-row gap-1 items-center">
-                  <Text className="text-base text-gray-600">Chỉnh sửa</Text>
+                  <Text className="text-base text-gray-600 dark:text-gray-400">Chỉnh sửa</Text>
                   <ChevronRight color="#4b5563" size={16} />
                 </View>
               </View>
@@ -259,7 +293,9 @@ export default function PurchasePage() {
                       <Text>-</Text>
                     </React.Fragment>
                   )}
-                  {userPhone != "" && <Text className="text-gray-600">{userPhone}</Text>}
+                  {userPhone != "" && (
+                    <Text className="text-gray-600 dark:text-gray-400">{userPhone}</Text>
+                  )}
                 </View>
 
                 {(userAddress.district != "" ||
@@ -294,21 +330,28 @@ export default function PurchasePage() {
           <View className="flex flex-col gap-2">
             <View className="flex flex-col gap-2">
               <Text>Họ và tên</Text>
-              <Input placeholder="Nhập tên người nhận hàng" onChangeText={setUserName} />
+              <Input
+                placeholder="Nhập tên người nhận hàng"
+                value={userName}
+                onChangeText={setUserName}
+              />
             </View>
             <View className="flex flex-col gap-2">
               <Text>Số điện thoại</Text>
-              <Input placeholder="Nhập số điện thoại người nhận hàng" onChangeText={setUserPhone} />
+              <Input
+                placeholder="Nhập số điện thoại người nhận hàng"
+                value={userPhone}
+                onChangeText={setUserPhone}
+              />
             </View>
             <View className="flex flex-col gap-2">
-              <Text>Địa chỉ</Text>
               <SelectAddress value={userAddress} onChange={setUserAddress} />
             </View>
           </View>
         </ModalBottomSheet>
 
         {/* Voucher */}
-        <View className="p-4 bg-white flex flex-col gap-4">
+        <View className="p-4 bg-white dark:bg-zinc-900 flex flex-col gap-4">
           <TouchableOpacity
             className="flex flex-row justify-between items-center"
             onPress={() => setShowCouponModal(true)}
@@ -338,14 +381,14 @@ export default function PurchasePage() {
         <View className="px-4 border-b-[1px] border-gray-100"></View>
 
         {/* Note */}
-        <View className="p-4 bg-white flex flex-col gap-4">
+        <View className="p-4 bg-white dark:bg-zinc-900 flex flex-col gap-4">
           <TouchableOpacity
             className="flex flex-row justify-between items-center"
             onPress={() => setShowNoteModal(true)}
           >
             <Text className="font-c-semibold">Ghi chú</Text>
             <View className="flex flex-row gap-1 items-center">
-              <Text className="text-base text-gray-600">Để lại ghi chú</Text>
+              <Text className="text-base text-gray-600 dark:text-gray-400">Để lại ghi chú</Text>
               <ChevronRight color="#4b5563" size={16} />
             </View>
           </TouchableOpacity>
@@ -359,13 +402,13 @@ export default function PurchasePage() {
         >
           <Textarea
             placeholder="Để lại ghi chú cho chúng mình nhé!"
-            className="placeholder:text-base"
+            className="placeholder:text-lg"
             autoFocus={true}
           />
         </ModalBottomSheet>
 
         {/* Payment method */}
-        <View className="mt-4 p-4 bg-white flex flex-col gap-4">
+        <View className="mt-4 p-4 bg-white dark:bg-zinc-900 flex flex-col gap-4">
           <TouchableOpacity
             className="flex flex-row justify-between items-center"
             onPress={() => setShowMethodModal(true)}
@@ -374,7 +417,7 @@ export default function PurchasePage() {
               <View className="w-full flex flex-row justify-between">
                 <Text className="font-c-semibold">Phương thức thanh toán</Text>
                 <View className="flex flex-row gap-1 items-center">
-                  <Text className="text-base text-gray-600">Xem thêm</Text>
+                  <Text className="text-base text-gray-600 dark:text-gray-400">Xem thêm</Text>
                   <ChevronRight color="#4b5563" size={16} />
                 </View>
               </View>
@@ -416,7 +459,9 @@ export default function PurchasePage() {
           <View className="mt-4 flex flex-row gap-2">
             <TouchableOpacity
               className={`w-[49%] aspect-square rounded-lg flex flex-col justify-center items-center gap-2 ${
-                paymentMethod == "cod" ? "bg-teal-100 border-2 border-teal-300" : "bg-slate-100"
+                paymentMethod == "cod"
+                  ? "bg-teal-100 dark:bg-teal-600 border-2 border-teal-300"
+                  : "bg-slate-100 dark:bg-zinc-600"
               }`}
               onPress={() => setPaymentMethod("cod")}
             >
@@ -428,7 +473,9 @@ export default function PurchasePage() {
 
             <TouchableOpacity
               className={`w-[49%] aspect-square rounded-lg flex flex-col justify-center items-center gap-2 ${
-                paymentMethod == "onl" ? "bg-teal-100 border-2 border-teal-300" : "bg-slate-100"
+                paymentMethod == "onl"
+                  ? "bg-teal-100 dark:bg-teal-600 border-2 border-teal-300"
+                  : "bg-slate-100 dark:bg-zinc-600"
               }`}
               onPress={() => setPaymentMethod("onl")}
             >
@@ -439,7 +486,7 @@ export default function PurchasePage() {
         </ModalBottomSheet>
 
         {/* Payment detail */}
-        <View className="mt-4 p-4 mb-[124px] bg-white flex flex-col gap-4">
+        <View className="mt-4 p-4 mb-[124px] bg-white dark:bg-zinc-900 flex flex-col gap-4">
           <Text className="font-c-semibold">Chi tiết thanh toán</Text>
           <View className="flex flex-row justify-between items-center">
             <Text>Tổng tiền hàng</Text>
@@ -455,7 +502,7 @@ export default function PurchasePage() {
 
           <View className="flex flex-row justify-between items-center">
             <Text>Khuyến mãi</Text>
-            <Text className="text-teal-400">
+            <Text className="text-teal-600 dark:text-teal-400">
               -
               {convertNumberToVND(
                 orderProducts.reduce(
@@ -473,7 +520,7 @@ export default function PurchasePage() {
 
           <View className="flex flex-row justify-between items-center">
             <Text>Phiếu giảm giá</Text>
-            <Text className="text-teal-400">-{convertNumberToVND(100000)}</Text>
+            <Text className="text-teal-600 dark:text-teal-400">-{convertNumberToVND(100000)}</Text>
           </View>
 
           <View className="px-4 border-b-[1px] border-gray-100"></View>
@@ -485,7 +532,7 @@ export default function PurchasePage() {
         </View>
       </ScrollView>
 
-      <View className="w-full h-[64px] absolute bottom-[52px] flex flex-row items-center gap-1 bg-white">
+      <View className="w-full h-[64px] absolute bottom-[52px] flex flex-row items-center gap-1 bg-white dark:bg-zinc-950">
         <ShieldCheck color="rgb(34 197 94)" size={18} />
         <Text className="w-3/6 text-sm">
           {" "}
@@ -502,7 +549,7 @@ export default function PurchasePage() {
 
         {/* Mua hang */}
         <TouchableOpacity
-          className="flex-1 h-full p-2 bg-teal-500 flex justify-center items-center"
+          className="flex-1 h-full p-2 bg-teal-500 dark:bg-teal-600 flex justify-center items-center"
           onPress={handlePayment}
         >
           <Text className="font-c-semibold text-white">Mua hàng ({timeLeft}s)</Text>

@@ -16,6 +16,8 @@ import {
   Star,
 } from "lucide-react-native";
 import { WebView } from "react-native-webview";
+import Toast from "react-native-toast-message";
+import { useColorScheme } from "nativewind";
 
 // import components
 import { Text } from "@/components/Text";
@@ -31,18 +33,19 @@ import PurchaseInfo from "./purchase-info";
 import { getData } from "@/utils/functions/handle";
 import { PRODUCT_DETAIL_URL } from "@/utils/constants/urls";
 import { convertNumberToVND } from "@/utils/functions/convert";
+import { CART_PRODUCTS, PURCHASE_PRODUCTS } from "@/utils/constants/variables";
 
 // import types
 import { IProductDetail, IProductVariant } from "@/types/interfaces";
 
 // import styles
-import { injectedCSS } from "./injected-css";
-import { CART_PRODUCTS, PURCHASE_PRODUCTS } from "@/utils/constants/variables";
-import Toast from "react-native-toast-message";
+import { injectedCSS, injectedDarkCSS } from "./injected-css";
 
 export default function ProductDetailPage() {
   const router = useRouter();
   const { id, pid } = useLocalSearchParams();
+  const { colorScheme } = useColorScheme();
+
   const [currentIndex, setCurrentIndex] = useState<number>(1);
   const [productData, setProductData] = useState<IProductDetail>();
   const [isProductLoading, setIsProductLoading] = useState<boolean>(true);
@@ -81,10 +84,10 @@ export default function ProductDetailPage() {
 
   return (
     <View className="relative">
-      <ScrollView>
-        <View className="bg-white py-4">
+      <ScrollView className="bg-bg-1 dark:bg-zinc-800">
+        <View className="bg-white dark:bg-zinc-900 py-4">
           {/* Slider Image */}
-          <View className="flex-1">
+          <View className="flex-1 ">
             <Swiper
               autoplay
               loop
@@ -122,7 +125,7 @@ export default function ProductDetailPage() {
                 key={`product variant img${index}`}
                 className={`${
                   currentVariant?._id == item._id
-                    ? "border-2 rounded-lg border-teal-400"
+                    ? "border-2 rounded-lg border-teal-600 dark:border-teal-400"
                     : ""
                 }`}
                 onPress={() => setCurrentVariant(item)}
@@ -139,14 +142,14 @@ export default function ProductDetailPage() {
           <View className="mt-4 px-4 flex flex-col gap-2">
             {(currentVariant?.variant_discount_percent || 0) > 0 ? (
               <View className="flex flex-row gap-2 items-center">
-                <Text className="text-3xl font-c-semibold text-teal-400">
+                <Text className="text-3xl font-c-semibold text-teal-600 dark:text-teal-400">
                   {convertNumberToVND(
                     ((currentVariant?.variant_price || 0) *
                       (100 - (currentVariant?.variant_discount_percent || 0))) /
                       100
                   ) || 0}
                 </Text>
-                <Text className="text-base line-through text-gray-600">
+                <Text className="text-base line-through text-gray-600 dark:text-gray-400">
                   {convertNumberToVND(currentVariant?.variant_price || 0)}
                 </Text>
                 <Text className="text-base text-red-500 px-4 bg-red-100 rounded-lg">
@@ -176,14 +179,16 @@ export default function ProductDetailPage() {
         </View>
 
         {/* Voucher */}
-        <View className="mt-4 py-4 px-4 bg-white flex flex-col gap-4">
+        <View className="mt-4 py-4 px-4 bg-white dark:bg-zinc-900 flex flex-col gap-4">
           <TouchableOpacity
             className="flex flex-row justify-between items-center"
             onPress={() => setShowCouponModal(true)}
           >
             <Text className="font-c-semibold">Phiếu giảm giá</Text>
             <View className="flex flex-row gap-1 items-center">
-              <Text className="text-base text-gray-600">Xem thêm</Text>
+              <Text className="text-base text-gray-600 dark:text-gray-400">
+                Xem thêm
+              </Text>
               <ChevronRight color="#4b5563" size={16} />
             </View>
           </TouchableOpacity>
@@ -209,13 +214,15 @@ export default function ProductDetailPage() {
 
         {/* Description */}
         <TouchableOpacity
-          className="mt-4 py-4 px-4 bg-white flex flex-col gap-4"
+          className="mt-4 py-4 px-4 bg-white dark:bg-zinc-900 flex flex-col gap-4"
           onPress={() => setShowDesModal(true)}
         >
           <View className="flex flex-row justify-between items-center">
             <Text className="font-c-semibold">Mô tả sản phẩm</Text>
             <View className="flex flex-row gap-1 items-center">
-              <Text className="text-base text-gray-600">Xem thêm</Text>
+              <Text className="text-base text-gray-600 dark:text-gray-400">
+                Xem thêm
+              </Text>
               <ChevronRight color="#4b5563" size={16} />
             </View>
           </View>
@@ -227,9 +234,11 @@ export default function ProductDetailPage() {
                 html:
                   productData?.product_description || "<p>No description</p>",
               }}
-              className="w-full h-full"
+              className="w-full h-full bg-white"
               scalesPageToFit={false}
-              injectedJavaScript={injectedCSS}
+              injectedJavaScript={
+                colorScheme == "light" ? injectedCSS : injectedDarkCSS
+              }
             />
             <Text className="pl-3">...</Text>
           </View>
@@ -251,19 +260,23 @@ export default function ProductDetailPage() {
             scrollEnabled={true}
             nestedScrollEnabled={true}
             scalesPageToFit={false}
-            injectedJavaScript={injectedCSS}
+            injectedJavaScript={
+              colorScheme == "light" ? injectedCSS : injectedDarkCSS
+            }
           />
         </ModalBottomSheet>
 
         {/* Specification */}
         <TouchableOpacity
-          className="mt-4 py-4 px-4 bg-white flex flex-col gap-4"
+          className="mt-4 py-4 px-4 bg-white dark:bg-zinc-900 flex flex-col gap-4"
           onPress={() => setShowSpeModal(true)}
         >
           <View className="flex flex-row justify-between items-center">
             <Text className="font-c-semibold">Thông số sản phẩm</Text>
             <View className="flex flex-row gap-1 items-center">
-              <Text className="text-base text-gray-600">Xem thêm</Text>
+              <Text className="text-base text-gray-600 dark:text-gray-400">
+                Xem thêm
+              </Text>
               <ChevronRight color="#4b5563" size={16} />
             </View>
           </View>
@@ -274,13 +287,13 @@ export default function ProductDetailPage() {
               .map((item, index) => (
                 <View
                   key={`product spe ${index}`}
-                  className={`w-full flex flex-row gap-2 pb-2 ${
+                  className={`w-full flex flex-row gap-2 pb-2 mb-2 ${
                     index == 2
                       ? "border-none"
-                      : "border-b-[1px] border-gray-200"
+                      : "border-b-[1px] border-gray-200 dark:border-gray-100"
                   }`}
                 >
-                  <Text className="w-[49%] text-gray-600 font-c-medium">
+                  <Text className="w-[49%] text-gray-600 dark:text-gray-400 font-c-medium">
                     {item.name}
                   </Text>
                   <Text className="w-1/2">{item.value}</Text>
@@ -298,14 +311,14 @@ export default function ProductDetailPage() {
             {(productData?.product_specifications || []).map((item, index) => (
               <View
                 key={`product spe ${index}`}
-                className={`w-full flex flex-row gap-2 pb-2 ${
+                className={`w-full flex flex-row gap-2 pb-2 mb-2 ${
                   index ==
                   (productData?.product_specifications || []).length - 1
                     ? "border-none"
-                    : "border-b-[1px] border-gray-200"
+                    : "border-b-[1px] border-gray-200 dark:border-gray-100"
                 }`}
               >
-                <Text className="w-1/2 text-gray-600 font-c-medium">
+                <Text className="w-1/2 text-gray-600 dark:text-gray-400 font-c-medium">
                   {item.name}
                 </Text>
                 <Text>{item.value}</Text>
@@ -316,13 +329,15 @@ export default function ProductDetailPage() {
 
         {/* Reviews */}
         <TouchableOpacity
-          className="mt-4 py-4 px-4 bg-white flex flex-col gap-4 mb-[112px]"
+          className="mt-4 py-4 px-4 bg-white dark:bg-zinc-900 flex flex-col gap-4 mb-[112px]"
           onPress={() => setShowReviewModal(true)}
         >
           <View className="flex flex-row justify-between items-center">
             <Text className="font-c-semibold">Đánh giá sản phẩm</Text>
             <View className="flex flex-row gap-1 items-center">
-              <Text className="text-base text-gray-600">Xem thêm</Text>
+              <Text className="text-base text-gray-600 dark:text-gray-400">
+                Xem thêm
+              </Text>
               <ChevronRight color="#4b5563" size={16} />
             </View>
           </View>
@@ -335,7 +350,7 @@ export default function ProductDetailPage() {
             <Text className="text-red-500">
               {productData?.product_avg_rating.rating_point || 0}/5
             </Text>
-            <Text className="text-gray-600">
+            <Text className="text-gray-600 dark:text-gray-400">
               ({productData?.product_avg_rating.rating_count} đánh giá)
             </Text>
           </View>
@@ -363,7 +378,7 @@ export default function ProductDetailPage() {
                 <Text className="text-red-500">
                   {productData?.product_avg_rating.rating_point || 0}/5
                 </Text>
-                <Text className="text-gray-600">
+                <Text className="text-gray-600 dark:text-gray-400">
                   ({productData?.product_avg_rating.rating_count} đánh giá)
                 </Text>
               </View>
@@ -384,20 +399,27 @@ export default function ProductDetailPage() {
       </ScrollView>
 
       {/* App bar */}
-      <View className="w-full absolute bottom-[52px] flex flex-row items-center bg-white">
-        <TouchableOpacity className="w-1/5 h-[52px] p-2 bg-white flex justify-center items-center">
-          <MessageCircleMore color="#315475" size={24} />
+      <View className="w-full absolute bottom-[52px] flex flex-row items-center bg-white dark:bg-zinc-950">
+        <TouchableOpacity className="w-1/5 h-[52px] p-2  bg-white dark:bg-zinc-950 flex justify-center items-center">
+          <MessageCircleMore
+            color={colorScheme == "light" ? "#315475" : "#669E9E"}
+            size={24}
+          />
         </TouchableOpacity>
 
         {/* Gio hang */}
         <TouchableOpacity
-          className="w-1/5 h-[48px] p-2 bg-white flex justify-center items-center"
+          className="w-1/5 h-[48px] p-2  bg-white dark:bg-zinc-950 flex justify-center items-center"
           onPress={() => setShowCartModal(true)}
         >
-          <ShoppingCart color="#315475" size={24} />
+          <ShoppingCart
+            color={colorScheme == "light" ? "#315475" : "#669E9E"}
+            size={24}
+          />
         </TouchableOpacity>
 
         <PurchaseInfo
+          type="cart"
           title="Thông tin sản phẩm"
           action={() => {
             Toast.show({
@@ -408,6 +430,7 @@ export default function ProductDetailPage() {
             setShowCartModal(false);
           }}
           actionTitle="Thêm vào giỏ hàng"
+          productName={productData?.product_name || ""}
           currentVariant={currentVariant}
           productVariants={productData?.product_variants || []}
           setCurrentVariant={setCurrentVariant}
@@ -419,7 +442,7 @@ export default function ProductDetailPage() {
 
         {/* Mua hang */}
         <TouchableOpacity
-          className="w-3/5 h-[48px] p-2 bg-teal-500 flex justify-center items-center"
+          className="w-3/5 h-[48px] p-2 bg-teal-500 dark:bg-teal-600 flex justify-center items-center"
           onPress={() => setShowBuyModal(true)}
         >
           <Text className="font-c-semibold text-white">Mua ngay</Text>
@@ -435,12 +458,14 @@ export default function ProductDetailPage() {
         </TouchableOpacity>
 
         <PurchaseInfo
+          type="buy"
           title="Thông tin sản phẩm"
           actionTitle="Mua ngay"
           action={() => {
             setShowCartModal(false);
             router.push("/purchase");
           }}
+          productName={productData?.product_name || ""}
           currentVariant={currentVariant}
           productVariants={productData?.product_variants || []}
           setCurrentVariant={setCurrentVariant}

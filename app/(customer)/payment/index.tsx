@@ -1,3 +1,4 @@
+// import libs
 import React, { useEffect, useState } from "react";
 import { View, ActivityIndicator, StyleSheet, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -5,6 +6,8 @@ import { WebView } from "react-native-webview";
 import * as Linking from "expo-linking";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
+
+// import components
 import { Text } from "@/components/Text";
 
 const PAYMENT_PRODUCTS = "PAYMENT_PRODUCTS";
@@ -31,7 +34,8 @@ export default function PaymentPage() {
         }
 
         const paymentData = JSON.parse(storedData);
-        console.log("paymentData", paymentData);
+        await AsyncStorage.removeItem(PAYMENT_PRODUCTS);
+        // console.log("paymentData", paymentData);
 
         const response = await fetch(
           `${process.env.EXPO_PUBLIC_BACKEND_URL}/payos/create-payment-link`,
@@ -54,8 +58,12 @@ export default function PaymentPage() {
           return;
         }
 
-        const htmlContent = await response.text();
-        setHtmlContent(htmlContent);
+        if (paymentData.payment_method == "onl") {
+          const htmlContent = await response.text();
+          setHtmlContent(htmlContent);
+        } else if (paymentData.payment_method == "cod") {
+          router.push(`/order-success?orderId=${encodeURIComponent(paymentData.order_id)}`);
+        }
       } catch (error) {
         Toast.show({
           type: "error",
