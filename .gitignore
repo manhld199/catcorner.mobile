@@ -40,6 +40,6 @@ yarn-error.*
 app-example
 
 # others
-.vscode/
-android/
-ios/
+/.vscode/
+/android
+/ios/
