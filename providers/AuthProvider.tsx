@@ -74,6 +74,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         email: data.data.user.email,
         user_role: data.data.user.role,
         user_avt: data.data.user.user_role,
+        user_phone_number: data.data.user_phone_number,
+        user_address: data.data.user_address,
       };
 
       setUserInfo(userData);
@@ -202,7 +204,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return;
   };
 
-  const forgotPassword = async (user: IUser) => {
+  const forgotPassword = async (user: IUser, isResend: boolean) => {
     try {
       const { data, message } = await postData(AUTH_FORGOT_URL, user);
       // console.log("aaaaaaaaaa2");
@@ -212,18 +214,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         Toast.show({
           type: "error",
           text1: "Oops!!!",
-          text2: message || "Đặt lại mật khẩu thất bại. Vui lòng thử lại sau!",
+          text2: message || "Gửi mã OTP thất bại. Vui lòng thử lại sau!",
         });
 
         return;
       }
 
-      // console.log("aaaaaaaaaa3");
       Toast.show({
         type: "success",
-        text1: "Success!!!",
-        text2: message || "Đặt lại mật khẩu thành công. Vui lòng xác thực Email!",
+        text1: "Gửi lại OTP",
+        text2: "Gửi mã OTP thành công. Vui lòng kiểm tra email.",
       });
+
+      if (isResend) return;
 
       router.push({
         pathname: "/verify-otp",

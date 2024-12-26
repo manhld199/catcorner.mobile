@@ -13,7 +13,7 @@ import { convertNumberToVND } from "@/utils/functions/convert";
 export default function CardProductOrder({ product }: { product: IProductOrder }) {
   return (
     <View className="p-2 bg-pri-5 dark:bg-pri-6 rounded-lg flex flex-row gap-4">
-      <View className="w-[100px] aspect-square rounded-lg border-[1px] border-gray-200 dark:border-gray-100 overflow-hidden bg-white dark:bg-gray-700">
+      <View className="w-[100px] aspect-square rounded-lg border-[1px] dark:border-0 border-gray-200 dark:border-gray-100 overflow-hidden bg-white dark:bg-gray-800">
         <Image source={{ uri: product.product_variant.variant_img }} className="w-full h-full" />
       </View>
 

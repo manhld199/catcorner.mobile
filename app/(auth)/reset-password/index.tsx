@@ -1,10 +1,7 @@
 // import libs
-import React, { useContext, useEffect, useState } from "react";
-import { View } from "react-native";
+import React, { useContext, useState } from "react";
+import { View, Image } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Mail } from "lucide-react-native";
-import OTPTextView from "react-native-otp-textinput";
-import Toast from "react-native-toast-message";
 
 // import components
 import { Text } from "@/components/Text";
@@ -12,13 +9,11 @@ import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 
 // import utils
-import { getData, postData } from "@/utils/functions/handle";
-import { AUTH_VERIFY_EMAIL_URL, AUTH_VERIFY_OTP_URL } from "@/utils/constants/urls";
 import { Input } from "@/components/Input";
 import { AuthContext } from "@/providers";
 import { IUser } from "@/types/interfaces";
 
-function ResetPasswordContent() {
+export default function ResetPasswordPage() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const { reset_token } = params;
@@ -36,7 +31,7 @@ function ResetPasswordContent() {
   const validatePassword = (text: string) => {
     setPassword(text);
     if (text.length < 6) {
-      setErrors((prev) => ({ ...prev, password: "Password must be at least 6 characters." }));
+      setErrors((prev) => ({ ...prev, password: "Mật khẩu phải có ít nhất 6 ký tự." }));
     } else {
       setErrors((prev) => ({ ...prev, password: "" }));
     }
@@ -45,9 +40,9 @@ function ResetPasswordContent() {
   const validateConfirmPassword = (text: string) => {
     setConfirmPassword(text);
     if (text !== password) {
-      setErrors((prev) => ({ ...prev, confirmPassword: "Password does not match." }));
+      setErrors((prev) => ({ ...prev, confirmPassword: "Mật khẩu không khớp." }));
     } else if (text === "") {
-      setErrors((prev) => ({ ...prev, confirmPassword: "Confirm password is required" }));
+      setErrors((prev) => ({ ...prev, confirmPassword: "Hãy điền đầy đủ thông tin" }));
     } else {
       setErrors((prev) => ({ ...prev, confirmPassword: "" }));
     }
@@ -62,19 +57,19 @@ function ResetPasswordContent() {
 
     // Kiểm tra Password
     if (!password) {
-      newErrors.password = "Password is required.";
+      newErrors.password = "Hãy điền đầy đủ thông tin.";
       valid = false;
     } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
+      newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự.";
       valid = false;
     }
 
     // Kiểm tra Confirm Password
     if (!confirmPassword) {
-      newErrors.confirmPassword = "Confirm password is required.";
+      newErrors.confirmPassword = "Hãy điền đầy đủ thông tin.";
       valid = false;
     } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Password does not match.";
+      newErrors.confirmPassword = "Mật khẩu không khớp.";
       valid = false;
     }
 
@@ -88,7 +83,7 @@ function ResetPasswordContent() {
   };
 
   return (
-    <Card className="h-full w-full max-w-md bg-white dark:bg-gray-800 p-4 mx-auto my-8">
+    <Card className="h-full w-full bg-white dark:bg-gray-800 p-4 mx-auto rounded-none">
       <Text className="text-2xl font-c-bold text-gray-700 dark:text-white text-center">
         ĐẶT LẠI MẬT KHẨU
       </Text>
@@ -96,6 +91,14 @@ function ResetPasswordContent() {
       <Text className="text-center text-gray-600 dark:text-gray-300 mb-6">
         Nhập mật khẩu mới để hoàn tất đặt lại mật khẩu!
       </Text>
+
+      <View className="mx-auto w-[180px] h-[180px]">
+        <Image
+          source={require("@/assets/images/noti/cat-4.png")}
+          className="w-full h-full"
+          resizeMode="cover"
+        />
+      </View>
 
       <View className="w-full flex-col gap-2">
         {/* Password */}
@@ -146,7 +149,7 @@ function ResetPasswordContent() {
           className="bg-green-500 text-white py-3 rounded-lg text-center"
           onPress={handleSubmit}
         >
-          <Text className="text-white text-lg">Xác nhận</Text>
+          <Text className="text-white !font-c-semibold !text-xl">Xác nhận</Text>
         </Button>
 
         <Button
@@ -157,13 +160,5 @@ function ResetPasswordContent() {
         </Button>
       </View>
     </Card>
-  );
-}
-
-export default function ResetPasswordPage() {
-  return (
-    <View className="flex-1 justify-center items-center">
-      <ResetPasswordContent />
-    </View>
   );
 }

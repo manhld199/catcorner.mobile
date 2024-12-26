@@ -62,7 +62,11 @@ export default function RootLayout() {
       <ThemeProvider>
         <SafeAreaView className="w-full h-full flex">
           <CustomerHeader />
-          <Slot />
+
+          <View className="flex-1">
+            <Slot />
+          </View>
+
           <Toast />
         </SafeAreaView>
       </ThemeProvider>

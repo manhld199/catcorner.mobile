@@ -22,7 +22,7 @@ import { Textarea } from "@/components/Textarea";
 import { Input } from "@/components/Input";
 
 // import types
-import { IAddress, IProductOrder, IPurchaseProduct, IUser } from "@/types/interfaces";
+import { IAddress, IProductOrder, IPurchaseProduct } from "@/types/interfaces";
 
 // import providers
 import { AuthContext } from "@/providers";
@@ -43,14 +43,23 @@ export default function PurchasePage() {
   const [showNoteModal, setShowNoteModal] = useState<boolean>(false);
   const [showAddressModal, setShowAddressModal] = useState<boolean>(false);
   const [showMethodModal, setShowMethodModal] = useState<boolean>(false);
-  const [userName, setUserName] = useState<string>("");
-  const [userPhone, setUserPhone] = useState<string>("");
-  const [userAddress, setUserAddress] = useState<IAddress>({
-    province: "",
-    district: "",
-    ward: "",
-    street: "",
-  });
+  const [userName, setUserName] = useState<string>(
+    (userInfo && userInfo.user_name ? userInfo.user_name : "") as string
+  );
+  const [userPhone, setUserPhone] = useState<string>(
+    (userInfo && userInfo.user_phone_number ? userInfo.user_phone_number : "") as string
+  );
+  // console.log("userPhone", userPhone, typeof userPhone, userInfo);
+  const [userAddress, setUserAddress] = useState<IAddress>(
+    (userInfo && userInfo.user_address
+      ? userInfo.user_address[0]
+      : {
+          province: "",
+          district: "",
+          ward: "",
+          street: "",
+        }) as IAddress
+  );
   const [paymentMethod, setPaymentMethod] = useState<"cod" | "onl">("cod");
   const [note, setNote] = useState<string>("");
   const [timeLeft, setTimeLeft] = useState<number>(300);
@@ -206,7 +215,7 @@ export default function PurchasePage() {
         shipping_cost: SHIPPING_COST,
         payment_method: paymentMethod,
         cancel_url: "catcorner://purchase-history?selectedTab=unpaid",
-        return_url: `catcorner://order-success?orderId=${orderId}`,
+        return_url: `catcorner://order-success?orderId=${encodeURIComponent(orderId)}`,
       };
 
       // console.log("newPaymentData", newPaymentData);
@@ -226,7 +235,7 @@ export default function PurchasePage() {
   // console.log("userInfo", userInfo);
 
   return (
-    <View className="bg-bg-1 dark:bg-zinc-800 relative">
+    <View className="bg-bg-1 dark:bg-gray-800 relative">
       <ScrollView>
         {/* Product */}
         <View className="mt-4 p-4 flex flex-col gap-4 bg-white dark:bg-zinc-900 ">
@@ -287,14 +296,13 @@ export default function PurchasePage() {
                   {(userName != "" || userPhone != "") && (
                     <UserRound color="#5eead4" fill="#5eead4" size={24} />
                   )}
-                  {userName != "" && (
-                    <React.Fragment>
-                      <Text className="font-c-medium">{userName}</Text>
-                      <Text>-</Text>
-                    </React.Fragment>
-                  )}
+                  {userName != "" && <Text className="font-c-medium">{userName}</Text>}
+
                   {userPhone != "" && (
-                    <Text className="text-gray-600 dark:text-gray-400">{userPhone}</Text>
+                    <React.Fragment>
+                      <Text>-</Text>
+                      <Text className="text-gray-600 dark:text-gray-400">{userPhone}</Text>
+                    </React.Fragment>
                   )}
                 </View>
 
@@ -402,6 +410,7 @@ export default function PurchasePage() {
         >
           <Textarea
             placeholder="Để lại ghi chú cho chúng mình nhé!"
+            onChangeText={setNote}
             className="placeholder:text-lg"
             autoFocus={true}
           />
@@ -486,7 +495,7 @@ export default function PurchasePage() {
         </ModalBottomSheet>
 
         {/* Payment detail */}
-        <View className="mt-4 p-4 mb-[124px] bg-white dark:bg-zinc-900 flex flex-col gap-4">
+        <View className="mt-4 p-4 mb-[64px] bg-white dark:bg-zinc-900 flex flex-col gap-4">
           <Text className="font-c-semibold">Chi tiết thanh toán</Text>
           <View className="flex flex-row justify-between items-center">
             <Text>Tổng tiền hàng</Text>
@@ -532,7 +541,7 @@ export default function PurchasePage() {
         </View>
       </ScrollView>
 
-      <View className="w-full h-[64px] absolute bottom-[52px] flex flex-row items-center gap-1 bg-white dark:bg-zinc-950">
+      <View className="w-full h-[64px] absolute bottom-0 flex flex-row items-center gap-1 bg-white dark:bg-zinc-950">
         <ShieldCheck color="rgb(34 197 94)" size={18} />
         <Text className="w-3/6 text-sm">
           {" "}
