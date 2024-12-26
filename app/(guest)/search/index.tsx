@@ -162,6 +162,7 @@ export default function SearchPage() {
             <View className="w-full p-4 flex flex-row gap-2 items-center">
               <View className="overflow-hidden flex-1 h-[44px] bg-white dark:bg-zinc-900 border-2 border-pri-7 dark:border-pri-2 rounded-lg flex flex-row gap-2">
                 <Input
+                  containerClassName="flex-1"
                   placeholder="Nhập từ khóa cần tìm..."
                   className="!border-0 flex-1 dark:bg-zinc-900"
                   value={transcript}
@@ -193,7 +194,7 @@ export default function SearchPage() {
           </LinearGradient>
 
           {/* Suggested Products */}
-          <View className="w-full px-4 py-4 bg-white dark:bg-zinc-900">
+          <View className="w-full px-4 py-4 bg-white dark:bg-gray-800">
             <Text className="w-full text-center font-c-semibold text-gray-600 dark:text-white">
               Kết quả tìm kiếm
             </Text>
@@ -228,7 +229,7 @@ export default function SearchPage() {
         </View>
 
         {/* Categories */}
-        <View className="w-full px-4 py-4 bg-white dark:bg-zinc-900 flex flex-col gap-2">
+        <View className="w-full px-4 py-4 bg-white dark:bg-gray-800 flex flex-col gap-2">
           <Text className="w-full text-center font-c-semibold text-gray-600 dark:text-white">
             Sản phẩm theo danh mục
           </Text>

@@ -1,6 +1,6 @@
 // import libs
 import React, { useContext, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Link } from "expo-router";
 
 // import components
@@ -180,7 +180,7 @@ const Register = () => {
   };
 
   return (
-    <ScrollView className="p-4">
+    <ScrollView className="p-4 bg-white dark:bg-gray-800">
       <View className="flex flex-col gap-4">
         <View className="flex flex-col gap-1">
           <Text className="w-full text-center text-4xl font-c-bold">Tạo tài khoản</Text>
@@ -315,9 +315,12 @@ const Register = () => {
         </View>
 
         {/* Submit Button */}
-        <Button variant="rounded-pri1" size="2xl" onPress={handleSubmit}>
-          <Text className="font-c-bold">Đăng ký</Text>
-        </Button>
+        <TouchableOpacity
+          className="w-full h-14 rounded-full bg-green-500 flex justify-center items-center"
+          onPress={handleSubmit}
+        >
+          <Text className="font-c-semibold text-white text-2xl">Đăng ký</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

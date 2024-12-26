@@ -130,6 +130,8 @@ export default function PurchaseInfo({
           className="w-full h-[40px] bg-teal-500 dark:bg-teal-600 rounded-lg flex justify-center items-center"
           onPress={async () => {
             try {
+              // console.log("Bắt đầu xử lý");
+
               // Lấy dữ liệu hiện tại từ AsyncStorage
               const currentStorage = await AsyncStorage.getItem(storageName);
               // console.log("currentStorage", currentStorage);

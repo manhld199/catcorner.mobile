@@ -1,6 +1,6 @@
 // import libs
 import React, { useEffect, useState } from "react";
-import { View, ActivityIndicator, StyleSheet, Alert } from "react-native";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { WebView } from "react-native-webview";
 import * as Linking from "expo-linking";
@@ -10,7 +10,8 @@ import { useRouter } from "expo-router";
 // import components
 import { Text } from "@/components/Text";
 
-const PAYMENT_PRODUCTS = "PAYMENT_PRODUCTS";
+// import utils
+import { PAYMENT_PRODUCTS } from "@/utils/constants/variables";
 
 export default function PaymentPage() {
   const router = useRouter();

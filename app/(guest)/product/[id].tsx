@@ -84,7 +84,7 @@ export default function ProductDetailPage() {
 
   return (
     <View className="relative">
-      <ScrollView className="bg-bg-1 dark:bg-zinc-800">
+      <ScrollView className="bg-bg-1 dark:bg-gray-800">
         <View className="bg-white dark:bg-zinc-900 py-4">
           {/* Slider Image */}
           <View className="flex-1 ">
@@ -329,7 +329,7 @@ export default function ProductDetailPage() {
 
         {/* Reviews */}
         <TouchableOpacity
-          className="mt-4 py-4 px-4 bg-white dark:bg-zinc-900 flex flex-col gap-4 mb-[112px]"
+          className="mt-4 py-4 px-4 bg-white dark:bg-zinc-900 flex flex-col gap-4 mb-[64px]"
           onPress={() => setShowReviewModal(true)}
         >
           <View className="flex flex-row justify-between items-center">
@@ -399,7 +399,7 @@ export default function ProductDetailPage() {
       </ScrollView>
 
       {/* App bar */}
-      <View className="w-full absolute bottom-[52px] flex flex-row items-center bg-white dark:bg-zinc-950">
+      <View className="w-full absolute bottom-0 flex flex-row items-center bg-white dark:bg-zinc-950">
         <TouchableOpacity className="w-1/5 h-[52px] p-2  bg-white dark:bg-zinc-950 flex justify-center items-center">
           <MessageCircleMore
             color={colorScheme == "light" ? "#315475" : "#669E9E"}
@@ -462,6 +462,7 @@ export default function ProductDetailPage() {
           title="Thông tin sản phẩm"
           actionTitle="Mua ngay"
           action={() => {
+            // console.log("aaaaaaaaaaa");
             setShowCartModal(false);
             router.push("/purchase");
           }}

@@ -135,7 +135,7 @@ export default function HomeScreen() {
               <ActivityIndicator size="large" color="#00bfa5" />
             </View>
           ) : (
-            <View className="w-full flex flex-row flex-wrap justify-between gap-x-2 gap-y-4">
+            <View className="w-full flex flex-row flex-wrap justify-between gap-x-2 gap-y-4 mx-4">
               {(products || []).length > 0 ? (
                 (products || []).map((product) => (
                   <ProductCard

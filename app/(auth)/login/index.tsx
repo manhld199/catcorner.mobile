@@ -1,8 +1,9 @@
 // import libs
-import { ScrollView, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { useContext, useState } from "react";
 import { Image } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import { useColorScheme } from "nativewind";
 
 // import components
 import { Input } from "@/components/Input";
@@ -16,9 +17,11 @@ import { AuthContext } from "@/providers";
 import { IUser } from "@/types/interfaces";
 
 const Login = () => {
+  const router = useRouter();
   const { login } = useContext(AuthContext) || {
     login: async (user: IUser) => {},
   };
+  const { colorScheme } = useColorScheme();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -89,18 +92,30 @@ const Login = () => {
   };
 
   return (
-    <ScrollView className="p-4">
-      <View className="flex flex-col gap-4">
+    <View className="p-4 relative bg-white dark:bg-gray-800 w-full h-full flex flex-col justify-between">
+      <View className="flex flex-col gap-3">
         <View className="flex flex-col gap-1">
           <Text className="w-full text-center text-4xl font-c-bold">Chào mừng trở lại!</Text>
-          <Text className="text-center text-gray-600">
+          <Text className="text-center text-gray-600 dark:text-gray-400">
             Đăng nhập ngay, để tận hưởng vô vàn ưu đãi dành riêng cho thành viên nhé bạn!!!.
           </Text>
         </View>
 
+        <View className="mx-auto w-[178px] h-[120px]">
+          <Image
+            source={require("@/assets/images/noti/cat-2.png")}
+            className="w-full h-full"
+            resizeMode="cover"
+          />
+        </View>
+
         {/* Email */}
         <View className="flex flex-col gap-2">
-          <Text className={`text-gray-600 ${errors.email ? "text-red-500" : ""}`}>Email:</Text>
+          <Text
+            className={`text-gray-600 dark:text-gray-400 ${errors.email ? "text-red-500" : ""}`}
+          >
+            Email:
+          </Text>
 
           <Input
             value={email}
@@ -118,7 +133,9 @@ const Login = () => {
 
         {/* Mật khẩu */}
         <View className="flex flex-col gap-2">
-          <Text className={`text-gray-600 ${errors.password ? "text-red-500" : ""}`}>
+          <Text
+            className={`text-gray-600 dark:text-gray-400 ${errors.password ? "text-red-500" : ""}`}
+          >
             Mật khẩu:
           </Text>
 
@@ -138,9 +155,12 @@ const Login = () => {
         </View>
 
         <View className="w-full flex flex-col gap-2">
-          <Button variant="rounded-pri1" size="2xl" onPress={handleSubmit}>
-            <Text className="font-c-bold">Đăng nhập</Text>
-          </Button>
+          <TouchableOpacity
+            onPress={handleSubmit}
+            className="w-full h-14 rounded-full bg-green-500 flex justify-center items-center"
+          >
+            <Text className="font-c-semibold text-white text-2xl">Đăng nhập</Text>
+          </TouchableOpacity>
           <Text className="text-center underline">
             <Link href="/forgot-password">Quên mật khẩu?</Link>
           </Text>
@@ -155,22 +175,39 @@ const Login = () => {
         <View className="w-full flex flex-row gap-2">
           <Button variant="rounded-border" size="xl" className="w-[49%] flex flex-row gap-2">
             <Image source={require("@/assets/images/brands/fb-logo.png")} />
-            <Text className="text-gray-600">Facebook</Text>
+            <Text className="text-gray-600 dark:text-gray-400">Facebook</Text>
           </Button>
           <Button variant="rounded-border" size="xl" className="w-[49%] flex flex-row gap-2">
             <Image source={require("@/assets/images/brands/gg-logo.png")} />
-            <Text className="text-gray-600">Google</Text>
+            <Text className="text-gray-600 dark:text-gray-400">Google</Text>
           </Button>
         </View>
+      </View>
 
-        <View className="pb-10">
-          <Text className="text-gray-600 text-center">
-            Chưa là thành viên? Trở thành thành viên để có quyền tận hưởng vô vàn khuyến mãi, quà
-            tặng, và nhiều hơn nữa.
-          </Text>
+      <View className="w-full flex flex-col gap-2">
+        <TouchableOpacity
+          className="w-full h-14 rounded-full border-2 border-green-500 flex justify-center items-center"
+          onPress={() => router.push("/register")}
+        >
+          <Text className="text-green-500 font-c-semibold">Tạo tài khoản mới</Text>
+        </TouchableOpacity>
+        <View className="m-auto w-[250px] h-[40px]">
+          {colorScheme == "light" ? (
+            <Image
+              source={require("@/assets/images/logo-pri.webp")}
+              className="w-full h-full"
+              resizeMode="contain"
+            />
+          ) : (
+            <Image
+              source={require("@/assets/images/logo-white.webp")}
+              className="w-full h-full"
+              resizeMode="contain"
+            />
+          )}
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

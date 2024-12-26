@@ -2,7 +2,7 @@ export interface IAuthContext {
   userInfo: IUser | null;
   register: (user: IUser) => any;
   login: (user: IUser) => any;
-  forgotPassword: (user: IUser) => any;
+  forgotPassword: (user: IUser, isResend: boolean) => any;
   resetPassword: (user: IUser) => any;
   logout: () => any;
   verifyEmail: (user: IUser) => any;
@@ -13,13 +13,15 @@ export interface IAuthContext {
 export interface IUser {
   user_id?: string;
   user_name?: string;
+  user_phone_number?: string;
+  user_address?: IAddress[];
   email?: string;
   user_role?: string;
   user_avt?: string;
   password?: string;
+  token?: string;
   reset_token?: string;
   new_password?: string;
-  token?: string;
   otp?: string;
   user_phone_number?: string;
   user_gender?: string;

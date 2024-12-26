@@ -19,7 +19,7 @@ const buttonVariants = cva(
 
         // custom button variant
         "rounded-pri1": "bg-pri-1 rounded-full",
-        "rounded-border": "bg-transparent rounded-full border-[1px] border-black",
+        "rounded-border": "bg-transparent rounded-full border-[1.5px] border-zinc-400",
         none: "",
       },
       size: {
