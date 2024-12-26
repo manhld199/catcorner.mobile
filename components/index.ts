@@ -15,6 +15,7 @@ export { default as ModalBottomSheet } from "./modals/bottom-sheet";
 
 // Inputs
 export { default as InputQuantity } from "./inputs/quantity";
+export { default as InputQuantityMini } from "./inputs/quantity-small";
 
 // Selects
 export { default as SelectAddress } from "./selects/address";
