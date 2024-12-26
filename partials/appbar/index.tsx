@@ -7,8 +7,8 @@ const tabData = [
   // { href: "/sale-product", iconName: "ticket-outline", label: "Sale" },
   { href: "/search", iconName: "search", label: "Search" },
   { href: "/profile", iconName: "person", label: "Profile" },
-  { href: "/login", iconName: "log-in-outline", label: "Login" },
-  { href: "/register", iconName: "person-add-outline", label: "Register" },
+  // { href: "/login", iconName: "log-in-outline", label: "Login" },
+  // { href: "/register", iconName: "person-add-outline", label: "Register" },
 ];
 
 export default function AppBar() {
