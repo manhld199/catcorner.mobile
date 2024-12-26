@@ -36,18 +36,27 @@ export default function PurchaseInfo({
   productName: string;
   currentVariant: IProductVariant | undefined;
   productVariants: IProductVariant[];
-  setCurrentVariant: React.Dispatch<React.SetStateAction<IProductVariant | undefined>>;
+  setCurrentVariant: React.Dispatch<
+    React.SetStateAction<IProductVariant | undefined>
+  >;
   productId: string;
   storageName: string;
 }) {
   const [quantity, setQuantity] = useState<number>(1);
 
   return (
-    <ModalBottomSheet visible={showModal} onClose={() => setShowModal(false)} title={title}>
+    <ModalBottomSheet
+      visible={showModal}
+      onClose={() => setShowModal(false)}
+      title={title}
+    >
       <View className="flex flex-col gap-4">
         <View className="flex flex-row items-end gap-2">
           <View className="w-[120px] aspect-square border-2 rounded-lg border-teal-400 overflow-hidden">
-            <Image source={{ uri: currentVariant?.variant_img }} className="w-full h-full" />
+            <Image
+              source={{ uri: currentVariant?.variant_img }}
+              className="w-full h-full"
+            />
           </View>
           <View className="flex-1 h-full flex flex-col justify-start gap-2">
             <Text className="w-full line-clamp-2">{productName}</Text>
@@ -95,9 +104,14 @@ export default function PurchaseInfo({
               onPress={() => setCurrentVariant(item)}
             >
               <View className="w-[32px] aspect-square">
-                <Image source={{ uri: item.variant_img }} className="w-full h-full" />
+                <Image
+                  source={{ uri: item.variant_img }}
+                  className="w-full h-full"
+                />
               </View>
-              <Text className="text-base font-c-regular">{item.variant_name}</Text>
+              <Text className="text-base font-c-regular">
+                {item.variant_name}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -174,7 +188,10 @@ export default function PurchaseInfo({
               // Lưu lại mảng đã cập nhật vào AsyncStorage
               await AsyncStorage.setItem(
                 storageName,
-                JSON.stringify({ updatedAt: Date.now(), products: parsedCurrentStorage })
+                JSON.stringify({
+                  updatedAt: Date.now(),
+                  products: parsedCurrentStorage,
+                })
               );
 
               // console.log("Lưu trữ thành công");
@@ -184,7 +201,9 @@ export default function PurchaseInfo({
             }
           }}
         >
-          <Text className="font-c-semibold !text-xl text-white">{actionTitle}</Text>
+          <Text className="font-c-semibold !text-xl text-white">
+            {actionTitle}
+          </Text>
         </TouchableOpacity>
       </View>
     </ModalBottomSheet>

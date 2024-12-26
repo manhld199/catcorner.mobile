@@ -11,7 +11,7 @@ import { Text } from "@/components/Text";
 
 export default function PurchaseHistoryPage() {
   const [selectedTab, setSelectedTab] = useState("Tất cả");
-  const colorScheme = useColorScheme(); // Lấy chế độ sáng/tối của hệ thống
+  const colorScheme = useColorScheme();
 
   const tabs = [
     "Tất cả",
@@ -41,6 +41,36 @@ export default function PurchaseHistoryPage() {
       id: 2,
       order_id: "#ĐH000000002",
       status: "Đang giao hàng",
+      product: {
+        image:
+          "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg",
+        name: "Pate cho mèo Royal Canin",
+        sku: "CB02",
+        quantity: 1,
+        originalPrice: 300000,
+        discountedPrice: 204000,
+      },
+      total: 196000,
+    },
+    {
+      id: 3,
+      order_id: "#ĐH000000002",
+      status: "Đã giao",
+      product: {
+        image:
+          "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg",
+        name: "Pate cho mèo Royal Canin",
+        sku: "CB02",
+        quantity: 1,
+        originalPrice: 300000,
+        discountedPrice: 204000,
+      },
+      total: 196000,
+    },
+    {
+      id: 4,
+      order_id: "#ĐH000000002",
+      status: "Đã hủy",
       product: {
         image:
           "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg",
@@ -88,7 +118,7 @@ export default function PurchaseHistoryPage() {
     <View className="flex-1 bg-white dark:bg-black px-4 py-6">
       <View className="flex-row items-center mb-6">
         <ArrowBack />
-        <Text className="text-lg font-bold text-black dark:text-white ml-4">
+        <Text className="text-lg font-c-bold text-black dark:text-white ml-4">
           Lịch sử đặt hàng
         </Text>
       </View>
@@ -184,7 +214,7 @@ export default function PurchaseHistoryPage() {
                   <View className="flex-row items-center mb-2">
                     <Image
                       source={{ uri: item.product.image }}
-                      className="w-16 h-16 rounded-md"
+                      className="w-20 h-20 rounded-md"
                     />
                     <View className="ml-4 flex-1">
                       <Text
@@ -204,7 +234,7 @@ export default function PurchaseHistoryPage() {
                             : "text-gray-500"
                         }`}
                       >
-                        {item.product.sku}
+                        Phân loại: {item.product.sku}
                       </Text>
                       <Text
                         className={`${
@@ -235,7 +265,7 @@ export default function PurchaseHistoryPage() {
                           colorScheme === "dark"
                             ? "text-red-300"
                             : "text-red-500"
-                        } font-bold`}
+                        } font-c-bold`}
                       >
                         {item.product.discountedPrice.toLocaleString()}đ
                       </Text>
@@ -248,7 +278,7 @@ export default function PurchaseHistoryPage() {
                       } mt-1`}
                     >
                       Tổng số tiền ({item.product.quantity} sản phẩm):{" "}
-                      <Text className="font-bold text-red-500">
+                      <Text className="font-c-bold text-red-500">
                         {item.total.toLocaleString()}đ
                       </Text>
                     </Text>

@@ -67,16 +67,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       await saveTokens(data.data.token, data.data.refreshToken);
-
       const userData = {
         user_id: data.data.user.id,
         user_name: data.data.user.name,
         email: data.data.user.email,
         user_role: data.data.user.role,
-        user_avt: data.data.user.user_role,
-        user_phone_number: data.data.user_phone_number,
-        user_address: data.data.user_address,
+        user_address: data.data.user.user_address,
+        user_avt: data.data.user.user_avt,
+        user_phone_number: data.data.user.user_phone_number,
+        user_gender: data.data.user.user_gender,
+        user_birth_day: data.data.user.user_birth_day,
       };
+      // console.log("aaaaaaaaaaaaaaaaa", userData);
 
       setUserInfo(userData);
 
@@ -101,6 +103,68 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
 
       return;
+    }
+  };
+
+  const updateUserInfo = async () => {
+    try {
+      // Lấy token từ AsyncStorage
+      const token = await getAccessToken();
+      if (!token) {
+        Toast.show({
+          type: "error",
+          text1: "Oops!!!",
+          text2: "Không tìm thấy token. Vui lòng đăng nhập lại.",
+        });
+        return;
+      }
+
+      // Gọi API để lấy thông tin người dùng
+      const { data, message } = await getData(AUTH_ME_URL, token);
+
+      // console.log("API Response:", data);
+
+      // Kiểm tra dữ liệu trả về từ API
+      if (!data) {
+        Toast.show({
+          type: "error",
+          text1: "Oops!!!",
+          text2:
+            message || "Cập nhật thông tin thất bại. Vui lòng thử lại sau!",
+        });
+        return;
+      }
+
+      // Lưu thông tin người dùng
+      const userData = {
+        user_id: data.data.user.id,
+        user_name: data.data.user.name,
+        email: data.data.user.email,
+        user_role: data.data.user.role,
+        user_avt: data.data.user.user_avt,
+        user_phone_number: data.data.user.user_phone_number,
+        user_gender: data.data.user.user_gender,
+        user_birth_day: data.data.user.user_birth_day,
+      };
+
+      // Lưu vào state và AsyncStorage
+      setUserInfo(userData);
+      await AsyncStorage.setItem("user", JSON.stringify(userData));
+
+      Toast.show({
+        type: "success",
+        text1: "Success!!!",
+        text2: "Thông tin người dùng đã được cập nhật thành công!",
+      });
+    } catch (err) {
+      console.error("Cập nhật thông tin thất bại: ", err);
+
+      // Hiển thị thông báo lỗi
+      Toast.show({
+        type: "error",
+        text1: "Oops!!!",
+        text2: "Có lỗi xảy ra trong quá trình cập nhật. Vui lòng thử lại!",
+      });
     }
   };
 
@@ -230,7 +294,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       router.push({
         pathname: "/verify-otp",
-        params: { type: "forgot", email: encodeURIComponent(user.email as string) },
+        params: {
+          type: "forgot",
+          email: encodeURIComponent(user.email as string),
+        },
       });
 
       return;
@@ -249,16 +316,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const verifyOtp = async (user: IUser) => {
     if (!user.otp || !user.email) return false;
 
-    const otpRes = await postData(AUTH_VERIFY_OTP_URL, { otp: user.otp, email: user.email });
+    const otpRes = await postData(AUTH_VERIFY_OTP_URL, {
+      otp: user.otp,
+      email: user.email,
+    });
     // console.log("otpRes", otpRes);
 
     if (!otpRes.data)
       return {
         data: null,
-        message: otpRes.message || "Xác thực OTP thất bại. Vui lòng thử lại sau!!!",
+        message:
+          otpRes.message || "Xác thực OTP thất bại. Vui lòng thử lại sau!!!",
       };
 
-    return { data: otpRes.data, message: otpRes.data.data.message || "Xác thực OTP thành công!" };
+    return {
+      data: otpRes.data,
+      message: otpRes.data.data.message || "Xác thực OTP thành công!",
+    };
   };
 
   const resetPassword = async (user: IUser) => {
@@ -303,6 +377,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{
         userInfo,
+        updateUserInfo,
         login,
         logout,
         register,

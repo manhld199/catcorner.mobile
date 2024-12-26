@@ -17,7 +17,9 @@ export default function ProductCard({ product }: ProductCardProps) {
     <TouchableOpacity
       onPress={() =>
         router.push(
-          `/product/${product.product_slug}?pid=${encodeURIComponent(product.product_id_hashed)}`
+          `/product/${product.product_slug}?pid=${encodeURIComponent(
+            product.product_id_hashed
+          )}`
         )
       }
       // className="w-[48%] bg-pri-5 dark:bg-pri-7 rounded-md"
@@ -27,7 +29,9 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Discount Badge */}
         {product.highest_discount && (
           <View className="absolute top-2 left-2 bg-red-600 px-2 py-1 rounded z-10">
-            <Text className="text-white text-xs font-c-bold">-{product.highest_discount}%</Text>
+            <Text className="text-white text-xs font-c-bold">
+              -{product.highest_discount}%
+            </Text>
           </View>
         )}
 
@@ -58,7 +62,10 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Rating and Sold */}
         <View className="w-full flex-row justify-start  items-center space-x-1 mb-2">
-          <StarGroup rating={product?.product_rating?.rating_point || 0} starSize={16} />
+          <StarGroup
+            rating={product?.product_rating?.rating_point || 0}
+            starSize={16}
+          />
           {/* {Array.from({ length: 5 }).map((_, index) => (
             <Ionicons
               key={index}
@@ -67,7 +74,10 @@ export default function ProductCard({ product }: ProductCardProps) {
               color="gold"
             />
           ))} */}
-          <Text className="text-xs text-gray-500"> ({product.product_sold_quantity} sold)</Text>
+          <Text className="text-xs text-gray-500">
+            {" "}
+            ({product.product_sold_quantity} sold)
+          </Text>
         </View>
 
         {/* Variants */}
@@ -82,14 +92,18 @@ export default function ProductCard({ product }: ProductCardProps) {
                 {variant}
               </Text>
             ))}
-          {Array.isArray(product.variant_name) && product.variant_name.length > 3 && (
-            <Text className="px-2 py-1 text-xs bg-gray-100 text-gray-500 rounded-full">...</Text>
-          )}
+          {Array.isArray(product.variant_name) &&
+            product.variant_name.length > 3 && (
+              <Text className="px-2 py-1 text-xs bg-gray-100 text-gray-500 rounded-full">
+                ...
+              </Text>
+            )}
         </View>
 
         {/* Price */}
         <View className="flex-row items-center justify-between w-full">
-          {product.lowest_price && product.lowest_price !== product.product_price ? (
+          {product.lowest_price &&
+          product.lowest_price !== product.product_price ? (
             <>
               <Text className="text-sm text-gray-500 line-through">
                 {convertNumberToVND(product.product_price)}

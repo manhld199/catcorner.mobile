@@ -23,3 +23,7 @@ export const ALL_CATEGORIES_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/guest/
 
 // Order
 export const ORDERS_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/customer/orders`;
+
+// User
+export const CHANGE_PROFILE_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/user/profile`;
+export const CHANGE_PASSWORD_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/auth/change-password`;
