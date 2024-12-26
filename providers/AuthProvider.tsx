@@ -288,9 +288,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         type: "success",
         text1: "Gửi lại OTP",
         text2: "Gửi mã OTP thành công. Vui lòng kiểm tra email.",
-        text1: "Success!!!",
-        text2:
-          message || "Đặt lại mật khẩu thành công. Vui lòng xác thực Email!",
       });
 
       if (isResend) return;

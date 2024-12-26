@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import ProductCard from "@/components/cards/product-card";
 import { CardCategory, ProductCarousel, ProductCategories } from "@/components";
-import { CustomerAppbar } from "@/partials";
+import { CustomerAppbar, CustomerHeader } from "@/partials";
 import { Text } from "@/components/Text";
 import {
   PRODUCT_LIST_NEWEST_URL,
@@ -70,7 +70,9 @@ export default function HomeScreen() {
 
   return (
     <>
-      <ScrollView className="bg-white flex-1 dark:bg-zinc-900 mb-20">
+      <CustomerHeader />
+
+      <ScrollView className="bg-white flex-1 dark:bg-zinc-900">
         {/* Carousel */}
         <ProductCarousel images={images} />
 
@@ -135,7 +137,7 @@ export default function HomeScreen() {
               <ActivityIndicator size="large" color="#00bfa5" />
             </View>
           ) : (
-            <View className="w-full flex flex-row flex-wrap justify-between gap-x-2 gap-y-4 mx-4">
+            <View className="w-full flex flex-row flex-wrap justify-between gap-y-4 gap-x-2 px-4">
               {(products || []).length > 0 ? (
                 (products || []).map((product) => (
                   <ProductCard
