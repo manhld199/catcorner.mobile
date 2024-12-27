@@ -21,9 +21,9 @@ export default function ProductCard({ product }: ProductCardProps) {
         )
       }
       // className="w-[48%] bg-pri-5 dark:bg-pri-7 rounded-md"
-      className="rounded-xl bg-white shadow shadow-gray-400 dark:bg-gray-800 w-[48%]"
+      className="rounded-lg bg-white shadow shadow-gray-400 dark:bg-pri-6 w-[48%]"
     >
-      <View className="relative w-full p-4 flex flex-col justify-center items-center gap-2">
+      <View className="relative w-full p-2 flex flex-col justify-center gap-2">
         {/* Discount Badge */}
         {(product.highest_discount || 0) > 0 && (
           <View className="absolute top-2 left-2 bg-red-600 px-2 py-1 rounded z-10">
@@ -50,18 +50,18 @@ export default function ProductCard({ product }: ProductCardProps) {
         </View>
 
         {/* Product Category */}
-        <Text className="text-[10px] text-gray-500 bg-gray-100 px-2 py-1 rounded-full self-start mb-2">
+        <Text className="text-sm text-gray-600 dark:text-white bg-gray-100 dark:bg-teal-600 px-2 py-1 rounded-full self-start mb-2">
           {product.category_name}
         </Text>
 
         {/* Product Name */}
-        <Text className="w-full font-c-bold text-gray-900 dark:text-white text-base mb-2 line-clamp-2">
+        <Text className="w-full font-c-semibold text-gray-900 dark:text-white text-lg mb-2 line-clamp-2">
           {product.product_name}
         </Text>
 
         {/* Rating and Sold */}
         <View className="w-full flex-row justify-start  items-center space-x-1 mb-2">
-          <StarGroup rating={product?.product_rating?.rating_point || 0} starSize={16} />
+          <StarGroup rating={product?.product_rating?.rating_point || 5} starSize={18} />
           {/* {Array.from({ length: 5 }).map((_, index) => (
             <Ionicons
               key={index}
@@ -70,39 +70,44 @@ export default function ProductCard({ product }: ProductCardProps) {
               color="gold"
             />
           ))} */}
-          <Text className="text-xs text-gray-500"> ({product.product_sold_quantity} sold)</Text>
+          <Text className="text-sm text-gray-600 dark:text-white">
+            {" "}
+            ({product.product_sold_quantity} sold)
+          </Text>
         </View>
 
         {/* Variants */}
-        <View className="flex-row flex-wrap gap-1">
+        {/* <View className="flex-row flex-wrap gap-1">
           {Array.isArray(product.variant_name) &&
             product.variant_name.length > 1 &&
             product.variant_name.slice(0, 2).map((variant, index) => (
               <Text
                 key={index}
-                className="px-2 py-1 text-[8px] border border-teal-600 rounded-full text-teal-600"
+                className="px-2 py-1 text-xs border border-teal-600 dark:border-teal-400 rounded-full text-teal-600 dark:text-teal-400"
               >
                 {variant}
               </Text>
             ))}
           {Array.isArray(product.variant_name) && product.variant_name.length > 3 && (
-            <Text className="px-2 py-1 text-xs bg-gray-100 text-gray-500 rounded-full">...</Text>
+            <Text className="px-2 py-1 text-xs bg-gray-100 text-gray-600 dark:text-white rounded-full">
+              ...
+            </Text>
           )}
-        </View>
+        </View> */}
 
         {/* Price */}
-        <View className="flex-row items-center justify-between w-full">
+        <View className="mt-4 flex-row items-center justify-between w-full">
           {product.lowest_price && product.lowest_price !== product.product_price ? (
             <Fragment>
-              <Text className="text-sm text-gray-500 line-through">
+              <Text className="text-sm text-gray-600 dark:text-white line-through">
                 {convertNumberToVND(product.product_price)}
               </Text>
-              <Text className="text-base font-c-bold text-red-600">
+              <Text className="text-lg font-c-bold text-red-600 dark:text-red-500">
                 {convertNumberToVND(product.lowest_price)}
               </Text>
             </Fragment>
           ) : (
-            <Text className="text-base font-c-bold text-red-600">
+            <Text className="text-lg font-c-bold text-red-600 dark:text-red-500">
               {convertNumberToVND(product.product_price)}
             </Text>
           )}

@@ -9,6 +9,7 @@ import ProductCard from "@/components/cards/product-card";
 import { Filter } from "lucide-react-native";
 import { Input } from "@/components/Input";
 import { getData } from "@/utils/functions/handle";
+import { useColorScheme } from "nativewind";
 
 interface IFiterState {
   category: string;
@@ -20,6 +21,7 @@ interface IFiterState {
 
 export default function SearchResultPage() {
   const { searchKey, sortBy } = useLocalSearchParams();
+  const { colorScheme } = useColorScheme();
 
   // sort
   const [searchKeyState, setSearchKeyState] = useState<string>((searchKey as string) || "");
@@ -79,7 +81,7 @@ export default function SearchResultPage() {
 
       const queryString = queryParams.join("&");
 
-      console.log("queryString", queryString);
+      // console.log("queryString", queryString);
 
       const res = await fetch(
         `${SEARCH_URL}?${queryString}`
@@ -117,60 +119,82 @@ export default function SearchResultPage() {
   }, []);
 
   return (
-    <View className="flex flex-col">
+    <View className="flex flex-col bg-white dark:bg-gray-800">
       <InputSearch transcript={searchKeyState} setTranscript={setSearchKeyState} />
 
-      <View className="bg-white flex flex-row justify-between items-center border-b-[1px] border-b-gray-200">
+      <View className="bg-white dark:bg-pri-6 flex flex-row justify-between items-center">
         <TouchableOpacity
-          className={`p-4 ${currentTab == "relevant" ? "border-b-2 border-pri-6" : ""}`}
+          className={`p-4 ${
+            currentTab == "relevant" ? "border-b-2 border-pri-6 dark:border-pri-2" : ""
+          }`}
           onPress={() => {
             setCurrentTab("relevant");
           }}
         >
-          <Text className={`${currentTab == "relevant" ? "text-pri-6 font-c-semibold" : ""}`}>
+          <Text
+            className={`${
+              currentTab == "relevant" ? "text-pri-6 dark:text-pri-2 font-c-semibold" : ""
+            }`}
+          >
             Liên quan
           </Text>
         </TouchableOpacity>
         <View className="h-1/2 w-[2px] bg-slate-200"></View>
 
         <TouchableOpacity
-          className={`p-4 ${currentTab == "hot" ? "border-b-2 border-pri-6" : ""}`}
+          className={`p-4 ${
+            currentTab == "hot" ? "border-b-2 border-pri-6 dark:border-pri-2" : ""
+          }`}
           onPress={() => {
             setCurrentTab("hot");
             setSortByState("hot");
           }}
         >
-          <Text className={`${currentTab == "hot" ? "text-pri-6 font-c-semibold" : ""}`}>HOT</Text>
+          <Text
+            className={`${currentTab == "hot" ? "text-pri-6 dark:text-pri-2 font-c-semibold" : ""}`}
+          >
+            HOT
+          </Text>
         </TouchableOpacity>
         <View className="h-1/2 w-[2px] bg-slate-200"></View>
 
         <TouchableOpacity
-          className={`p-4 ${currentTab == "new" ? "border-b-2 border-pri-6" : ""}`}
+          className={`p-4 ${
+            currentTab == "new" ? "border-b-2 border-pri-6 dark:border-pri-2" : ""
+          }`}
           onPress={() => {
             setCurrentTab("new");
             setSortByState("new");
           }}
         >
-          <Text className={`${currentTab == "new" ? "text-pri-6 font-c-semibold" : ""}`}>
+          <Text
+            className={`${currentTab == "new" ? "text-pri-6 dark:text-pri-2 font-c-semibold" : ""}`}
+          >
             Mới nhất
           </Text>
         </TouchableOpacity>
         <View className="h-1/2 w-[2px] bg-slate-200"></View>
 
         <TouchableOpacity
-          className={`p-4 ${currentTab == "sale" ? "border-b-2 border-pri-6" : ""}`}
+          className={`p-4 ${
+            currentTab == "sale" ? "border-b-2 border-pri-6 dark:border-pri-2" : ""
+          }`}
           onPress={() => {
             setCurrentTab("sale");
             setSortByState("sale");
           }}
         >
-          <Text className={`${currentTab == "sale" ? "text-pri-6 font-c-semibold" : ""}`}>
+          <Text
+            className={`${
+              currentTab == "sale" ? "text-pri-6 dark:text-pri-2 font-c-semibold" : ""
+            }`}
+          >
             Bán chạy
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity className="p-2" onPress={() => setShowFilterModal(true)}>
-          <Filter color="black" size={24} />
+          <Filter color={colorScheme == "light" ? "black" : "white"} size={24} />
         </TouchableOpacity>
 
         <ModalRightSheet
@@ -179,9 +203,9 @@ export default function SearchResultPage() {
           title="Bộ lọc tìm kiếm"
           modalWidth="w-4/5"
         >
-          <View className="flex flex-col gap-4">
+          <View className="flex flex-col gap-4 ">
             <View className="flex flex-col gap-2">
-              <Text className="text-lg font-c-semibold text-pri-6">Danh mục</Text>
+              <Text className="text-lg font-c-semibold text-pri-6 dark:text-pri-2">Danh mục</Text>
               <View className="flex flex-row gap-2 flex-wrap justify-between">
                 {(categories || []).length > 0 &&
                   (isFullCategories ? categories : categories.slice(0, 4)).map(
@@ -190,8 +214,8 @@ export default function SearchResultPage() {
                         key={`filter category ${index}`}
                         className={`w-[48%] p-2 rounded-md ${
                           category.category_id_hashed == filterState.category
-                            ? "bg-teal-100"
-                            : "bg-gray-100 "
+                            ? "bg-teal-100 dark:bg-teal-600"
+                            : "bg-gray-100 dark:bg-gray-700"
                         }`}
                         onPress={() =>
                           setFilterState((prev) => ({
@@ -216,11 +240,13 @@ export default function SearchResultPage() {
             </View>
 
             <View className="flex flex-col gap-2">
-              <Text className="text-lg font-c-semibold text-pri-6">Đánh giá</Text>
+              <Text className="text-lg font-c-semibold text-pri-6 dark:text-pri-2">Đánh giá</Text>
               <View className="flex flex-row gap-2 flex-wrap">
                 <TouchableOpacity
                   className={`w-[48%] p-2 rounded-md ${
-                    filterState.rating == 1 ? "bg-teal-100" : "bg-gray-100"
+                    filterState.rating == 1
+                      ? "bg-teal-100 dark:bg-teal-600"
+                      : "bg-gray-100 dark:bg-gray-700"
                   }`}
                   onPress={() => setFilterState((prev) => ({ ...prev, rating: 1 }))}
                 >
@@ -231,7 +257,9 @@ export default function SearchResultPage() {
 
                 <TouchableOpacity
                   className={`w-[48%] p-2 rounded-md ${
-                    filterState.rating == 2 ? "bg-teal-100" : "bg-gray-100"
+                    filterState.rating == 2
+                      ? "bg-teal-100 dark:bg-teal-600"
+                      : "bg-gray-100 dark:bg-gray-700"
                   }`}
                   onPress={() => setFilterState((prev) => ({ ...prev, rating: 2 }))}
                 >
@@ -241,7 +269,9 @@ export default function SearchResultPage() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   className={`w-[48%] p-2 rounded-md ${
-                    filterState.rating == 3 ? "bg-teal-100" : "bg-gray-100"
+                    filterState.rating == 3
+                      ? "bg-teal-100 dark:bg-teal-600"
+                      : "bg-gray-100 dark:bg-gray-700"
                   }`}
                   onPress={() => setFilterState((prev) => ({ ...prev, rating: 3 }))}
                 >
@@ -251,7 +281,9 @@ export default function SearchResultPage() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   className={`w-[48%] p-2 rounded-md ${
-                    filterState.rating == 4 ? "bg-teal-100" : "bg-gray-100"
+                    filterState.rating == 4
+                      ? "bg-teal-100 dark:bg-teal-600"
+                      : "bg-gray-100 dark:bg-gray-700"
                   }`}
                   onPress={() => setFilterState((prev) => ({ ...prev, rating: 4 }))}
                 >
@@ -261,7 +293,9 @@ export default function SearchResultPage() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   className={`w-[48%] p-2 rounded-md ${
-                    filterState.rating == 5 ? "bg-teal-100" : "bg-gray-100"
+                    filterState.rating == 5
+                      ? "bg-teal-100 dark:bg-teal-600"
+                      : "bg-gray-100 dark:bg-gray-700"
                   }`}
                   onPress={() => setFilterState((prev) => ({ ...prev, rating: 5 }))}
                 >
@@ -273,11 +307,13 @@ export default function SearchResultPage() {
             </View>
 
             <View className="flex flex-col gap-2">
-              <Text className="text-lg font-c-semibold text-pri-6">Giảm giá</Text>
+              <Text className="text-lg font-c-semibold text-pri-6 dark:text-pri-2">Giảm giá</Text>
               <View className="flex flex-row gap-2 flex-wrap justify-between">
                 <TouchableOpacity
                   className={`w-[48%] p-2 rounded-md ${
-                    filterState.discount == false ? "bg-teal-100" : "bg-gray-100"
+                    filterState.discount == false
+                      ? "bg-teal-100 dark:bg-teal-600"
+                      : "bg-gray-100 dark:bg-gray-700"
                   }`}
                   onPress={() => setFilterState((prev) => ({ ...prev, discount: false }))}
                 >
@@ -285,7 +321,9 @@ export default function SearchResultPage() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   className={`w-[48%] p-2 rounded-md ${
-                    filterState.discount == true ? "bg-teal-100" : "bg-gray-100"
+                    filterState.discount == true
+                      ? "bg-teal-100 dark:bg-teal-600"
+                      : "bg-gray-100 dark:bg-gray-700"
                   }`}
                   onPress={() => setFilterState((prev) => ({ ...prev, discount: true }))}
                 >
@@ -295,9 +333,9 @@ export default function SearchResultPage() {
             </View>
 
             <View className="w-full flex flex-col gap-2">
-              <Text className="text-lg font-c-semibold text-pri-6">Giá tiền</Text>
+              <Text className="text-lg font-c-semibold text-pri-6 dark:text-pri-2">Giá tiền</Text>
               <View className="flex flex-col gap-2">
-                <View className="w-full p-4 flex flex-row gap-2 justify-between items-center bg-gray-100 rounded-md">
+                <View className="w-full p-4 flex flex-row gap-2 justify-between items-center bg-gray-100 dark:bg-gray-700 rounded-md">
                   <Input
                     placeholder="TỐI THIỂU"
                     containerClassName="w-[45%]"
@@ -321,7 +359,7 @@ export default function SearchResultPage() {
 
                 <View className="flex flex-row gap-2 flex-wrap justify-between">
                   <TouchableOpacity
-                    className="py-2 px-3 bg-gray-100 rounded-md"
+                    className="py-2 px-3 bg-gray-100 dark:bg-gray-700 rounded-md"
                     onPress={() =>
                       setFilterState((prev) => ({ ...prev, minPrice: 0, maxPrice: 100000 }))
                     }
@@ -329,7 +367,7 @@ export default function SearchResultPage() {
                     <Text className="text-center text-base">0-100K</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    className="p-2 bg-gray-100 rounded-md"
+                    className="p-2 bg-gray-100 dark:bg-gray-700 rounded-md"
                     onPress={() =>
                       setFilterState((prev) => ({ ...prev, minPrice: 100000, maxPrice: 200000 }))
                     }
@@ -337,7 +375,7 @@ export default function SearchResultPage() {
                     <Text className="text-center text-base">100-200K</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    className="p-2 bg-gray-100 rounded-md"
+                    className="p-2 bg-gray-100 dark:bg-gray-700 rounded-md"
                     onPress={() =>
                       setFilterState((prev) => ({ ...prev, minPrice: 200000, maxPrice: 500000 }))
                     }
@@ -345,9 +383,13 @@ export default function SearchResultPage() {
                     <Text className="text-center text-base">200-500K</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    className="p-2 bg-gray-100 rounded-md"
+                    className="p-2 bg-gray-100 dark:bg-gray-700 rounded-md"
                     onPress={() =>
-                      setFilterState((prev) => ({ ...prev, minPrice: 1000000, maxPrice: 5000000 }))
+                      setFilterState((prev) => ({
+                        ...prev,
+                        minPrice: 1000000,
+                        maxPrice: 5000000,
+                      }))
                     }
                   >
                     <Text className="text-center text-base">{">"} 1M</Text>
@@ -401,25 +443,27 @@ export default function SearchResultPage() {
         </ModalRightSheet>
       </View>
 
-      <ScrollView className="bg-white p-4">
-        {/* Hiển thị trạng thái loading */}
-        {isLoading ? (
-          <View className="items-center justify-center py-6">
-            <ActivityIndicator size="large" color="#00bfa5" />
-          </View>
-        ) : (
-          <View className="w-full flex flex-row flex-wrap justify-between gap-y-4 gap-x-2">
-            {(products || []).length > 0 ? (
-              products.map((product) => (
-                <ProductCard key={product.product_id_hashed} product={product} />
-              ))
-            ) : (
-              <Text className="text-center text-gray-600 dark:text-gray-400">
-                Không có sản phẩm nào.
-              </Text>
-            )}
-          </View>
-        )}
+      <ScrollView>
+        <View className="p-4">
+          {/* Hiển thị trạng thái loading */}
+          {isLoading ? (
+            <View className="items-center justify-center py-6">
+              <ActivityIndicator size="large" color="#00bfa5" />
+            </View>
+          ) : (
+            <View className="w-full flex flex-row flex-wrap justify-between gap-y-4 gap-x-2">
+              {(products || []).length > 0 ? (
+                products.map((product) => (
+                  <ProductCard key={product.product_id_hashed} product={product} />
+                ))
+              ) : (
+                <Text className="text-center text-gray-600 dark:text-gray-400">
+                  Không có sản phẩm nào.
+                </Text>
+              )}
+            </View>
+          )}
+        </View>
       </ScrollView>
     </View>
   );
