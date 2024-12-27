@@ -23,7 +23,6 @@ export default function PurchaseDetailPage() {
   const colorScheme = useColorScheme();
   const router = useRouter();
   const { id } = useLocalSearchParams();
-  console.log("iiiiiiiiiiiiiiiiiiii", id);
   const [order, setOrder] = useState<any>(null); // Trạng thái lưu thông tin đơn hàng
   const [loading, setLoading] = useState<boolean>(true); // Trạng thái tải dữ liệu
 
@@ -196,7 +195,7 @@ export default function PurchaseDetailPage() {
         
         <div class="section">
           <h2 class="section-title">Tổng tiền</h2>
-          <p class="text">Tổng tiền hàng: <strong>${order.total_products_cost?.toLocaleString()}đ</strong></p>
+          <p class="text">Tổng tiền hàng: <strong>${order.final_cost?.toLocaleString()}đ</strong></p>
           <p class="text">Phí vận chuyển: <strong>${order.shipping_cost?.toLocaleString()}đ</strong></p>
           <p class="text">Ưu đãi: <strong>${
             order.applied_coupons?.length > 0 ? "-15.000đ" : "Không có"
@@ -337,7 +336,7 @@ export default function PurchaseDetailPage() {
         <View className="flex-row justify-between mb-2">
           <Text className="text-gray-500">Tổng tiền hàng</Text>
           <Text className="text-gray-800">
-            {order.total_products_cost?.toLocaleString()}đ
+            {order.final_cost?.toLocaleString()}đ
           </Text>
         </View>
         <View className="flex-row justify-between mb-2">

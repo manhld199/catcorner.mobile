@@ -52,7 +52,8 @@ export const getData = async (url: string, token?: string) => {
     // console.log("data", data);
     // console.log("resssssssssssssss", res.ok);
 
-    if (!res.ok) return { data: null, message: data.data.message || "Get Failed" };
+    if (!res.ok)
+      return { data: null, message: data.data.message || "Get Failed" };
 
     return { data: data, message: data.data.message || "Get Success" };
   } catch (err) {
@@ -88,5 +89,39 @@ export const putData = async (url: string, payload: any, token?: string) => {
   } catch (err) {
     console.error("Fetch data error: ", err);
     return { data: null, message: "Put Error" };
+  }
+};
+
+export const deleteData = async (url: string, token?: string) => {
+  try {
+    const headers: any = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    const res = await fetch(url, {
+      method: "DELETE",
+      headers,
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return {
+        data: null,
+        message: data.message || data.data?.message || "Delete Failed",
+      };
+    }
+
+    return {
+      data: data,
+      message: data.message || data.data?.message || "Delete Success",
+    };
+  } catch (err) {
+    console.error("Fetch data error: ", err);
+    return { data: null, message: "Delete Error" };
   }
 };

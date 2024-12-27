@@ -11,9 +11,13 @@ import {
 import { Text } from "@/components/Text";
 import { ArrowBack } from "@/components";
 import { useRouter } from "expo-router"; // Import useRouter để điều hướng
-import { getData } from "@/utils/functions/handle";
+import { getData, putData } from "@/utils/functions/handle";
 import { getAccessToken } from "@/lib/authStorage";
-import { ALL_ORDERS_URL } from "@/utils/constants/urls";
+import {
+  ALL_ORDERS_URL,
+  CANCEL_ORDER_URL,
+  ORDER_URL,
+} from "@/utils/constants/urls";
 import { IOrder } from "@/types/interfaces";
 
 const statusMapping = {
@@ -95,13 +99,51 @@ export default function PurchaseHistoryPage() {
           : "bg-gray-200 text-gray-700";
     }
   };
+  const handleCancelOrder = async (orderId: string) => {
+    try {
+      const token = await getAccessToken();
 
-  const renderActions = (status: OrderStatus) => {
+      if (!token) {
+        Alert.alert("Lỗi", "Bạn cần đăng nhập để hủy đơn hàng.");
+        return;
+      }
+
+      // URL API
+      const url = `${CANCEL_ORDER_URL}/${orderId}`; // Đảm bảo `orderId` không bị undefined
+      // console.log("API gọi tới:", url);
+      console.log("_id:", orderId);
+
+      const payload = { order_status: "cancel" };
+
+      // Gửi request
+      const { data, message } = await putData(url, payload, token);
+      console.log("Phản hồi API:", data, message);
+
+      if (message) {
+        Alert.alert("Thành công", "Đơn hàng đã được hủy.");
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order._id === orderId ? { ...order, order_status: "cancel" } : order
+          )
+        );
+      } else {
+        Alert.alert("Lỗi", message || "Không thể hủy đơn hàng.");
+      }
+    } catch (error) {
+      console.error("Lỗi khi hủy đơn hàng:", error);
+      Alert.alert("Lỗi", "Không thể hủy đơn hàng.");
+    }
+  };
+
+  const renderActions = (status: OrderStatus, orderId: string) => {
     switch (status) {
       case "unpaid":
         return (
           <View className="flex-row gap-3 mt-2 justify-end">
-            <TouchableOpacity className="border border-red-500 w-36 py-3 rounded-lg">
+            <TouchableOpacity
+              onPress={() => handleCancelOrder(orderId)} // Gọi hàm cancelOrder khi nhấn
+              className="border border-red-500 w-36 py-3 rounded-lg"
+            >
               <Text className="text-red-500 text-center text-base">
                 Hủy đơn hàng
               </Text>
@@ -321,7 +363,7 @@ export default function PurchaseHistoryPage() {
                   </View>
 
                   {/* Action Buttons */}
-                  {renderActions(item.order_status)}
+                  {renderActions(item.order_status, item._id)}
                 </View>
               </TouchableOpacity>
             )}
