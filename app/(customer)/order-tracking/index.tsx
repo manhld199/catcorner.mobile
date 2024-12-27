@@ -4,8 +4,6 @@ import { Text } from "@/components/Text";
 import { Input } from "@/components/Input";
 import { CustomerAppbar, CustomerHeader } from "@/partials";
 import { useRouter } from "expo-router";
-import { TRACK_ORDER_URL } from "@/utils/constants/urls";
-import { getData } from "@/utils/functions/handle";
 
 export default function OrderTrackingPage() {
   const [orderId, setOrderId] = useState("");
