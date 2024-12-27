@@ -1,27 +1,37 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, ScrollView } from "react-native";
+import { View, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { Text } from "@/components/Text";
 import { Input } from "@/components/Input";
-import { CustomerAppbar } from "@/partials";
+import { CustomerAppbar, CustomerHeader } from "@/partials";
+import { useRouter } from "expo-router";
+import { TRACK_ORDER_URL } from "@/utils/constants/urls";
+import { getData } from "@/utils/functions/handle";
 
 export default function OrderTrackingPage() {
   const [orderId, setOrderId] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const router = useRouter();
 
   const handleTrackOrder = () => {
-    // Xử lý tra cứu đơn hàng
-    alert(`Tra cứu đơn hàng: ${orderId} - ${phoneNumber}`);
-  };
+    if (!orderId || !phoneNumber) {
+      Alert.alert(
+        "Thông báo",
+        "Vui lòng nhập đầy đủ mã đơn hàng và số điện thoại."
+      );
+      return;
+    }
 
-  const handleViewOrdersInCatCorner = () => {
-    // Xử lý xem đơn hàng trong CatCorner
-    alert("Xem đơn hàng trong CatCorner");
+    // Chuyển sang trang kết quả và truyền tham số qua router
+    router.push({
+      pathname: "/order-tracking/result",
+      params: { orderId, phoneNumber },
+    });
   };
 
   return (
     <>
+      <CustomerHeader />
       <ScrollView className="flex-1 bg-gray-50 px-6 py-8">
-        {/* Header */}
         <Text className="text-2xl font-c-bold text-gray-800 text-center">
           Tra cứu đơn hàng
         </Text>
@@ -29,7 +39,6 @@ export default function OrderTrackingPage() {
           Kiểm tra thông tin đơn hàng và tình trạng vận chuyển đơn hàng của bạn!
         </Text>
 
-        {/* Form */}
         <View className="mt-8">
           <Text className="text-gray-700 font-medium mb-2">Mã đơn hàng:</Text>
           <Input
@@ -38,7 +47,6 @@ export default function OrderTrackingPage() {
             value={orderId}
             onChangeText={setOrderId}
           />
-
           <Text className="text-gray-700 font-medium mt-4 mb-2">
             Số điện thoại nhận hàng:
           </Text>
@@ -48,8 +56,6 @@ export default function OrderTrackingPage() {
             value={phoneNumber}
             onChangeText={setPhoneNumber}
           />
-
-          {/* Button */}
           <TouchableOpacity
             className="bg-teal-700 rounded-full py-4 mt-6"
             onPress={handleTrackOrder}
@@ -58,19 +64,12 @@ export default function OrderTrackingPage() {
               Tra cứu
             </Text>
           </TouchableOpacity>
-
-          {/* Separator */}
           <View className="flex-row items-center my-6">
             <View className="flex-1 h-[1px] bg-gray-300" />
             <Text className="px-4 text-gray-500">Hoặc</Text>
             <View className="flex-1 h-[1px] bg-gray-300" />
           </View>
-
-          {/* View Orders Button */}
-          <TouchableOpacity
-            className="border-2 border-teal-700 rounded-full py-4"
-            onPress={handleViewOrdersInCatCorner}
-          >
+          <TouchableOpacity className="border-2 border-teal-700 rounded-full py-4">
             <Text className="text-teal-700 font-c-bold text-center">
               Xem đơn hàng trong CatCorner
             </Text>

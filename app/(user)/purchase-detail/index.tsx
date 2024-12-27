@@ -497,13 +497,9 @@ export default function PurchaseDetailPage() {
           <View className="w-4 h-4 bg-gray-300 rounded-full mr-4" />
           <Text className="text-gray-500">Đã giao</Text>
         </View>
-        {/* <TouchableOpacity className="bg-teal-500 rounded-lg mt-4 p-4">
-            <Text className="text-white text-center font-bold">
-              Track your Order
-            </Text>
-          </TouchableOpacity> */}
       </View>
 
+      {/* Payment Info */}
       <View className="bg-white shadow rounded-lg p-4 mb-6">
         <Text className="text-gray-800 font-c-bold text-lg mb-2">
           Thông tin thanh toán

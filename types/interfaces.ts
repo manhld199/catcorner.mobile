@@ -23,7 +23,6 @@ export interface IUser {
   reset_token?: string;
   new_password?: string;
   otp?: string;
-  user_phone_number?: string;
   user_gender?: string;
   user_birth_day?: Date;
 }
@@ -176,4 +175,16 @@ export interface IOption {
   title: string;
   icon: string;
   link: string;
+}
+
+export interface IOrderProduct {
+  product_id: string;
+  variant_id: string;
+  quantity: number;
+  unit_price: number;
+  discount_percent: number;
+  product_name: string;
+  product_img: string;
+  variant_name?: string;
+  variant_img?: string;
 }
