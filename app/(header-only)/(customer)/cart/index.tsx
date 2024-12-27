@@ -53,9 +53,9 @@ export default function CartPage() {
         const cartData: ICartProduct[] =
           JSON.parse(currentStorage || "{}")?.products || [];
 
-        console.log("aaaaaaaaaaaaaaaaa", cartData);
+        // console.log("aaaaaaaaaaaaaaaaa", cartData);
         const { data, message } = await postData(CART_URL, cartData);
-        console.log("bbbbbbbbbbbbbbbbbbbb", data);
+        // console.log("bbbbbbbbbbbbbbbbbbbb", data.data);
         if (data.data.products) {
           setCartProducts(data.data.products);
         }
@@ -267,6 +267,49 @@ export default function CartPage() {
               {calculateTotal().toLocaleString()}đ
             </Text>
           </View>
+        </View>
+        {/* Footer */}
+        <View className="py-4 bg-white shadow-md rounded-lg mt-4 mb-8">
+          <TouchableOpacity
+            className="mt-4 bg-teal-500 p-3 rounded-lg"
+            onPress={async () => {
+              const selectedProducts = cartProducts
+                .filter((item) =>
+                  selectedItems.includes(item.product_id + item.variant_id)
+                )
+                .map((item) => ({
+                  product_hashed_id: item.product_hashed_id,
+                  variant_id: item.variant_id,
+                  quantity: item.quantity,
+                }));
+
+              if (selectedProducts.length === 0) {
+                Alert.alert(
+                  "Lỗi",
+                  "Vui lòng chọn ít nhất một sản phẩm để đặt hàng."
+                );
+                return;
+              }
+
+              try {
+                await AsyncStorage.setItem(
+                  "PURCHASE_PRODUCTS",
+                  JSON.stringify({
+                    updatedAt: Date.now(),
+                    products: selectedProducts,
+                  })
+                );
+                router.push("/purchase");
+              } catch (error) {
+                console.error("Lỗi khi lưu sản phẩm vào AsyncStorage:", error);
+                Alert.alert("Lỗi", "Không thể tiến hành đặt hàng.");
+              }
+            }}
+          >
+            <Text className="text-white font-c-semibold text-center">
+              Đặt hàng
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </>

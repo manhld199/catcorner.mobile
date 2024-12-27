@@ -17,7 +17,13 @@ import {
 
 // Import components
 import { Text } from "@/components/Text";
-import { CardCoupon, CardProductOrder, ModalBottomSheet, SelectAddress } from "@/components";
+import {
+  ArrowBack,
+  CardCoupon,
+  CardProductOrder,
+  ModalBottomSheet,
+  SelectAddress,
+} from "@/components";
 import { Textarea } from "@/components/Textarea";
 import { Input } from "@/components/Input";
 
@@ -28,7 +34,11 @@ import { IAddress, IProductOrder, IPurchaseProduct } from "@/types/interfaces";
 import { AuthContext } from "@/providers";
 
 // import utils
-import { PAYMENT_PRODUCTS, PURCHASE_PRODUCTS, SHIPPING_COST } from "@/utils/constants/variables";
+import {
+  PAYMENT_PRODUCTS,
+  PURCHASE_PRODUCTS,
+  SHIPPING_COST,
+} from "@/utils/constants/variables";
 import { postData } from "@/utils/functions/handle";
 import { PRODUCT_ORDER_URL } from "@/utils/constants/urls";
 import { convertNumberToVND } from "@/utils/functions/convert";
@@ -37,7 +47,9 @@ export default function PurchasePage() {
   const router = useRouter();
   const { userInfo } = useContext(AuthContext) || { userInfo: null };
 
-  const [purchaseProducts, setPurchaseProducts] = useState<IPurchaseProduct[]>([]);
+  const [purchaseProducts, setPurchaseProducts] = useState<IPurchaseProduct[]>(
+    []
+  );
   const [orderProducts, setOrderProducts] = useState<IProductOrder[]>([]);
   const [showCouponModal, setShowCouponModal] = useState<boolean>(false);
   const [showNoteModal, setShowNoteModal] = useState<boolean>(false);
@@ -47,7 +59,9 @@ export default function PurchasePage() {
     (userInfo && userInfo.user_name ? userInfo.user_name : "") as string
   );
   const [userPhone, setUserPhone] = useState<string>(
-    (userInfo && userInfo.user_phone_number ? userInfo.user_phone_number : "") as string
+    (userInfo && userInfo.user_phone_number
+      ? userInfo.user_phone_number
+      : "") as string
   );
   // console.log("userPhone", userPhone, typeof userPhone, userInfo);
   const [userAddress, setUserAddress] = useState<IAddress>(
@@ -68,14 +82,18 @@ export default function PurchasePage() {
     const getPurchaseProducts = async () => {
       try {
         const storageData = await AsyncStorage.getItem(PURCHASE_PRODUCTS);
+        // console.log("Data lưu:", storageData);
 
         if (storageData) {
           const parsedData = JSON.parse(storageData);
+          console.log("Data parse mua ngay:", parsedData);
           await AsyncStorage.removeItem(PURCHASE_PRODUCTS);
 
           if (parsedData?.updatedAt) {
             const currentTime = Date.now();
-            const timeElapsed = Math.floor((currentTime - parsedData.updatedAt) / 1000);
+            const timeElapsed = Math.floor(
+              (currentTime - parsedData.updatedAt) / 1000
+            );
             const remainingTime = timeLeft - timeElapsed;
 
             if (remainingTime <= 0) {
@@ -84,7 +102,7 @@ export default function PurchasePage() {
               Toast.show({
                 type: "error",
                 text1: "Oops!!!",
-                text2: "Phiên thanh toán đã quá hạn, vui lòng thử lại sau!",
+                text2: "Phiên đặt hàng đã quá hạn, vui lòng thử lại sau!",
               });
               router.back();
               return;
@@ -190,7 +208,9 @@ export default function PurchasePage() {
       // console.log("Đã xóa PAYMENT_PRODUCTS cũ");
 
       const orderId = `DH${Date.now()}${
-        userInfo ? `.${userInfo.user_id}` : `.guest${userPhone}_${Math.round(Math.random() * 1000)}`
+        userInfo
+          ? `.${userInfo.user_id}`
+          : `.guest${userPhone}_${Math.round(Math.random() * 1000)}`
       }`;
 
       // Chuẩn bị dữ liệu mới để lưu
@@ -213,13 +233,18 @@ export default function PurchasePage() {
         shipping_cost: SHIPPING_COST,
         payment_method: paymentMethod,
         cancel_url: "catcorner://purchase-history?selectedTab=unpaid",
-        return_url: `catcorner://order-success?orderId=${encodeURIComponent(orderId)}`,
+        return_url: `catcorner://order-success?orderId=${encodeURIComponent(
+          orderId
+        )}`,
       };
 
       // console.log("newPaymentData", newPaymentData);
 
       // Lưu lại PAYMENT_PRODUCTS mới
-      await AsyncStorage.setItem(PAYMENT_PRODUCTS, JSON.stringify(newPaymentData));
+      await AsyncStorage.setItem(
+        PAYMENT_PRODUCTS,
+        JSON.stringify(newPaymentData)
+      );
       // console.log("Đã lưu PAYMENT_PRODUCTS mới:", newPaymentData);
 
       router.push("/payment");
@@ -233,26 +258,36 @@ export default function PurchasePage() {
   // console.log("userInfo", userInfo);
 
   return (
-    <View className="bg-bg-1 dark:bg-gray-800 relative">
+    <View className="bg-bg-1 dark:bg-gray-800 relative px-3">
       <ScrollView>
+        <View className="flex flex-row gap-2 items-center my-3">
+          <ArrowBack />
+          <Text>Thông tin đặt hàng</Text>
+        </View>
         {/* Product */}
         <View className="mt-4 p-4 flex flex-col gap-4 bg-white dark:bg-zinc-900 ">
           <Text className="font-c-semibold">Sản phẩm</Text>
 
           {orderProducts.map((product, index) => (
-            <CardProductOrder key={`order product ${index}`} product={product} />
+            <CardProductOrder
+              key={`order product ${index}`}
+              product={product}
+            />
           ))}
           <View className="px-4 border-b-[1px] border-gray-100"></View>
 
           <View className="flex flex-row justify-between">
             <Text>
-              Tổng số tiền ({orderProducts.reduce((acc, curr) => acc + curr.quantity, 0)} sản phẩm)
+              Tổng số tiền (
+              {orderProducts.reduce((acc, curr) => acc + curr.quantity, 0)} sản
+              phẩm)
             </Text>
             <View className="flex flex-row gap-2 items-center">
               <Text className="text-base text-gray-600 dark:text-gray-400 line-through">
                 {convertNumberToVND(
                   orderProducts.reduce(
-                    (acc, curr) => acc + curr.quantity * curr.product_variant.variant_price,
+                    (acc, curr) =>
+                      acc + curr.quantity * curr.product_variant.variant_price,
                     0
                   )
                 )}
@@ -264,7 +299,9 @@ export default function PurchasePage() {
                       acc +
                       (curr.product_variant.variant_price *
                         curr.quantity *
-                        (100 - (curr.product_variant.variant_discount_percent || 0))) /
+                        (100 -
+                          (curr.product_variant.variant_discount_percent ||
+                            0))) /
                         100,
                     0
                   )
@@ -284,7 +321,9 @@ export default function PurchasePage() {
               <View className="w-full flex flex-row justify-between">
                 <Text className="font-c-semibold">Thông tin người nhận</Text>
                 <View className="flex flex-row gap-1 items-center">
-                  <Text className="text-base text-gray-600 dark:text-gray-400">Chỉnh sửa</Text>
+                  <Text className="text-base text-gray-600 dark:text-gray-400">
+                    Chỉnh sửa
+                  </Text>
                   <ChevronRight color="#4b5563" size={16} />
                 </View>
               </View>
@@ -294,12 +333,16 @@ export default function PurchasePage() {
                   {(userName != "" || userPhone != "") && (
                     <UserRound color="#5eead4" fill="#5eead4" size={24} />
                   )}
-                  {userName != "" && <Text className="font-c-medium">{userName}</Text>}
+                  {userName != "" && (
+                    <Text className="font-c-medium">{userName}</Text>
+                  )}
 
                   {userPhone != "" && (
                     <React.Fragment>
                       <Text>-</Text>
-                      <Text className="text-gray-600 dark:text-gray-400">{userPhone}</Text>
+                      <Text className="text-gray-600 dark:text-gray-400">
+                        {userPhone}
+                      </Text>
                     </React.Fragment>
                   )}
                 </View>
@@ -366,7 +409,9 @@ export default function PurchasePage() {
             <View className="flex flex-row gap-1 items-center">
               <View className="flex flex-row gap-2 items-center">
                 <TicketMinus color="#ef4444" size={18} />
-                <Text className="text-red-500">{convertNumberToVND(100998.5)}</Text>
+                <Text className="text-red-500">
+                  {convertNumberToVND(100998.5)}
+                </Text>
               </View>
               <ChevronRight color="#4b5563" size={16} />
             </View>
@@ -394,7 +439,9 @@ export default function PurchasePage() {
           >
             <Text className="font-c-semibold">Ghi chú</Text>
             <View className="flex flex-row gap-1 items-center">
-              <Text className="text-base text-gray-600 dark:text-gray-400">Để lại ghi chú</Text>
+              <Text className="text-base text-gray-600 dark:text-gray-400">
+                Để lại ghi chú
+              </Text>
               <ChevronRight color="#4b5563" size={16} />
             </View>
           </TouchableOpacity>
@@ -424,7 +471,9 @@ export default function PurchasePage() {
               <View className="w-full flex flex-row justify-between">
                 <Text className="font-c-semibold">Phương thức thanh toán</Text>
                 <View className="flex flex-row gap-1 items-center">
-                  <Text className="text-base text-gray-600 dark:text-gray-400">Xem thêm</Text>
+                  <Text className="text-base text-gray-600 dark:text-gray-400">
+                    Xem thêm
+                  </Text>
                   <ChevronRight color="#4b5563" size={16} />
                 </View>
               </View>
@@ -500,7 +549,8 @@ export default function PurchasePage() {
             <Text>
               {convertNumberToVND(
                 orderProducts.reduce(
-                  (acc, curr) => acc + curr.product_variant.variant_price * curr.quantity,
+                  (acc, curr) =>
+                    acc + curr.product_variant.variant_price * curr.quantity,
                   0
                 )
               )}
@@ -527,7 +577,9 @@ export default function PurchasePage() {
 
           <View className="flex flex-row justify-between items-center">
             <Text>Phiếu giảm giá</Text>
-            <Text className="text-teal-600 dark:text-teal-400">-{convertNumberToVND(100000)}</Text>
+            <Text className="text-teal-600 dark:text-teal-400">
+              -{convertNumberToVND(100000)}
+            </Text>
           </View>
 
           <View className="px-4 border-b-[1px] border-gray-100"></View>
@@ -544,11 +596,17 @@ export default function PurchasePage() {
         <Text className="w-3/6 text-sm">
           {" "}
           Bạn đồng ý với{" "}
-          <Link href={"/term-of-service" as any} className="underline text-blue-500">
+          <Link
+            href={"/term-of-service" as any}
+            className="underline text-blue-500"
+          >
             Điều khoản dịch vụ
           </Link>{" "}
           và{" "}
-          <Link href={"/privacy-policy" as any} className="underline text-blue-500">
+          <Link
+            href={"/privacy-policy" as any}
+            className="underline text-blue-500"
+          >
             Chính sách quyền riêng tư
           </Link>{" "}
           .
@@ -559,8 +617,12 @@ export default function PurchasePage() {
           className="flex-1 h-full p-2 bg-teal-500 dark:bg-teal-600 flex justify-center items-center"
           onPress={handlePayment}
         >
-          <Text className="font-c-semibold text-white">Mua hàng ({timeLeft}s)</Text>
-          <Text className="font-c-semibold text-white">{convertNumberToVND(1000000)}</Text>
+          <Text className="font-c-semibold text-white">
+            Mua hàng ({timeLeft}s)
+          </Text>
+          <Text className="font-c-semibold text-white">
+            {convertNumberToVND(1000000)}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
