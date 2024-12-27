@@ -13,6 +13,7 @@ const StarRating = ({
   starSize?: number;
   starColor?: string;
 }) => {
+  // console.log("raaaaaa", rating);
   // Chuyển rating thành các sao đầy, nửa sao, và sao trống
   const fullStars = Math.floor(rating);
   const decimalPart = rating - fullStars;

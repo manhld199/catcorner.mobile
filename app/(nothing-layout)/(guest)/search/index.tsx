@@ -83,10 +83,9 @@ export default function SearchPage() {
 
   return (
     <Fragment>
-      <ScrollView className="flex flex-col">
+      <InputSearch transcript={transcript} setTranscript={setTranscript} />
+      <ScrollView className="flex flex-col mb-[58px]">
         <View className="w-full flex flex-col">
-          <InputSearch transcript={transcript} setTranscript={setTranscript} />
-
           {/* Suggested Products */}
           <View className="w-full px-4 py-4 bg-white dark:bg-gray-800">
             <Text className="w-full text-center text-xl font-c-semibold text-gray-600 dark:text-white">

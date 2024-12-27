@@ -135,7 +135,7 @@ export default function ProductDetailPage() {
                 </Text>
               </View>
             ) : (
-              <Text className="text-3xl font-c-semibold text-pri-6">
+              <Text className="text-3xl font-c-semibold text-pri-6 dark:text-pri-2">
                 {convertNumberToVND(currentVariant?.variant_price || 0)}
               </Text>
             )}

@@ -12,10 +12,7 @@ interface AuthenticatedUserProps {
   options: IOption[];
 }
 
-export default function AuthenticatedUser({
-  userInfo,
-  options,
-}: AuthenticatedUserProps) {
+export default function AuthenticatedUser({ userInfo, options }: AuthenticatedUserProps) {
   const { logout } = useContext(AuthContext) || {};
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -38,12 +35,8 @@ export default function AuthenticatedUser({
             className="w-24 h-24"
           />
         </View>
-        <Text className="font-c-bold text-lg mt-4 dark:text-white">
-          {userInfo?.user_name}
-        </Text>
-        <Text className="text-gray-500 dark:text-gray-400">
-          {userInfo?.email}
-        </Text>
+        <Text className="font-c-bold text-lg mt-4 dark:text-white">{userInfo?.user_name}</Text>
+        <Text className="text-gray-500 dark:text-gray-400">{userInfo?.email}</Text>
         <Link
           href="/edit-information"
           className="bg-pri-1 dark:bg-teal-600 px-6 py-3 rounded-full mt-2"
@@ -70,9 +63,7 @@ export default function AuthenticatedUser({
                 >
                   <Ionicons name={item.icon as any} size={20} color="red" />
                 </View>
-                <Text className="text-base font-medium text-red-500">
-                  {item.title}
-                </Text>
+                <Text className="text-base font-medium text-red-500">{item.title}</Text>
               </View>
             </TouchableOpacity>
           ) : (
@@ -82,15 +73,9 @@ export default function AuthenticatedUser({
                   <View
                     className={`w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mr-4`}
                   >
-                    <Ionicons
-                      name={item.icon as any}
-                      size={20}
-                      color="#6b7280"
-                    />
+                    <Ionicons name={item.icon as any} size={20} color="#6b7280" />
                   </View>
-                  <Text className="text-base font-medium dark:text-gray-300">
-                    {item.title}
-                  </Text>
+                  <Text className="text-base font-medium dark:text-gray-300">{item.title}</Text>
                 </View>
                 <Ionicons
                   name="chevron-forward-outline"
@@ -117,25 +102,19 @@ export default function AuthenticatedUser({
             <Text className="font-c-bold text-lg mb-4 text-gray-800 dark:text-white">
               Xác nhận đăng xuất
             </Text>
-            <Text className="text-gray-500 mb-6">
-              Bạn có chắc chắn muốn đăng xuất không?
-            </Text>
+            <Text className="text-gray-500 mb-6">Bạn có chắc chắn muốn đăng xuất không?</Text>
             <View className="flex-row justify-between">
               <TouchableOpacity
                 onPress={() => setShowLogoutModal(false)}
                 className="bg-gray-300 dark:bg-gray-600 py-3 w-32 rounded-lg"
               >
-                <Text className="text-gray-800 dark:text-white text-center text-sm">
-                  Hủy
-                </Text>
+                <Text className="text-gray-800 dark:text-white text-center text-sm">Hủy</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleLogout}
                 className="bg-red-500 py-3 w-32 rounded-lg text-center"
               >
-                <Text className="text-white text-center text-sm">
-                  Đăng xuất
-                </Text>
+                <Text className="text-white text-center text-sm">Đăng xuất</Text>
               </TouchableOpacity>
             </View>
           </View>

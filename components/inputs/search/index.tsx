@@ -1,11 +1,15 @@
-import { View, Text } from "react-native";
+// import libs
+import { TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { Input } from "@/components/Input";
-import { Button } from "@/components/Button";
-import { Mic, MicOff, Search } from "lucide-react-native";
+import { ArrowLeft, Mic, MicOff, Search } from "lucide-react-native";
 import { useColorScheme } from "nativewind";
 import { ExpoSpeechRecognitionModule, useSpeechRecognitionEvent } from "expo-speech-recognition";
+
+// import components
+import { Input } from "@/components/Input";
+import { Button } from "@/components/Button";
+import { useRouter } from "expo-router";
 
 export default function InputSearch({
   transcript,
@@ -15,6 +19,7 @@ export default function InputSearch({
   setTranscript: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const { colorScheme } = useColorScheme();
+  const router = useRouter();
 
   const [searchColorState, setSearchColorState] = useState<string[]>(
     colorScheme == "light"
@@ -79,6 +84,12 @@ export default function InputSearch({
   return (
     <LinearGradient className="w-full" colors={searchColorState as any}>
       <View className="w-full p-4 flex flex-row gap-2 items-center">
+        <TouchableOpacity className="pr-2" onPress={() => router.back()}>
+          <ArrowLeft
+            color={colorScheme == "light" ? "rgb(153, 246, 228)" : "rgb(234, 251, 228)"}
+            size={24}
+          />
+        </TouchableOpacity>
         <View className="overflow-hidden flex-1 h-[44px] bg-white dark:bg-zinc-900 border-2 border-pri-7 dark:border-pri-2 rounded-lg flex flex-row gap-2">
           <Input
             containerClassName="flex-1"
