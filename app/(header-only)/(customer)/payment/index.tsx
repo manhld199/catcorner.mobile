@@ -86,6 +86,7 @@ export default function PaymentPage() {
     // console.log("URL được WebView gọi:", url);
 
     if (url.startsWith("catcorner://")) {
+      // console.log("URLLLLLLLLLL", url);
       Linking.openURL(url); // Xử lý custom scheme
       // router.replace("/"); // Chuyển hướng ứng dụng nếu cần
       return false; // Dừng WebView xử lý URL
