@@ -63,11 +63,7 @@ export default function EditUserInformationPage() {
         return;
       }
 
-      const { data, message } = await putData(
-        CHANGE_PROFILE_URL,
-        payload,
-        token
-      );
+      const { data, message } = await putData(CHANGE_PROFILE_URL, payload, token);
 
       if (data) {
         const updatedUser = data.data.user || payload;
@@ -87,8 +83,7 @@ export default function EditUserInformationPage() {
 
   // Hàm chọn ảnh
   const pickImage = async () => {
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
       Alert.alert("Quyền truy cập", "Bạn cần cấp quyền để chọn ảnh.");
       return;
@@ -128,22 +123,14 @@ export default function EditUserInformationPage() {
         <TouchableOpacity onPress={() => router.back()}>
           <Text className="text-teal-500 dark:text-teal-400">Hủy</Text>
         </TouchableOpacity>
-        <Text className="font-c-bold text-lg text-gray-800 dark:text-white">
-          Chỉnh sửa
-        </Text>
+        <Text className="font-c-bold text-lg text-gray-800 dark:text-white">Chỉnh sửa</Text>
         <TouchableOpacity onPress={saveChanges}>
           <Text className="text-teal-500 dark:text-teal-400">Lưu</Text>
         </TouchableOpacity>
       </View>
 
       {/* Loading Indicator */}
-      {loading && (
-        <ActivityIndicator
-          size="large"
-          color="#00ff00"
-          style={{ marginTop: 20 }}
-        />
-      )}
+      {loading && <ActivityIndicator size="large" color="#00ff00" style={{ marginTop: 20 }} />}
 
       {/* Avatar */}
       <View className="items-center mt-6 mb-6">
@@ -165,9 +152,7 @@ export default function EditUserInformationPage() {
       <View className="px-6">
         {/* Email */}
         <View className="mb-4">
-          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">
-            EMAIL
-          </Text>
+          <Text className="text-gray-400 dark:text-gray-500 text-sm mb-1">EMAIL</Text>
           <Input1
             value={email}
             placeholder="Nhập email"
@@ -178,9 +163,7 @@ export default function EditUserInformationPage() {
 
         {/* Số điện thoại */}
         <View className="mb-4">
-          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">
-            SỐ ĐIỆN THOẠI
-          </Text>
+          <Text className="text-gray-400 dark:text-gray-500 text-sm mb-1">SỐ ĐIỆN THOẠI</Text>
           <Input1
             value={phone}
             placeholder="Nhập số điện thoại"
@@ -192,16 +175,12 @@ export default function EditUserInformationPage() {
 
         {/* Giới tính */}
         <View className="mb-4">
-          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">
-            GIỚI TÍNH
-          </Text>
+          <Text className="text-gray-400 dark:text-gray-500 text-sm mb-1">GIỚI TÍNH</Text>
           <TouchableOpacity
             onPress={() => setShowGenderModal(true)}
             className="border-b border-gray-300 dark:border-gray-700 pb-2 flex-row items-center justify-between"
           >
-            <Text className="text-gray-800 dark:text-white text-base">
-              {gender || "Chọn"}
-            </Text>
+            <Text className="text-gray-800 dark:text-white text-base">{gender || "Chọn"}</Text>
             <Ionicons
               name="chevron-down-outline"
               size={16}
@@ -258,9 +237,7 @@ export default function EditUserInformationPage() {
 
         {/* Ngày sinh */}
         <View className="mb-4">
-          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">
-            NGÀY SINH
-          </Text>
+          <Text className="text-gray-400 dark:text-gray-500 text-sm mb-1">NGÀY SINH</Text>
           <TouchableOpacity
             onPress={() => setShowDatePicker(true)}
             className="border-b border-gray-300 dark:border-gray-700 pb-2 flex-row items-center justify-between"

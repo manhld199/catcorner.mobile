@@ -85,10 +85,7 @@ export default function InputSearch({
     <LinearGradient className="w-full" colors={searchColorState as any}>
       <View className="w-full p-4 flex flex-row gap-2 items-center">
         <TouchableOpacity className="pr-2" onPress={() => router.back()}>
-          <ArrowLeft
-            color={colorScheme == "light" ? "rgb(153, 246, 228)" : "rgb(234, 251, 228)"}
-            size={24}
-          />
+          <ArrowLeft color={colorScheme == "light" ? "#315475" : "rgb(234, 251, 228)"} size={24} />
         </TouchableOpacity>
         <View className="overflow-hidden flex-1 h-[44px] bg-white dark:bg-zinc-900 border-2 border-pri-7 dark:border-pri-2 rounded-lg flex flex-row gap-2">
           <Input

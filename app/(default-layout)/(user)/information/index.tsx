@@ -1,11 +1,5 @@
 import React, { useContext } from "react";
-import {
-  View,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  useColorScheme,
-} from "react-native";
+import { View, Image, ScrollView, TouchableOpacity, useColorScheme } from "react-native";
 import { Text } from "@/components/Text";
 import { Input1 } from "@/components/TextInput";
 import { Link, useRouter } from "expo-router";
@@ -32,10 +26,7 @@ export default function UserInformationPage() {
       {/* Header */}
       <View className="relative bg-gradient-to-r from-pink-500 to-purple-500 h-64 items-center justify-center dark:from-gray-800 dark:to-gray-900">
         {/* Nút Back */}
-        <TouchableOpacity
-          onPress={() => router.push("/profile")}
-          className="absolute top-8 left-4"
-        >
+        <TouchableOpacity onPress={() => router.push("/profile")} className="absolute top-8 left-4">
           <Ionicons
             name="arrow-back-outline"
             size={20}
@@ -65,12 +56,10 @@ export default function UserInformationPage() {
       </View>
 
       {/* Thông tin người dùng */}
-      <View className="px-6">
+      <View className="px-6 my-4">
         {/* Email */}
         <View className="mb-4">
-          <Text className="text-gray-400 text-xs mb-1 dark:text-gray-500">
-            EMAIL CỦA BẠN
-          </Text>
+          <Text className="text-gray-400 text-sm mb-1 dark:text-gray-500">EMAIL CỦA BẠN</Text>
           <Input1
             value={userInfo.email || "Chưa cập nhật"}
             editable={false}
@@ -80,7 +69,7 @@ export default function UserInformationPage() {
 
         {/* Số điện thoại */}
         <View className="mb-4">
-          <Text className="text-gray-400 text-xs mb-1 dark:text-gray-500">
+          <Text className="text-gray-400 text-sm mb-1 dark:text-gray-500">
             SỐ ĐIỆN THOẠI CỦA BẠN
           </Text>
           <Input1
@@ -92,9 +81,7 @@ export default function UserInformationPage() {
 
         {/* Giới tính */}
         <View className="mb-4">
-          <Text className="text-gray-400 text-xs mb-1 dark:text-gray-500">
-            GIỚI TÍNH
-          </Text>
+          <Text className="text-gray-400 text-sm mb-1 dark:text-gray-500">GIỚI TÍNH</Text>
           <Input1
             value={userInfo.user_gender || "Chưa cập nhật"}
             editable={false}
@@ -104,9 +91,7 @@ export default function UserInformationPage() {
 
         {/* Ngày sinh */}
         <View className="mb-4">
-          <Text className="text-gray-400 text-xs mb-1 dark:text-gray-500">
-            NGÀY SINH
-          </Text>
+          <Text className="text-gray-400 text-sm mb-1 dark:text-gray-500">NGÀY SINH</Text>
           <Input1
             value={
               userInfo.user_birth_day

@@ -107,9 +107,12 @@ export default function ProductCard({ product }: ProductCardProps) {
               </Text>
             </Fragment>
           ) : (
-            <Text className="text-lg font-c-bold text-red-600 dark:text-red-500">
-              {convertNumberToVND(product.product_price)}
-            </Text>
+            <Fragment>
+              <Text></Text>
+              <Text className="text-lg font-c-bold text-red-600 dark:text-red-500">
+                {convertNumberToVND(product.product_price)}
+              </Text>
+            </Fragment>
           )}
         </View>
       </View>

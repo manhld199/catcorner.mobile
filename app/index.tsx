@@ -63,7 +63,7 @@ export default function HomeScreen() {
     <>
       <CustomerHeader />
 
-      <ScrollView className="bg-white flex-1 dark:bg-gray-800">
+      <ScrollView className="bg-white flex-1 dark:bg-gray-800 mb-[58px]">
         {/* Carousel */}
         <ProductCarousel images={images} />
 
@@ -93,7 +93,7 @@ export default function HomeScreen() {
             className="mt-2 flex-row mx-4 space-x-3"
           >
             {(categories || []).length > 0 ? (
-              (categories || []).map((category, index) => (
+              categories.map((category, index) => (
                 <View className="mr-2" key={index}>
                   <CardCategory category={category} className="min-w-[120px] p-2 w-full" />
                 </View>
@@ -107,7 +107,7 @@ export default function HomeScreen() {
         </View>
 
         {/* Sản phẩm HOT */}
-        <View className="mt-6">
+        <View className="mt-6 pb-4">
           <View className="flex-row justify-between mx-4 mb-2">
             <Text className="font-c-bold text-lg dark:text-white">Sản phẩm mới nhất</Text>
             <TouchableOpacity>
