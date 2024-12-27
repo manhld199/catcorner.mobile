@@ -12,10 +12,12 @@ export { default as CardProductOrder } from "./cards/product-order";
 
 // Modals
 export { default as ModalBottomSheet } from "./modals/bottom-sheet";
+export { default as ModalRightSheet } from "./modals/right-sheet";
 
 // Inputs
 export { default as InputQuantity } from "./inputs/quantity";
 export { default as InputQuantityMini } from "./inputs/quantity-small";
+export { default as InputSearch } from "./inputs/search";
 
 // Selects
 export { default as SelectAddress } from "./selects/address";

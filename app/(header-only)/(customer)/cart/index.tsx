@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Modal,
-  Alert,
-} from "react-native";
+import { View, TouchableOpacity, Image, ScrollView, Modal, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
@@ -36,50 +29,52 @@ export default function CartPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false); // Hiển thị modal xóa
   const [itemToDelete, setItemToDelete] = useState<string | null>(null); // Sản phẩm cần xóa
   const [cartProducts, setCartProducts] = useState<ICartProduct[]>([]);
-  const [defaultCartProducts, setDefaultCartProducts] = useState<
-    ICartProduct[]
-  >([]);
+  const [defaultCartProducts, setDefaultCartProducts] = useState<ICartProduct[]>([]);
 
   const cartData: ICartProduct[] = [
     {
-      product_id: "660d58878be4c0f5e0b5c37e",
-      variant_id: "67069a7d2d723e958da39590",
+      // 660d58878be4c0f5e0b5c36e
+      product_id:
+        "7Quavw55Cs9o5aZ1209vHubPK78pKBSTqqTKQO3REPoIKbeSymM7A5b3prN9BNYIHRfSyQ367lCfOlgnDQ4qXA==",
+      variant_id: "6762d7ad27f4c8a669dfbea0",
       quantity: 100,
     },
-    {
-      product_id: "660d58878be4c0f5e0b5c3ec",
-      variant_id: "67069a7d2d723e958da395a1",
-      quantity: 192,
-    },
-    {
-      product_id: "6617f0ede1d3208ee924ec1a",
-      variant_id: "67069a7d2d723e958da395d4",
-      quantity: 28,
-    },
-    {
-      product_id: "660d58878be4c0f5e0b5c37e",
-      variant_id: "67069a7d2d723e958da39592",
-      quantity: 18,
-    },
-    {
-      product_id: "6617f0ede1d3208ee924ec72",
-      variant_id: "67069a7d2d723e958da395e4",
-      quantity: 57,
-    },
+    // {
+    //   product_id: "660d58878be4c0f5e0b5c3ec",
+    //   variant_id: "67069a7d2d723e958da395a1",
+    //   quantity: 192,
+    // },
+    // {
+    //   product_id: "6617f0ede1d3208ee924ec1a",
+    //   variant_id: "67069a7d2d723e958da395d4",
+    //   quantity: 28,
+    // },
+    // {
+    //   product_id: "660d58878be4c0f5e0b5c37e",
+    //   variant_id: "67069a7d2d723e958da39592",
+    //   quantity: 18,
+    // },
+    // {
+    //   product_id: "6617f0ede1d3208ee924ec72",
+    //   variant_id: "67069a7d2d723e958da395e4",
+    //   quantity: 57,
+    // },
   ];
 
   // Gọi API khi component được render
   useEffect(() => {
     const fetchCartItems = async () => {
-      const data = await postData(CART_URL, cartData);
+      const { data, message } = await postData(CART_URL, cartData);
 
-      console.log("aaaaaaaaaaaaaaaaaaaaa", data);
-      setCartProducts(data as any);
+      // console.log("aaaaaaaaaaaaaaaaaaaaa", data.data.products);
+      setCartProducts(data.data.products as any);
       setDefaultCartProducts(data as any);
     };
 
     fetchCartItems();
   }, []);
+
+  // console.log("cccccccarrrrrrrrrrrrrrr", cartProducts);
 
   // Xác nhận xóa sản phẩm
   const confirmDelete = (itemId: string) => {
@@ -90,9 +85,7 @@ export default function CartPage() {
   // Xóa sản phẩm
   const deleteCartItem = () => {
     if (itemToDelete) {
-      setCartItems(
-        cartItems.filter((item) => item.product_id !== itemToDelete)
-      );
+      setCartItems(cartItems.filter((item) => item.product_id !== itemToDelete));
       setItemToDelete(null);
       setShowDeleteModal(false);
     }
@@ -132,9 +125,7 @@ export default function CartPage() {
   // Cập nhật số lượng sản phẩm
   const setQuantity = (itemId: string, quantity: number) => {
     const updatedCart = cartItems.map((item) =>
-      item.product_id === itemId
-        ? { ...item, quantity: Math.max(1, quantity) }
-        : item
+      item.product_id === itemId ? { ...item, quantity: Math.max(1, quantity) } : item
     );
     setCartItems(updatedCart);
   };
@@ -179,16 +170,9 @@ export default function CartPage() {
 
         {/* Actions */}
         <View className="flex-row justify-between items-center mb-4">
-          <TouchableOpacity
-            className="flex-row items-center"
-            onPress={toggleSelectAll}
-          >
+          <TouchableOpacity className="flex-row items-center" onPress={toggleSelectAll}>
             <Ionicons
-              name={
-                selectedItems.length === cartItems.length
-                  ? "checkbox"
-                  : "square-outline"
-              }
+              name={selectedItems.length === cartItems.length ? "checkbox" : "square-outline"}
               size={18}
               color="#0F766E"
             />
@@ -216,15 +200,9 @@ export default function CartPage() {
               key={item.product_id}
               className="flex-row items-center px-4 py-4 border-b border-gray-200"
             >
-              <TouchableOpacity
-                onPress={() => toggleSelectItem(item.product_id)}
-              >
+              <TouchableOpacity onPress={() => toggleSelectItem(item.product_id)}>
                 <Ionicons
-                  name={
-                    selectedItems.includes(item.product_id)
-                      ? "checkbox"
-                      : "square-outline"
-                  }
+                  name={selectedItems.includes(item.product_id) ? "checkbox" : "square-outline"}
                   size={20}
                   color="#0F766E"
                 />
@@ -234,9 +212,7 @@ export default function CartPage() {
                 className="w-20 h-20 rounded-md ml-4"
               /> */}
               <View className="ml-4 flex-1">
-                <Text className="font-c-medium line-clamp-1">
-                  {item.product_name}
-                </Text>
+                <Text className="font-c-medium line-clamp-1">{item.product_name}</Text>
                 <Text className="text-gray-500 text-sm">
                   {/* Variant: {item.product_variants[0]?.variant_name} */}
                 </Text>
@@ -250,18 +226,11 @@ export default function CartPage() {
                   min={1}
                   max={100}
                   value={item.quantity}
-                  onChange={(quantity) =>
-                    setQuantity(item.product_id, quantity)
-                  }
+                  onChange={(quantity) => setQuantity(item.product_id, quantity)}
                 />
               </View>
               <TouchableOpacity onPress={() => confirmDelete(item.product_id)}>
-                <Ionicons
-                  name="trash-outline"
-                  size={20}
-                  color="red"
-                  className="ml-4"
-                />
+                <Ionicons name="trash-outline" size={20} color="red" className="ml-4" />
               </TouchableOpacity>
             </View>
           ))}
@@ -304,9 +273,7 @@ export default function CartPage() {
                 onPress={() => setShowDeleteModal(false)}
                 className="bg-gray-300 dark:bg-gray-600 py-3 w-32 rounded-lg"
               >
-                <Text className="text-gray-800 dark:text-white text-center text-sm">
-                  Huỷ
-                </Text>
+                <Text className="text-gray-800 dark:text-white text-center text-sm">Huỷ</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={deleteCartItem}

@@ -1,32 +1,16 @@
 // import libs
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import {
-  View,
-  Image,
-  ScrollView,
-  ActivityIndicator,
-  TouchableOpacity,
-} from "react-native";
+import { View, Image, ScrollView, ActivityIndicator, TouchableOpacity } from "react-native";
 import Swiper from "react-native-swiper";
-import {
-  ChevronRight,
-  MessageCircleMore,
-  ShoppingCart,
-  Star,
-} from "lucide-react-native";
+import { ChevronRight, MessageCircleMore, ShoppingCart, Star } from "lucide-react-native";
 import { WebView } from "react-native-webview";
 import Toast from "react-native-toast-message";
 import { useColorScheme } from "nativewind";
 
 // import components
 import { Text } from "@/components/Text";
-import {
-  CardCoupon,
-  CardReview,
-  ModalBottomSheet,
-  StarGroup,
-} from "@/components";
+import { CardCoupon, CardReview, ModalBottomSheet, StarGroup } from "@/components";
 import PurchaseInfo from "./purchase-info";
 
 // import utils
@@ -78,9 +62,9 @@ export default function ProductDetailPage() {
 
     fetchProduct();
   }, []);
+  // console.log("prooooooo: ", pid);
 
-  if (isProductLoading)
-    return <ActivityIndicator size="large" color="#00bcd4" />;
+  if (isProductLoading) return <ActivityIndicator size="large" color="#00bcd4" />;
 
   return (
     <View className="relative">
@@ -102,10 +86,7 @@ export default function ProductDetailPage() {
               style={{ height: 250 }}
             >
               {productData?.product_imgs.map((item, index) => (
-                <View
-                  key={`product img ${index}`}
-                  className="items-center justify-center"
-                >
+                <View key={`product img ${index}`} className="items-center justify-center">
                   <Image source={{ uri: item }} className="w-full h-full" />
                 </View>
               ))}
@@ -130,10 +111,7 @@ export default function ProductDetailPage() {
                 }`}
                 onPress={() => setCurrentVariant(item)}
               >
-                <Image
-                  source={{ uri: item.variant_img }}
-                  className="w-[60px] h-[60px]"
-                />
+                <Image source={{ uri: item.variant_img }} className="w-[60px] h-[60px]" />
               </TouchableOpacity>
             ))}
           </View>
@@ -186,9 +164,7 @@ export default function ProductDetailPage() {
           >
             <Text className="font-c-semibold">Phiếu giảm giá</Text>
             <View className="flex flex-row gap-1 items-center">
-              <Text className="text-base text-gray-600 dark:text-gray-400">
-                Xem thêm
-              </Text>
+              <Text className="text-base text-gray-600 dark:text-gray-400">Xem thêm</Text>
               <ChevronRight color="#4b5563" size={16} />
             </View>
           </TouchableOpacity>
@@ -220,9 +196,7 @@ export default function ProductDetailPage() {
           <View className="flex flex-row justify-between items-center">
             <Text className="font-c-semibold">Mô tả sản phẩm</Text>
             <View className="flex flex-row gap-1 items-center">
-              <Text className="text-base text-gray-600 dark:text-gray-400">
-                Xem thêm
-              </Text>
+              <Text className="text-base text-gray-600 dark:text-gray-400">Xem thêm</Text>
               <ChevronRight color="#4b5563" size={16} />
             </View>
           </View>
@@ -231,14 +205,11 @@ export default function ProductDetailPage() {
             <WebView
               originWhitelist={["*"]}
               source={{
-                html:
-                  productData?.product_description || "<p>No description</p>",
+                html: productData?.product_description || "<p>No description</p>",
               }}
               className="w-full h-full bg-white"
               scalesPageToFit={false}
-              injectedJavaScript={
-                colorScheme == "light" ? injectedCSS : injectedDarkCSS
-              }
+              injectedJavaScript={colorScheme == "light" ? injectedCSS : injectedDarkCSS}
             />
             <Text className="pl-3">...</Text>
           </View>
@@ -260,9 +231,7 @@ export default function ProductDetailPage() {
             scrollEnabled={true}
             nestedScrollEnabled={true}
             scalesPageToFit={false}
-            injectedJavaScript={
-              colorScheme == "light" ? injectedCSS : injectedDarkCSS
-            }
+            injectedJavaScript={colorScheme == "light" ? injectedCSS : injectedDarkCSS}
           />
         </ModalBottomSheet>
 
@@ -274,31 +243,25 @@ export default function ProductDetailPage() {
           <View className="flex flex-row justify-between items-center">
             <Text className="font-c-semibold">Thông số sản phẩm</Text>
             <View className="flex flex-row gap-1 items-center">
-              <Text className="text-base text-gray-600 dark:text-gray-400">
-                Xem thêm
-              </Text>
+              <Text className="text-base text-gray-600 dark:text-gray-400">Xem thêm</Text>
               <ChevronRight color="#4b5563" size={16} />
             </View>
           </View>
 
           <View className="w-full flex flex-col gap-2">
-            {(productData?.product_specifications || [])
-              .slice(0, 3)
-              .map((item, index) => (
-                <View
-                  key={`product spe ${index}`}
-                  className={`w-full flex flex-row gap-2 pb-2 mb-2 ${
-                    index == 2
-                      ? "border-none"
-                      : "border-b-[1px] border-gray-200 dark:border-gray-100"
-                  }`}
-                >
-                  <Text className="w-[49%] text-gray-600 dark:text-gray-400 font-c-medium">
-                    {item.name}
-                  </Text>
-                  <Text className="w-1/2">{item.value}</Text>
-                </View>
-              ))}
+            {(productData?.product_specifications || []).slice(0, 3).map((item, index) => (
+              <View
+                key={`product spe ${index}`}
+                className={`w-full flex flex-row gap-2 pb-2 mb-2 ${
+                  index == 2 ? "border-none" : "border-b-[1px] border-gray-200 dark:border-gray-100"
+                }`}
+              >
+                <Text className="w-[49%] text-gray-600 dark:text-gray-400 font-c-medium">
+                  {item.name}
+                </Text>
+                <Text className="w-1/2">{item.value}</Text>
+              </View>
+            ))}
           </View>
         </TouchableOpacity>
 
@@ -312,8 +275,7 @@ export default function ProductDetailPage() {
               <View
                 key={`product spe ${index}`}
                 className={`w-full flex flex-row gap-2 pb-2 mb-2 ${
-                  index ==
-                  (productData?.product_specifications || []).length - 1
+                  index == (productData?.product_specifications || []).length - 1
                     ? "border-none"
                     : "border-b-[1px] border-gray-200 dark:border-gray-100"
                 }`}
@@ -335,18 +297,13 @@ export default function ProductDetailPage() {
           <View className="flex flex-row justify-between items-center">
             <Text className="font-c-semibold">Đánh giá sản phẩm</Text>
             <View className="flex flex-row gap-1 items-center">
-              <Text className="text-base text-gray-600 dark:text-gray-400">
-                Xem thêm
-              </Text>
+              <Text className="text-base text-gray-600 dark:text-gray-400">Xem thêm</Text>
               <ChevronRight color="#4b5563" size={16} />
             </View>
           </View>
 
           <View className="flex flex-row gap-2 items-center">
-            <StarGroup
-              rating={productData?.product_avg_rating.rating_point || 0}
-              starSize={18}
-            />
+            <StarGroup rating={productData?.product_avg_rating.rating_point || 0} starSize={18} />
             <Text className="text-red-500">
               {productData?.product_avg_rating.rating_point || 0}/5
             </Text>
@@ -401,10 +358,7 @@ export default function ProductDetailPage() {
       {/* App bar */}
       <View className="w-full absolute bottom-0 flex flex-row items-center bg-white dark:bg-zinc-950">
         <TouchableOpacity className="w-1/5 h-[52px] p-2  bg-white dark:bg-zinc-950 flex justify-center items-center">
-          <MessageCircleMore
-            color={colorScheme == "light" ? "#315475" : "#669E9E"}
-            size={24}
-          />
+          <MessageCircleMore color={colorScheme == "light" ? "#315475" : "#669E9E"} size={24} />
         </TouchableOpacity>
 
         {/* Gio hang */}
@@ -412,10 +366,7 @@ export default function ProductDetailPage() {
           className="w-1/5 h-[48px] p-2  bg-white dark:bg-zinc-950 flex justify-center items-center"
           onPress={() => setShowCartModal(true)}
         >
-          <ShoppingCart
-            color={colorScheme == "light" ? "#315475" : "#669E9E"}
-            size={24}
-          />
+          <ShoppingCart color={colorScheme == "light" ? "#315475" : "#669E9E"} size={24} />
         </TouchableOpacity>
 
         <PurchaseInfo
@@ -449,8 +400,7 @@ export default function ProductDetailPage() {
           <Text className="font-c-semibold text-white">
             {convertNumberToVND(
               currentVariant?.variant_discount_percent
-                ? (currentVariant.variant_price *
-                    (100 - currentVariant.variant_discount_percent)) /
+                ? (currentVariant.variant_price * (100 - currentVariant.variant_discount_percent)) /
                     100
                 : currentVariant?.variant_price || 0
             )}

@@ -60,7 +60,7 @@ export default function PurchasePage() {
           street: "",
         }) as IAddress
   );
-  const [paymentMethod, setPaymentMethod] = useState<"cod" | "onl">("cod");
+  const [paymentMethod, setPaymentMethod] = useState<"cod" | "onl">("onl");
   const [note, setNote] = useState<string>("");
   const [timeLeft, setTimeLeft] = useState<number>(300);
 
@@ -189,10 +189,8 @@ export default function PurchasePage() {
       await AsyncStorage.removeItem(PAYMENT_PRODUCTS);
       // console.log("Đã xóa PAYMENT_PRODUCTS cũ");
 
-      const orderId = `#DH${Date.now()}${
-        userInfo
-          ? `.#${userInfo.user_id}`
-          : `.#guest${userPhone}_${Math.round(Math.random() * 1000)}`
+      const orderId = `DH${Date.now()}${
+        userInfo ? `.${userInfo.user_id}` : `.guest${userPhone}_${Math.round(Math.random() * 1000)}`
       }`;
 
       // Chuẩn bị dữ liệu mới để lưu
@@ -432,7 +430,7 @@ export default function PurchasePage() {
               </View>
 
               <View className="mt-4 flex flex-col gap-4">
-                <View className="flex flex-row justify-between items-center">
+                {/* <View className="flex flex-row justify-between items-center">
                   <View className="flex flex-row gap-2 items-center">
                     <CircleDollarSign color="white" fill="#eab308" size={24} />
                     <Text>Thanh toán khi nhận hàng</Text>
@@ -442,7 +440,7 @@ export default function PurchasePage() {
                   ) : (
                     <MinusCircle color="white" fill="#d1d5db" size={24} />
                   )}
-                </View>
+                </View> */}
 
                 <View className="flex flex-row justify-between items-center">
                   <View className="flex flex-row gap-2 items-center">
@@ -466,7 +464,7 @@ export default function PurchasePage() {
           title="Phương thức thanh toán"
         >
           <View className="mt-4 flex flex-row gap-2">
-            <TouchableOpacity
+            {/* <TouchableOpacity
               className={`w-[49%] aspect-square rounded-lg flex flex-col justify-center items-center gap-2 ${
                 paymentMethod == "cod"
                   ? "bg-teal-100 dark:bg-teal-600 border-2 border-teal-300"
@@ -478,7 +476,7 @@ export default function PurchasePage() {
                 <CircleDollarSign color="white" fill="#eab308" size={48} />
                 <Text className="text-center">Thanh toán khi nhận hàng</Text>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <TouchableOpacity
               className={`w-[49%] aspect-square rounded-lg flex flex-col justify-center items-center gap-2 ${
