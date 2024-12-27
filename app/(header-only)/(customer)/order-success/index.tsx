@@ -4,6 +4,7 @@ import { Link, useLocalSearchParams } from "expo-router";
 
 export default function PaymentSuccessPage() {
   const { orderId } = useLocalSearchParams();
+  console.log("sssssssssssssssssssss", orderId);
 
   return (
     <View>
