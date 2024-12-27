@@ -82,71 +82,77 @@ export default function SearchPage() {
   }, []);
 
   return (
-    <ScrollView className="flex flex-col">
-      <View className="w-full flex flex-col">
-        <InputSearch transcript={transcript} setTranscript={setTranscript} />
+    <Fragment>
+      <ScrollView className="flex flex-col">
+        <View className="w-full flex flex-col">
+          <InputSearch transcript={transcript} setTranscript={setTranscript} />
 
-        {/* Suggested Products */}
-        <View className="w-full px-4 py-4 bg-white dark:bg-gray-800">
+          {/* Suggested Products */}
+          <View className="w-full px-4 py-4 bg-white dark:bg-gray-800">
+            <Text className="w-full text-center text-xl font-c-semibold text-gray-600 dark:text-white">
+              Kết quả tìm kiếm
+            </Text>
+            <View className="w-1/3 h-[1.5px] mx-auto my-2 bg-teal-300"></View>
+            {isProductLoading ? (
+              <ActivityIndicator size="large" color="#00bcd4" />
+            ) : (
+              <View className="flex flex-col items-center gap-2">
+                {suggestedProducts.length > 0 ? (
+                  <Fragment>
+                    {suggestedProducts.map((product, index) => (
+                      <CardSuggestedProduct key={index} product={product} />
+                    ))}
+                    <TouchableOpacity
+                      className="p-2"
+                      onPress={() =>
+                        router.push({
+                          pathname: "/search-result",
+                          params: { searchKey: transcript },
+                        })
+                      }
+                    >
+                      <Text className="underline text-pri-6 dark:text-pri-2">Xem tất cả</Text>
+                    </TouchableOpacity>
+                  </Fragment>
+                ) : (
+                  <View className="w-full flex justify-center items-center">
+                    <View className="w-[250px] h-[250px]">
+                      <Image
+                        source={require("@/assets/images/noti/not-found.png")}
+                        className="w-full h-full"
+                        resizeMode="cover"
+                      />
+                    </View>
+                    <Text className="text-center text-gray-500 dark:text-white">
+                      {transcript
+                        ? `Không có sản phẩm gợi ý cho từ khóa '${transcript}'.`
+                        : "Hãy nhập từ khóa cần tìm."}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            )}
+          </View>
+        </View>
+
+        {/* Categories */}
+        <View className="w-full px-4 py-4 bg-white dark:bg-gray-800 flex flex-col gap-2">
           <Text className="w-full text-center text-xl font-c-semibold text-gray-600 dark:text-white">
-            Kết quả tìm kiếm
+            Sản phẩm theo danh mục
           </Text>
           <View className="w-1/3 h-[1.5px] mx-auto my-2 bg-teal-300"></View>
-          {isProductLoading ? (
+          {isCategoriesLoading ? (
             <ActivityIndicator size="large" color="#00bcd4" />
           ) : (
-            <View className="flex flex-col items-center gap-2">
-              {suggestedProducts.length > 0 ? (
-                <Fragment>
-                  {suggestedProducts.map((product, index) => (
-                    <CardSuggestedProduct key={index} product={product} />
-                  ))}
-                  <TouchableOpacity
-                    className="p-2"
-                    onPress={() =>
-                      router.push({ pathname: "/search-result", params: { searchKey: transcript } })
-                    }
-                  >
-                    <Text className="underline text-pri-6 dark:text-pri-2">Xem tất cả</Text>
-                  </TouchableOpacity>
-                </Fragment>
-              ) : (
-                <View className="w-full flex justify-center items-center">
-                  <View className="w-[250px] h-[250px]">
-                    <Image
-                      source={require("@/assets/images/noti/not-found.png")}
-                      className="w-full h-full"
-                      resizeMode="cover"
-                    />
-                  </View>
-                  <Text className="text-center text-gray-500 dark:text-white">
-                    {transcript
-                      ? `Không có sản phẩm gợi ý cho từ khóa '${transcript}'.`
-                      : "Hãy nhập từ khóa cần tìm."}
-                  </Text>
-                </View>
-              )}
+            <View className="w-full flex flex-row flex-wrap justify-between gap-x-2 gap-y-4">
+              {categories.map((category, index) => (
+                <CardCategory key={index} category={category} />
+              ))}
             </View>
           )}
         </View>
-      </View>
-
-      {/* Categories */}
-      <View className="w-full px-4 py-4 bg-white dark:bg-gray-800 flex flex-col gap-2">
-        <Text className="w-full text-center text-xl font-c-semibold text-gray-600 dark:text-white">
-          Sản phẩm theo danh mục
-        </Text>
-        <View className="w-1/3 h-[1.5px] mx-auto my-2 bg-teal-300"></View>
-        {isCategoriesLoading ? (
-          <ActivityIndicator size="large" color="#00bcd4" />
-        ) : (
-          <View className="w-full flex flex-row flex-wrap justify-between gap-x-2 gap-y-4">
-            {categories.map((category, index) => (
-              <CardCategory key={index} category={category} />
-            ))}
-          </View>
-        )}
-      </View>
-    </ScrollView>
+      </ScrollView>
+      <CustomerAppbar />
+    </Fragment>
   );
 }

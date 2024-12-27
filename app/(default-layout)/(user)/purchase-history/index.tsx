@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Text } from "@/components/Text";
 import { ArrowBack } from "@/components";
+import { useRouter } from "expo-router"; // Import useRouter để điều hướng
 import { getData } from "@/utils/functions/handle";
 import { getAccessToken } from "@/lib/authStorage";
 import { ALL_ORDERS_URL } from "@/utils/constants/urls";
@@ -25,6 +26,7 @@ const statusMapping = {
 type OrderStatus = keyof typeof statusMapping;
 
 export default function PurchaseHistoryPage() {
+  const router = useRouter(); // Sử dụng useRouter để điều hướng
   const [selectedTab, setSelectedTab] = useState<string>("Tất cả");
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -224,90 +226,104 @@ export default function PurchaseHistoryPage() {
             data={filteredOrders}
             keyExtractor={(item) => item._id}
             renderItem={({ item }) => (
-              <View
-                className={`p-4 border-b ${
-                  colorScheme === "dark" ? "border-gray-700" : "border-gray-200"
-                }`}
+              <TouchableOpacity
+                onPress={() =>
+                  router.push(
+                    `/purchase-detail/${encodeURIComponent(item._id)}`
+                  )
+                }
               >
-                {/* Header */}
-                <View className="flex-row justify-between items-center mb-2">
-                  <Text
-                    className={`${
-                      colorScheme === "dark" ? "text-gray-300" : "text-gray-800"
-                    } font-bold`}
-                  >
-                    {item.order_id.split(".")[0]}
-                  </Text>
-
-                  <Text
-                    className={`text-sm px-3 py-1 rounded-full ${getStatusStyle(
-                      item.order_status
-                    )}`}
-                  >
-                    {getStatusLabel(item.order_status)}
-                  </Text>
-                </View>
-
-                {/* Product Info */}
-                {item.order_products.slice(0, 1).map((product) => (
-                  <View
-                    key={product.product_id}
-                    className="flex-row items-center mb-2"
-                  >
-                    <Image
-                      source={{ uri: product.product_img }}
-                      className="w-20 h-20 rounded-md"
-                    />
-                    <View className="ml-4 flex-1">
-                      <Text
-                        className={`${
-                          colorScheme === "dark"
-                            ? "text-gray-300"
-                            : "text-gray-800"
-                        } font-c-medium mb-1 line-clamp-1`}
-                        numberOfLines={2}
-                      >
-                        {product.product_name}
-                      </Text>
-                      <Text
-                        className={`${
-                          colorScheme === "dark"
-                            ? "text-gray-400"
-                            : "text-gray-500"
-                        }`}
-                      >
-                        Phân loại: {product.variant_name}
-                      </Text>
-                      <Text
-                        className={`${
-                          colorScheme === "dark"
-                            ? "text-gray-400"
-                            : "text-gray-500"
-                        }`}
-                      >
-                        x{product.quantity}
-                      </Text>
-                    </View>
-                  </View>
-                ))}
-
-                {/* Pricing */}
-                <View className="mb-2">
-                  <Text
-                    className={`${
-                      colorScheme === "dark" ? "text-gray-300" : "text-gray-800"
-                    } mt-1`}
-                  >
-                    Tổng số tiền:{" "}
-                    <Text className="font-c-bold text-red-500">
-                      {item.final_cost.toLocaleString()}đ
+                <View
+                  className={`p-4 border-b ${
+                    colorScheme === "dark"
+                      ? "border-gray-700"
+                      : "border-gray-200"
+                  }`}
+                >
+                  {/* Header */}
+                  <View className="flex-row justify-between items-center mb-2">
+                    <Text
+                      className={`${
+                        colorScheme === "dark"
+                          ? "text-gray-300"
+                          : "text-gray-800"
+                      } font-bold`}
+                    >
+                      {item.order_id.split(".")[0]}
                     </Text>
-                  </Text>
-                </View>
 
-                {/* Action Buttons */}
-                {renderActions(item.order_status)}
-              </View>
+                    <Text
+                      className={`text-sm px-3 py-1 rounded-full ${getStatusStyle(
+                        item.order_status
+                      )}`}
+                    >
+                      {getStatusLabel(item.order_status)}
+                    </Text>
+                  </View>
+
+                  {/* Product Info */}
+                  {item.order_products.slice(0, 1).map((product) => (
+                    <View
+                      key={product.product_id}
+                      className="flex-row items-center mb-2"
+                    >
+                      <Image
+                        source={{ uri: product.product_img }}
+                        className="w-20 h-20 rounded-md"
+                      />
+                      <View className="ml-4 flex-1">
+                        <Text
+                          className={`${
+                            colorScheme === "dark"
+                              ? "text-gray-300"
+                              : "text-gray-800"
+                          } font-c-medium mb-1 line-clamp-1`}
+                          numberOfLines={2}
+                        >
+                          {product.product_name}
+                        </Text>
+                        <Text
+                          className={`${
+                            colorScheme === "dark"
+                              ? "text-gray-400"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          Phân loại: {product.variant_name}
+                        </Text>
+                        <Text
+                          className={`${
+                            colorScheme === "dark"
+                              ? "text-gray-400"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          x{product.quantity}
+                        </Text>
+                      </View>
+                    </View>
+                  ))}
+
+                  {/* Pricing */}
+                  <View className="mb-2">
+                    <Text
+                      className={`${
+                        colorScheme === "dark"
+                          ? "text-gray-300"
+                          : "text-gray-800"
+                      } mt-1`}
+                    >
+                      Tổng số tiền:{" "}
+                      <Text className="font-c-bold text-red-500">
+                        {item.final_cost.toLocaleString()}đ
+                      </Text>
+                    </Text>
+                  </View>
+
+                  {/* Action Buttons */}
+                  {renderActions(item.order_status)}
+                </View>
+              </TouchableOpacity>
             )}
           />
         )}

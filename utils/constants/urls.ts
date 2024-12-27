@@ -24,8 +24,12 @@ export const ALL_CATEGORIES_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/guest/
 
 // Order
 export const ALL_ORDERS_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/orders`;
+export const ORDER_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/orders`;
 export const TRACK_ORDER_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/orders/track`;
 
 // User
 export const CHANGE_PROFILE_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/user/profile`;
 export const CHANGE_PASSWORD_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/auth/change-password`;
+
+// Cart
+export const CART_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/customer/cart`;
