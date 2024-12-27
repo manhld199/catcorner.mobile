@@ -17,7 +17,13 @@ import {
 
 // Import components
 import { Text } from "@/components/Text";
-import { CardCoupon, CardProductOrder, ModalBottomSheet, SelectAddress } from "@/components";
+import {
+  ArrowBack,
+  CardCoupon,
+  CardProductOrder,
+  ModalBottomSheet,
+  SelectAddress,
+} from "@/components";
 import { Textarea } from "@/components/Textarea";
 import { Input } from "@/components/Input";
 
@@ -68,9 +74,11 @@ export default function PurchasePage() {
     const getPurchaseProducts = async () => {
       try {
         const storageData = await AsyncStorage.getItem(PURCHASE_PRODUCTS);
+        // console.log("Data lưu:", storageData);
 
         if (storageData) {
           const parsedData = JSON.parse(storageData);
+          console.log("Data parse mua ngay:", parsedData);
           await AsyncStorage.removeItem(PURCHASE_PRODUCTS);
 
           if (parsedData?.updatedAt) {
@@ -84,7 +92,7 @@ export default function PurchasePage() {
               Toast.show({
                 type: "error",
                 text1: "Oops!!!",
-                text2: "Phiên thanh toán đã quá hạn, vui lòng thử lại sau!",
+                text2: "Phiên đặt hàng đã quá hạn, vui lòng thử lại sau!",
               });
               router.back();
               return;
@@ -233,8 +241,12 @@ export default function PurchasePage() {
   // console.log("userInfo", userInfo);
 
   return (
-    <View className="bg-bg-1 dark:bg-gray-800 relative">
+    <View className="bg-bg-1 dark:bg-gray-800 relative px-3">
       <ScrollView>
+        <View className="flex flex-row gap-2 items-center my-3">
+          <ArrowBack />
+          <Text>Thông tin đặt hàng</Text>
+        </View>
         {/* Product */}
         <View className="mt-4 p-4 flex flex-col gap-4 bg-white dark:bg-zinc-900 ">
           <Text className="font-c-semibold">Sản phẩm</Text>
