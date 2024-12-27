@@ -249,7 +249,7 @@ export default function PurchaseHistoryPage() {
                           : "text-gray-800"
                       } font-bold`}
                     >
-                      {item.order_id.split(".")[0]}
+                      #{item.order_id.split(".")[0]}
                     </Text>
 
                     <Text

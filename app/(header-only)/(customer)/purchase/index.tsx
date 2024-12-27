@@ -75,11 +75,10 @@ export default function PurchasePage() {
     const getPurchaseProducts = async () => {
       try {
         const storageData = await AsyncStorage.getItem(PURCHASE_PRODUCTS);
-        // console.log("Data lưu:", storageData);
 
         if (storageData) {
           const parsedData = JSON.parse(storageData);
-          console.log("Data parse mua ngay:", parsedData);
+          // console.log("Data parse:", parsedData);
           await AsyncStorage.removeItem(PURCHASE_PRODUCTS);
 
           if (parsedData?.updatedAt) {
