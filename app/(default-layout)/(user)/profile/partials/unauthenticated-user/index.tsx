@@ -9,9 +9,7 @@ import { IOption } from "@/types/interfaces";
 interface UnauthenticatedUserProps {
   pre_options: IOption[];
 }
-export default function AuthenticatedUser({
-  pre_options,
-}: UnauthenticatedUserProps) {
+export default function AuthenticatedUser({ pre_options }: UnauthenticatedUserProps) {
   return (
     <>
       <View className="items-center mt-4 mb-6">
@@ -23,9 +21,7 @@ export default function AuthenticatedUser({
             className="w-24 h-24"
           />
         </View>
-        <Text className="font-c-bold text-lg mt-4 dark:text-white">
-          Bạn chưa đăng nhập
-        </Text>
+        <Text className="font-c-bold text-lg mt-4 dark:text-white">Bạn chưa đăng nhập</Text>
         <Text className="text-gray-500 dark:text-gray-400">
           Tạo tài khoản để khám phá cùng CatCorner!!!
         </Text>
@@ -49,15 +45,11 @@ export default function AuthenticatedUser({
                       name={item.icon as any}
                       size={20}
                       color={isLogout ? "red" : "#6b7280"}
-                      className={
-                        isLogout ? "dark:text-red-500" : "dark:text-gray-300"
-                      }
+                      className={isLogout ? "dark:text-red-500" : "dark:text-gray-300"}
                     />
                   </View>
                   <Text
-                    className={`text-base font-medium ${
-                      isLogout ? "text-red-500" : "dark:text-gray-300"
-                    }`}
+                    className={`font-medium ${isLogout ? "text-red-500" : "dark:text-gray-300"}`}
                   >
                     {item.title}
                   </Text>

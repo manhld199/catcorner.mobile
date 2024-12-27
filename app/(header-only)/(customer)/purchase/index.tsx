@@ -526,15 +526,32 @@ export default function PurchasePage() {
           </View>
 
           <View className="flex flex-row justify-between items-center">
+            <Text>Phí vận chuyển</Text>
+            <Text>{convertNumberToVND(SHIPPING_COST)}</Text>
+          </View>
+
+          <View className="flex flex-row justify-between items-center">
             <Text>Phiếu giảm giá</Text>
-            <Text className="text-teal-600 dark:text-teal-400">-{convertNumberToVND(100000)}</Text>
+            <Text className="text-teal-600 dark:text-teal-400">-{convertNumberToVND(0)}</Text>
           </View>
 
           <View className="px-4 border-b-[1px] border-gray-100"></View>
 
           <View className="flex flex-row justify-between items-center">
             <Text>Tổng thanh toán</Text>
-            <Text>{convertNumberToVND(1000000)}</Text>
+            <Text>
+              {convertNumberToVND(
+                orderProducts.reduce(
+                  (acc, curr) =>
+                    acc +
+                    (curr.product_variant.variant_price *
+                      curr.quantity *
+                      (100 - (curr.product_variant.variant_discount_percent || 0))) /
+                      100,
+                  0
+                ) + SHIPPING_COST
+              )}
+            </Text>
           </View>
         </View>
       </ScrollView>
@@ -560,7 +577,19 @@ export default function PurchasePage() {
           onPress={handlePayment}
         >
           <Text className="font-c-semibold text-white">Mua hàng ({timeLeft}s)</Text>
-          <Text className="font-c-semibold text-white">{convertNumberToVND(1000000)}</Text>
+          <Text className="font-c-semibold text-white">
+            {convertNumberToVND(
+              orderProducts.reduce(
+                (acc, curr) =>
+                  acc +
+                  (curr.product_variant.variant_price *
+                    curr.quantity *
+                    (100 - (curr.product_variant.variant_discount_percent || 0))) /
+                    100,
+                0
+              ) + SHIPPING_COST
+            )}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

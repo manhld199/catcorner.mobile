@@ -31,6 +31,7 @@ export const postData = async (url: string, payload: any) => {
 
 export const getData = async (url: string, token?: string) => {
   try {
+    // console.log("url", url);
     const headers: any = {
       "Content-Type": "application/json",
     };
@@ -45,12 +46,15 @@ export const getData = async (url: string, token?: string) => {
       headers,
     });
 
+    // console.log("res", res);
+
     const data = await res.json();
     // console.log("data", data);
+    // console.log("resssssssssssssss", res.ok);
 
-    if (!res.ok) return { data: null, message: data.message || "Get Failed" };
+    if (!res.ok) return { data: null, message: data.data.message || "Get Failed" };
 
-    return { data: data, message: data.message || "Get Success" };
+    return { data: data, message: data.data.message || "Get Success" };
   } catch (err) {
     console.error("Fetch data error: ", err);
     return { data: null, message: "Get Error" };

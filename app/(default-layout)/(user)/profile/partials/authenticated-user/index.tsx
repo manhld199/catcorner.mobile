@@ -63,7 +63,7 @@ export default function AuthenticatedUser({ userInfo, options }: AuthenticatedUs
                 >
                   <Ionicons name={item.icon as any} size={20} color="red" />
                 </View>
-                <Text className="text-base font-medium text-red-500">{item.title}</Text>
+                <Text className="font-medium text-red-500">{item.title}</Text>
               </View>
             </TouchableOpacity>
           ) : (
@@ -75,7 +75,7 @@ export default function AuthenticatedUser({ userInfo, options }: AuthenticatedUs
                   >
                     <Ionicons name={item.icon as any} size={20} color="#6b7280" />
                   </View>
-                  <Text className="text-base font-medium dark:text-gray-300">{item.title}</Text>
+                  <Text className="font-medium dark:text-gray-300">{item.title}</Text>
                 </View>
                 <Ionicons
                   name="chevron-forward-outline"

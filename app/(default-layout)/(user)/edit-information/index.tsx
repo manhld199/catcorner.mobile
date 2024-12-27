@@ -152,7 +152,7 @@ export default function EditUserInformationPage() {
       <View className="px-6">
         {/* Email */}
         <View className="mb-4">
-          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">EMAIL</Text>
+          <Text className="text-gray-400 dark:text-gray-500 text-sm mb-1">EMAIL</Text>
           <Input1
             value={email}
             placeholder="Nhập email"
@@ -163,7 +163,7 @@ export default function EditUserInformationPage() {
 
         {/* Số điện thoại */}
         <View className="mb-4">
-          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">SỐ ĐIỆN THOẠI</Text>
+          <Text className="text-gray-400 dark:text-gray-500 text-sm mb-1">SỐ ĐIỆN THOẠI</Text>
           <Input1
             value={phone}
             placeholder="Nhập số điện thoại"
@@ -175,7 +175,7 @@ export default function EditUserInformationPage() {
 
         {/* Giới tính */}
         <View className="mb-4">
-          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">GIỚI TÍNH</Text>
+          <Text className="text-gray-400 dark:text-gray-500 text-sm mb-1">GIỚI TÍNH</Text>
           <TouchableOpacity
             onPress={() => setShowGenderModal(true)}
             className="border-b border-gray-300 dark:border-gray-700 pb-2 flex-row items-center justify-between"
@@ -237,7 +237,7 @@ export default function EditUserInformationPage() {
 
         {/* Ngày sinh */}
         <View className="mb-4">
-          <Text className="text-gray-400 dark:text-gray-500 text-xs mb-1">NGÀY SINH</Text>
+          <Text className="text-gray-400 dark:text-gray-500 text-sm mb-1">NGÀY SINH</Text>
           <TouchableOpacity
             onPress={() => setShowDatePicker(true)}
             className="border-b border-gray-300 dark:border-gray-700 pb-2 flex-row items-center justify-between"

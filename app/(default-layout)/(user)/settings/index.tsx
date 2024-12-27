@@ -23,12 +23,7 @@ export default function SettingsPage() {
       id: 1,
       icon: "notifications-outline",
       label: "Thông báo",
-      action: (
-        <Switch
-          value={notificationsEnabled}
-          onValueChange={toggleNotifications}
-        />
-      ),
+      action: <Switch value={notificationsEnabled} onValueChange={toggleNotifications} />,
     },
     {
       id: 2,
@@ -58,9 +53,7 @@ export default function SettingsPage() {
       {/* Header */}
       <View className="flex-row items-center mb-6">
         <ArrowBack />
-        <Text className="text-lg font-bold text-black dark:text-white ml-4">
-          Cài đặt
-        </Text>
+        <Text className="text-lg font-bold text-black dark:text-white ml-4">Cài đặt</Text>
       </View>
 
       {/* Settings Options */}
@@ -84,9 +77,7 @@ export default function SettingsPage() {
                 color={colorScheme === "dark" ? "white" : "black"}
                 className="mr-4"
               />
-              <Text className="text-gray-800 dark:text-gray-300 text-base">
-                {item.label}
-              </Text>
+              <Text className="text-gray-800 dark:text-gray-300">{item.label}</Text>
             </View>
             {item.action || (
               <Ionicons
