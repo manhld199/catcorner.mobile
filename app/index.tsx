@@ -1,12 +1,19 @@
+// import libs
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, Image, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, ScrollView, Image, TouchableOpacity } from "react-native";
+
+// import components
 import ProductCard from "@/components/cards/product-card";
-import { CardCategory, ProductCarousel, ProductCategories } from "@/components";
-import { CustomerAppbar, CustomerHeader } from "@/partials";
+import { CardCategory, LoadingDefault, ProductCarousel } from "@/components";
 import { Text } from "@/components/Text";
+import { CustomerAppbar, CustomerHeader } from "@/partials";
+
+// import utils
 import { PRODUCT_LIST_NEWEST_URL, RECOMMEND_CATEGORY_URL } from "@/utils/constants/urls";
-import { ICategory, IProductProps } from "@/types/interfaces";
 import { getData } from "@/utils/functions/handle";
+
+// import types
+import { ICategory, IProductProps } from "@/types/interfaces";
 
 export default function HomeScreen() {
   const [products, setProducts] = useState<IProductProps[]>([]);
@@ -87,23 +94,27 @@ export default function HomeScreen() {
         {/* Danh mục */}
         <View className="mt-6">
           <Text className="mx-4 font-c-bold text-lg dark:text-white">Danh mục sản phẩm</Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            className="mt-2 flex-row mx-4 space-x-3"
-          >
-            {(categories || []).length > 0 ? (
-              categories.map((category, index) => (
-                <View className="mr-2" key={index}>
-                  <CardCategory category={category} className="min-w-[120px] p-2 w-full" />
-                </View>
-              ))
-            ) : (
-              <Text className="text-center text-gray-600 dark:text-gray-400">
-                Không có danh mục nào.
-              </Text>
-            )}
-          </ScrollView>
+          {isCategoriesLoading ? (
+            <LoadingDefault />
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="mt-2 flex-row mx-4 space-x-3"
+            >
+              {(categories || []).length > 0 ? (
+                categories.map((category, index) => (
+                  <View className="mr-2" key={index}>
+                    <CardCategory category={category} className="min-w-[120px] p-2 w-full" />
+                  </View>
+                ))
+              ) : (
+                <Text className="text-center text-gray-600 dark:text-gray-400">
+                  Không có danh mục nào.
+                </Text>
+              )}
+            </ScrollView>
+          )}
         </View>
 
         {/* Sản phẩm HOT */}
@@ -118,7 +129,7 @@ export default function HomeScreen() {
           {/* Hiển thị trạng thái loading */}
           {isProductLoading ? (
             <View className="items-center justify-center py-6">
-              <ActivityIndicator size="large" color="#00bfa5" />
+              <LoadingDefault />
             </View>
           ) : (
             <View className="w-full flex flex-row flex-wrap justify-between gap-y-4 gap-x-2 px-4">

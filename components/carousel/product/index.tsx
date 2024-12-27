@@ -18,11 +18,7 @@ export default function Carousel({ images }: CarouselProps) {
       >
         {images.map((image, index) => (
           <View key={index} className="flex justify-center items-center">
-            <Image
-              source={{ uri: image }}
-              resizeMode="cover"
-              className="h-full w-full"
-            />
+            <Image source={{ uri: image }} resizeMode="cover" className="h-full w-full" />
           </View>
         ))}
       </Swiper>

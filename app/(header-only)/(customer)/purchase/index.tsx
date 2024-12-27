@@ -21,6 +21,7 @@ import {
   ArrowBack,
   CardCoupon,
   CardProductOrder,
+  LoadingDefault,
   ModalBottomSheet,
   SelectAddress,
 } from "@/components";
@@ -251,9 +252,13 @@ export default function PurchasePage() {
         <View className="mt-4 p-4 flex flex-col gap-4 bg-white dark:bg-zinc-900 ">
           <Text className="font-c-semibold">Sản phẩm</Text>
 
-          {orderProducts.map((product, index) => (
-            <CardProductOrder key={`order product ${index}`} product={product} />
-          ))}
+          {(orderProducts || []).length > 0 ? (
+            orderProducts.map((product, index) => (
+              <CardProductOrder key={`order product ${index}`} product={product} />
+            ))
+          ) : (
+            <LoadingDefault size={150} />
+          )}
           <View className="px-4 border-b-[1px] border-gray-100"></View>
 
           <View className="flex flex-row justify-between">

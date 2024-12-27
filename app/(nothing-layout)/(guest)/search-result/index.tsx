@@ -1,15 +1,22 @@
-import { View, TouchableOpacity, ActivityIndicator, ScrollView } from "react-native";
+// import libs
+import { View, TouchableOpacity, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { ICategory, IProductProps } from "@/types/interfaces";
-import { RECOMMEND_CATEGORY_URL, SEARCH_URL } from "@/utils/constants/urls";
-import { InputSearch, ModalRightSheet, StarGroup } from "@/components";
+import { Filter } from "lucide-react-native";
+import { useColorScheme } from "nativewind";
+
+// import components
+import { InputSearch, LoadingDefault, ModalRightSheet, StarGroup } from "@/components";
 import { Text } from "@/components/Text";
 import ProductCard from "@/components/cards/product-card";
-import { Filter } from "lucide-react-native";
 import { Input } from "@/components/Input";
+
+// import utils
+import { RECOMMEND_CATEGORY_URL, SEARCH_URL } from "@/utils/constants/urls";
 import { getData } from "@/utils/functions/handle";
-import { useColorScheme } from "nativewind";
+
+// import types
+import { ICategory, IProductProps } from "@/types/interfaces";
 
 interface IFiterState {
   category: string;
@@ -119,7 +126,7 @@ export default function SearchResultPage() {
   }, []);
 
   return (
-    <View className="flex flex-col bg-white dark:bg-gray-800">
+    <View className="w-full h-full flex flex-col bg-white dark:bg-gray-800">
       <InputSearch transcript={searchKeyState} setTranscript={setSearchKeyState} />
 
       <View className="bg-white dark:bg-pri-6 flex flex-row justify-between items-center">
@@ -443,13 +450,11 @@ export default function SearchResultPage() {
         </ModalRightSheet>
       </View>
 
-      <ScrollView>
+      <ScrollView className="bg-white dark:bg-gray-800">
         <View className="p-4">
           {/* Hiển thị trạng thái loading */}
           {isLoading ? (
-            <View className="items-center justify-center py-6">
-              <ActivityIndicator size="large" color="#00bfa5" />
-            </View>
+            <LoadingDefault />
           ) : (
             <View className="w-full flex flex-row flex-wrap justify-between gap-y-4 gap-x-2">
               {(products || []).length > 0 ? (

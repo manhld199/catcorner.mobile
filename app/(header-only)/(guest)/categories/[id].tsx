@@ -1,12 +1,19 @@
-import { ActivityIndicator, Image, ScrollView, View } from "react-native";
+// import libs
+import { Image, ScrollView, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 
+// import components
 import { Text } from "@/components/Text";
-import { getData } from "@/utils/functions/handle";
-import { ICategory, IProductProps } from "@/types/interfaces";
-import { ALL_CATEGORIES_URL, PRODUCT_CATEGORIES_URL } from "@/utils/constants/urls";
 import ProductCard from "@/components/cards/product-card";
+import { LoadingDefault } from "@/components";
+
+// import utils
+import { getData } from "@/utils/functions/handle";
+import { ALL_CATEGORIES_URL, PRODUCT_CATEGORIES_URL } from "@/utils/constants/urls";
+
+// import types
+import { ICategory, IProductProps } from "@/types/interfaces";
 
 export default function CategoryPage() {
   const { id } = useLocalSearchParams();
@@ -46,7 +53,7 @@ export default function CategoryPage() {
   // console.log("products", products);
 
   return (
-    <ScrollView>
+    <ScrollView className="bg-white dark:bg-gray-800">
       <View className="p-4 flex flex-col items-center gap-4 bg-white dark:bg-gray-800">
         <Text className="font-c-semibold text-2xl">Sản phẩm theo danh mục</Text>
         <View className="p-4 mx-auto w-[200px] aspect-square bg-teal-100 rounded-xl overflow-hidden">
@@ -63,9 +70,7 @@ export default function CategoryPage() {
         <View className="w-4/5 h-[1px] bg-gray-200"></View>
 
         {isProductLoading ? (
-          <View className="items-center justify-center py-6">
-            <ActivityIndicator size="large" color="#00bfa5" />
-          </View>
+          <LoadingDefault />
         ) : (
           <View className="w-full flex flex-row flex-wrap justify-between gap-y-4 gap-x-2 px-4">
             {(products || []).length > 0 ? (
