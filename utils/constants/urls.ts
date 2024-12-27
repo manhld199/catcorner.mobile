@@ -23,6 +23,7 @@ export const ALL_CATEGORIES_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/guest/
 
 // Order
 export const ALL_ORDERS_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/orders`;
+export const ORDER_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/orders`;
 export const TRACK_ORDER_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/orders/track`;
 
 // User

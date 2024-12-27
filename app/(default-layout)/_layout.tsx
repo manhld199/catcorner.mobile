@@ -14,8 +14,6 @@ export default function RootLayout() {
       <View className="flex-1">
         <Slot />
       </View>
-
-      <CustomerAppbar />
     </Fragment>
   );
 }
