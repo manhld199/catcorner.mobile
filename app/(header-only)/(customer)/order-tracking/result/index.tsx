@@ -147,6 +147,12 @@ export default function OrderTrackingResultPage() {
             order.createdAt
           ).toLocaleDateString()}</strong></p>
           <p class="text">Tổng tiền: <strong>${order.final_cost?.toLocaleString()}đ</strong></p>
+          <p class="text">Người nhận hàng: <strong>${
+            order.order_buyer?.name
+          }</strong></p>
+          <p class="text">Số điện thoại người nhận: <strong>${
+            order.order_buyer?.phone_number
+          }</strong></p>
           <p class="text">
             Địa chỉ giao hàng: <strong>
             ${order.order_buyer?.address?.street || " "}, 
@@ -268,7 +274,10 @@ export default function OrderTrackingResultPage() {
           Ngày đặt hàng: {convertDateTimeToDate(order.createdAt)}
         </Text>
         <Text className="text-gray-500 mb-3">
-          Tổng tiền: {order.final_cost?.toLocaleString()}đ
+          Người nhận hàng: {order.order_buyer?.name || " "}
+        </Text>
+        <Text className="text-gray-500 mb-3">
+          Số điện thoại: {order.order_buyer?.phone_number || " "}
         </Text>
         <Text className="text-gray-500 mb-3">
           Địa chỉ:{" "}

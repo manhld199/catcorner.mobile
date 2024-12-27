@@ -23,6 +23,7 @@ export default function PurchaseDetailPage() {
   const colorScheme = useColorScheme();
   const router = useRouter();
   const { id } = useLocalSearchParams();
+  console.log("iiiiiiiiiiiiiiiiiiii", id);
   const [order, setOrder] = useState<any>(null); // Trạng thái lưu thông tin đơn hàng
   const [loading, setLoading] = useState<boolean>(true); // Trạng thái tải dữ liệu
 
@@ -255,7 +256,7 @@ export default function PurchaseDetailPage() {
           <ArrowBack />
         </TouchableOpacity>
         <Text className="text-lg font-c-bold text-black dark:text-white ml-4">
-          Đơn hàng {order.order_id.split(".")[0]}
+          Đơn hàng #{order.order_id.split(".")[0]}
         </Text>
       </View>
 
@@ -265,7 +266,7 @@ export default function PurchaseDetailPage() {
           Thông tin đơn hàng
         </Text>
         <Text className="text-gray-500 mb-3">
-          Mã đơn hàng: {order.order_id.split(".")[0].slice(1)}
+          Mã đơn hàng: {order.order_id.split(".")[0]}
         </Text>
 
         <Text className="text-gray-500 mb-3">

@@ -29,21 +29,6 @@ export default function CartPage() {
   const [selectedItems, setSelectedItems] = useState<string[]>([]); // Sản phẩm đã chọn
   const [isPriceAscending, setIsPriceAscending] = useState(true); // Trạng thái sắp xếp giá
 
-  // const cartData = [
-  //   {
-  //     product_id:
-  //       "7Quavw55Cs9o5aZ1209vHubPK78pKBSTqqTKQO3REPoIKbeSymM7A5b3prN9BNYIHRfSyQ367lCfOlgnDQ4qXA==",
-  //     variant_id: "6762d7ad27f4c8a669dfbea0",
-  //     quantity: 2,
-  //   },
-  //   {
-  //     product_id:
-  //       "7Quavw55Cs9o5aZ1209vHubPK78pKBSTqqTKQO3REPoIKbeSymM7A5b3prN9BNYIHRfSyQ367lCfOlgnDQ4qXA==",
-  //     variant_id: "6762d7ad27f4c8a669dfbea1",
-  //     quantity: 3,
-  //   },
-  // ];
-
   // Gọi API khi component được render
   useEffect(() => {
     const fetchCartItems = async () => {
