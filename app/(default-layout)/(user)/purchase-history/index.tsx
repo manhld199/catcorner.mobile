@@ -1,16 +1,33 @@
-import { ArrowBack } from "@/components";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TouchableOpacity,
   FlatList,
   Image,
+  ActivityIndicator,
   useColorScheme,
+  Alert,
 } from "react-native";
 import { Text } from "@/components/Text";
+import { ArrowBack } from "@/components";
+import { getData } from "@/utils/functions/handle";
+import { getAccessToken } from "@/lib/authStorage";
+import { ALL_ORDERS_URL } from "@/utils/constants/urls";
+import { IOrder } from "@/types/interfaces";
+
+const statusMapping = {
+  unpaid: "Chờ xác nhận",
+  delivering: "Đang giao hàng",
+  done: "Đã giao",
+  cancel: "Đã hủy",
+} as const;
+
+type OrderStatus = keyof typeof statusMapping;
 
 export default function PurchaseHistoryPage() {
-  const [selectedTab, setSelectedTab] = useState("Tất cả");
+  const [selectedTab, setSelectedTab] = useState<string>("Tất cả");
+  const [orders, setOrders] = useState<IOrder[]>([]);
+  const [loading, setLoading] = useState(true);
   const colorScheme = useColorScheme();
 
   const tabs = [
@@ -21,71 +38,39 @@ export default function PurchaseHistoryPage() {
     "Đã hủy",
   ];
 
-  const orders = [
-    {
-      id: 1,
-      order_id: "#ĐH000000001",
-      status: "Chờ xác nhận",
-      product: {
-        image:
-          "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg",
-        name: "Pate cho mèo Royal Canin",
-        sku: "CB02",
-        quantity: 1,
-        originalPrice: 300000,
-        discountedPrice: 204000,
-      },
-      total: 196000,
-    },
-    {
-      id: 2,
-      order_id: "#ĐH000000002",
-      status: "Đang giao hàng",
-      product: {
-        image:
-          "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg",
-        name: "Pate cho mèo Royal Canin",
-        sku: "CB02",
-        quantity: 1,
-        originalPrice: 300000,
-        discountedPrice: 204000,
-      },
-      total: 196000,
-    },
-    {
-      id: 3,
-      order_id: "#ĐH000000002",
-      status: "Đã giao",
-      product: {
-        image:
-          "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg",
-        name: "Pate cho mèo Royal Canin",
-        sku: "CB02",
-        quantity: 1,
-        originalPrice: 300000,
-        discountedPrice: 204000,
-      },
-      total: 196000,
-    },
-    {
-      id: 4,
-      order_id: "#ĐH000000002",
-      status: "Đã hủy",
-      product: {
-        image:
-          "https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg",
-        name: "Pate cho mèo Royal Canin",
-        sku: "CB02",
-        quantity: 1,
-        originalPrice: 300000,
-        discountedPrice: 204000,
-      },
-      total: 196000,
-    },
-  ];
+  const getStatusLabel = (status: OrderStatus): string => statusMapping[status];
 
-  const getStatusStyle = (status: any) => {
-    switch (status) {
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const token = await getAccessToken();
+
+        if (!token) {
+          Alert.alert("Lỗi", "Bạn cần đăng nhập để xem lịch sử đặt hàng.");
+          setLoading(false);
+          return;
+        }
+
+        const response = await getData(ALL_ORDERS_URL, token);
+
+        if (response && response.data.data) {
+          setOrders(response.data.data.orders || []);
+        } else {
+          Alert.alert("Lỗi", "Không thể tải danh sách đơn hàng.");
+        }
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+        Alert.alert("Lỗi", "Không thể tải danh sách đơn hàng.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  const getStatusStyle = (status: OrderStatus): string => {
+    switch (getStatusLabel(status)) {
       case "Chờ xác nhận":
         return colorScheme === "dark"
           ? "bg-yellow-700 text-yellow-200"
@@ -109,111 +94,168 @@ export default function PurchaseHistoryPage() {
     }
   };
 
+  const renderActions = (status: OrderStatus) => {
+    switch (status) {
+      case "unpaid":
+        return (
+          <View className="flex-row gap-3 mt-2 justify-end">
+            <TouchableOpacity className="border border-red-500 w-36 py-3 rounded-lg">
+              <Text className="text-red-500 text-center text-base">
+                Hủy đơn hàng
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity className="bg-teal-500 w-36 py-3 rounded-lg">
+              <Text className="text-white text-center text-base">
+                Thanh toán
+              </Text>
+            </TouchableOpacity>
+          </View>
+        );
+      case "delivering":
+        return (
+          <View className="mt-2 flex-row justify-end">
+            <TouchableOpacity className="border border-teal-500 w-52 py-3 rounded-lg">
+              <Text className="text-teal-600 text-center text-base">
+                Đã nhận được hàng
+              </Text>
+            </TouchableOpacity>
+          </View>
+        );
+      case "done":
+        return (
+          <View className="mt-2 flex-row justify-end">
+            <TouchableOpacity className="bg-teal-500 w-36 py-3 rounded-lg">
+              <Text className="text-white text-center text-base">Đánh giá</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      case "cancel":
+        return (
+          <View className="mt-2 flex-row justify-end">
+            <TouchableOpacity className="bg-teal-500 w-36 py-3 rounded-lg">
+              <Text className="text-white text-center text-base">Mua lại</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
+
   const filteredOrders =
     selectedTab === "Tất cả"
       ? orders
-      : orders.filter((order) => order.status === selectedTab);
+      : orders.filter(
+          (order) => getStatusLabel(order.order_status) === selectedTab
+        );
+
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#00bcd4" />
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1 bg-white dark:bg-black px-4 py-6">
+      {/* Header */}
       <View className="flex-row items-center mb-6">
         <ArrowBack />
         <Text className="text-lg font-c-bold text-black dark:text-white ml-4">
           Lịch sử đặt hàng
         </Text>
       </View>
+
+      {/* Tabs */}
       <View
-        className={`flex-1 ${
-          colorScheme === "dark" ? "bg-gray-900" : "bg-white"
+        className={`border-b ${
+          colorScheme === "dark" ? "border-gray-700" : "border-gray-200"
         }`}
       >
-        {/* Tabs */}
-        <View
-          className={`border-b ${
-            colorScheme === "dark" ? "border-gray-700" : "border-gray-200"
-          }`}
-        >
-          <FlatList
-            horizontal
-            data={tabs}
-            keyExtractor={(item) => item}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingHorizontal: 16,
-              alignItems: "center",
-            }}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => setSelectedTab(item)}
-                className={`px-4 py-4 ${
-                  selectedTab === item
-                    ? "border-b-2 border-orange-600"
-                    : "border-b-2 border-transparent"
-                }`}
-              >
-                <Text
-                  className={`text-sm ${
-                    selectedTab === item
-                      ? "text-orange-600 font-bold"
-                      : colorScheme === "dark"
-                      ? "text-gray-400"
-                      : "text-gray-600"
-                  }`}
-                >
-                  {item}
-                </Text>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
-
-        {/* Orders */}
-        <View className="flex-1">
-          {filteredOrders.length === 0 ? (
-            <View className="flex-1 items-center justify-center">
+        <FlatList
+          horizontal
+          data={tabs}
+          keyExtractor={(item) => item}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingHorizontal: 16,
+            alignItems: "center",
+          }}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => setSelectedTab(item)}
+              className={`px-4 py-4 ${
+                selectedTab === item
+                  ? "border-b-2 border-orange-600"
+                  : "border-b-2 border-transparent"
+              }`}
+            >
               <Text
-                className={`${
-                  colorScheme === "dark" ? "text-gray-400" : "text-gray-500"
+                className={`text-sm ${
+                  selectedTab === item
+                    ? "text-orange-600 font-bold"
+                    : colorScheme === "dark"
+                    ? "text-gray-400"
+                    : "text-gray-600"
                 }`}
               >
-                Không có đơn hàng nào!
+                {item}
               </Text>
-            </View>
-          ) : (
-            <FlatList
-              data={filteredOrders}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <View
-                  className={`p-4 border-b ${
-                    colorScheme === "dark"
-                      ? "border-gray-700"
-                      : "border-gray-200"
-                  }`}
-                >
-                  <View className="flex-row justify-between items-center mb-2">
-                    <Text
-                      className={`${
-                        colorScheme === "dark"
-                          ? "text-gray-300"
-                          : "text-gray-800"
-                      } font-bold`}
-                    >
-                      {item.order_id}
-                    </Text>
-                    <Text
-                      className={`text-sm px-3 py-1 rounded-full ${getStatusStyle(
-                        item.status
-                      )}`}
-                    >
-                      {item.status}
-                    </Text>
-                  </View>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
 
-                  {/* Product Info */}
-                  <View className="flex-row items-center mb-2">
+      {/* Orders */}
+      <View className="flex-1">
+        {filteredOrders.length === 0 ? (
+          <View className="flex-1 items-center justify-center">
+            <Text
+              className={`${
+                colorScheme === "dark" ? "text-gray-400" : "text-gray-500"
+              }`}
+            >
+              Không có đơn hàng nào!
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={filteredOrders}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item }) => (
+              <View
+                className={`p-4 border-b ${
+                  colorScheme === "dark" ? "border-gray-700" : "border-gray-200"
+                }`}
+              >
+                {/* Header */}
+                <View className="flex-row justify-between items-center mb-2">
+                  <Text
+                    className={`${
+                      colorScheme === "dark" ? "text-gray-300" : "text-gray-800"
+                    } font-bold`}
+                  >
+                    {item.order_id.split(".")[0]}
+                  </Text>
+
+                  <Text
+                    className={`text-sm px-3 py-1 rounded-full ${getStatusStyle(
+                      item.order_status
+                    )}`}
+                  >
+                    {getStatusLabel(item.order_status)}
+                  </Text>
+                </View>
+
+                {/* Product Info */}
+                {item.order_products.slice(0, 1).map((product) => (
+                  <View
+                    key={product.product_id}
+                    className="flex-row items-center mb-2"
+                  >
                     <Image
-                      source={{ uri: item.product.image }}
+                      source={{ uri: product.product_img }}
                       className="w-20 h-20 rounded-md"
                     />
                     <View className="ml-4 flex-1">
@@ -222,10 +264,10 @@ export default function PurchaseHistoryPage() {
                           colorScheme === "dark"
                             ? "text-gray-300"
                             : "text-gray-800"
-                        } font-medium mb-1`}
+                        } font-c-medium mb-1 line-clamp-1`}
                         numberOfLines={2}
                       >
-                        {item.product.name}
+                        {product.product_name}
                       </Text>
                       <Text
                         className={`${
@@ -234,7 +276,7 @@ export default function PurchaseHistoryPage() {
                             : "text-gray-500"
                         }`}
                       >
-                        Phân loại: {item.product.sku}
+                        Phân loại: {product.variant_name}
                       </Text>
                       <Text
                         className={`${
@@ -243,51 +285,32 @@ export default function PurchaseHistoryPage() {
                             : "text-gray-500"
                         }`}
                       >
-                        x{item.product.quantity}
+                        x{product.quantity}
                       </Text>
                     </View>
                   </View>
+                ))}
 
-                  {/* Pricing */}
-                  <View className="mb-2">
-                    <View className="flex-row justify-between items-center">
-                      <Text
-                        className={`${
-                          colorScheme === "dark"
-                            ? "text-gray-500"
-                            : "text-gray-400"
-                        } line-through`}
-                      >
-                        {item.product.originalPrice.toLocaleString()}đ
-                      </Text>
-                      <Text
-                        className={`${
-                          colorScheme === "dark"
-                            ? "text-red-300"
-                            : "text-red-500"
-                        } font-c-bold`}
-                      >
-                        {item.product.discountedPrice.toLocaleString()}đ
-                      </Text>
-                    </View>
-                    <Text
-                      className={`${
-                        colorScheme === "dark"
-                          ? "text-gray-300"
-                          : "text-gray-800"
-                      } mt-1`}
-                    >
-                      Tổng số tiền ({item.product.quantity} sản phẩm):{" "}
-                      <Text className="font-c-bold text-red-500">
-                        {item.total.toLocaleString()}đ
-                      </Text>
+                {/* Pricing */}
+                <View className="mb-2">
+                  <Text
+                    className={`${
+                      colorScheme === "dark" ? "text-gray-300" : "text-gray-800"
+                    } mt-1`}
+                  >
+                    Tổng số tiền:{" "}
+                    <Text className="font-c-bold text-red-500">
+                      {item.final_cost.toLocaleString()}đ
                     </Text>
-                  </View>
+                  </Text>
                 </View>
-              )}
-            />
-          )}
-        </View>
+
+                {/* Action Buttons */}
+                {renderActions(item.order_status)}
+              </View>
+            )}
+          />
+        )}
       </View>
     </View>
   );

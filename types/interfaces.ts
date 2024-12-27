@@ -188,3 +188,13 @@ export interface IOrderProduct {
   variant_name?: string;
   variant_img?: string;
 }
+
+export interface IOrder {
+  _id: string;
+  order_id: string;
+  order_status: "unpaid" | "delivering" | "done" | "cancel";
+  order_products: IOrderProduct[];
+  final_cost: number;
+  createdAt: string;
+  updatedAt: string;
+}
