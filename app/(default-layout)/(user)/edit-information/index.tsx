@@ -13,7 +13,7 @@ import { ArrowBack } from "@/components";
 import { getData } from "@/utils/functions/handle";
 import { getAccessToken } from "@/lib/authStorage";
 import { ALL_ORDERS_URL } from "@/utils/constants/urls";
-import { IOrder, IOrderProduct } from "@/types/interfaces"; // Import interface
+import { IOrder, IOrderProduct } from "@/types/interfaces";
 
 const statusMapping = {
   unpaid: "Chờ xác nhận",
