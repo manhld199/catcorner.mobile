@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Text } from "@/components/Text";
-import { ArrowBack } from "@/components";
+import { ArrowBack, LoadingDefault } from "@/components";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { getData } from "@/utils/functions/handle";
 import { getAccessToken } from "@/lib/authStorage";
@@ -59,9 +59,7 @@ export default function PurchaseDetailPage() {
 
   const generatePDF = async () => {
     const currentDate = new Date();
-    const formattedDate = `${currentDate.getFullYear()}_${(
-      currentDate.getMonth() + 1
-    )
+    const formattedDate = `${currentDate.getFullYear()}_${(currentDate.getMonth() + 1)
       .toString()
       .padStart(2, "0")}_${currentDate.getDate().toString().padStart(2, "0")}`;
     const fileName = `Order_${order.orderId}_${formattedDate}.pdf`;
@@ -178,9 +176,7 @@ export default function PurchaseDetailPage() {
                   (product: any) => `
                 <tr>
                   <td>
-                    <img src="${
-                      product.product_img || ""
-                    }" alt="Product Image" />
+                    <img src="${product.product_img || ""}" alt="Product Image" />
                   </td>
                   <td>${product.product_name || "Không xác định"}</td>
                   <td>${product.variant_name || "Không có"}</td>
@@ -232,8 +228,8 @@ export default function PurchaseDetailPage() {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" color="#00bcd4" />
+      <View className="flex-1 justify-center items-center bg-white dark:bg-gray-800">
+        <LoadingDefault />
       </View>
     );
   }
@@ -241,9 +237,7 @@ export default function PurchaseDetailPage() {
   if (!order) {
     return (
       <View className="flex-1 justify-center items-center">
-        <Text className="text-gray-500">
-          Không tìm thấy thông tin đơn hàng.
-        </Text>
+        <Text className="text-gray-500">Không tìm thấy thông tin đơn hàng.</Text>
       </View>
     );
   }
@@ -262,19 +256,13 @@ export default function PurchaseDetailPage() {
 
       {/* Order Details */}
       <View className="bg-white shadow rounded-lg p-4 mb-6">
-        <Text className="text-gray-800 font-c-bold text-lg mb-2">
-          Thông tin đơn hàng
-        </Text>
-        <Text className="text-gray-500 mb-3">
-          Mã đơn hàng: {order.order_id.split(".")[0]}
-        </Text>
+        <Text className="text-gray-800 font-c-bold text-lg mb-2">Thông tin đơn hàng</Text>
+        <Text className="text-gray-500 mb-3">Mã đơn hàng: {order.order_id.split(".")[0]}</Text>
 
         <Text className="text-gray-500 mb-3">
           Ngày đặt hàng: {convertDateTimeToDate(order.createdAt)}
         </Text>
-        <Text className="text-gray-500 mb-3">
-          Tổng tiền: {order.final_cost?.toLocaleString()}đ
-        </Text>
+        <Text className="text-gray-500 mb-3">Tổng tiền: {order.final_cost?.toLocaleString()}đ</Text>
         <Text className="text-gray-500 mb-3">
           Địa chỉ:{" "}
           {`${order.order_buyer?.address?.street || " "}, ${
@@ -287,15 +275,10 @@ export default function PurchaseDetailPage() {
 
       {/* Product List */}
       <View className="bg-white shadow rounded-lg p-4 mb-6">
-        <Text className="text-gray-800 font-c-bold text-lg mb-4">
-          Danh sách sản phẩm
-        </Text>
+        <Text className="text-gray-800 font-c-bold text-lg mb-4">Danh sách sản phẩm</Text>
         {order.order_products.map((product: any, index: number) => (
           <View key={index} className="flex-row items-center mb-4">
-            <Image
-              source={{ uri: product.product_img || "" }}
-              className="w-20 h-20 rounded-md"
-            />
+            <Image source={{ uri: product.product_img || "" }} className="w-20 h-20 rounded-md" />
             <View className="ml-4 flex-1">
               <Text
                 className={`${
@@ -304,11 +287,7 @@ export default function PurchaseDetailPage() {
               >
                 {product.product_name || "Sản phẩm không xác định"}
               </Text>
-              <Text
-                className={`${
-                  colorScheme === "dark" ? "text-gray-400" : "text-gray-500"
-                }`}
-              >
+              <Text className={`${colorScheme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
                 Phân loại: {product.variant_name || "Không có"}
               </Text>
               <View className="flex flex-row w-full justify-between">
@@ -319,11 +298,7 @@ export default function PurchaseDetailPage() {
                 >
                   {product.unit_price?.toLocaleString() || "0"}đ
                 </Text>
-                <Text
-                  className={`${
-                    colorScheme === "dark" ? "text-gray-400" : "text-gray-500"
-                  }`}
-                >
+                <Text className={`${colorScheme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
                   x{product.quantity || "1"}
                 </Text>
               </View>
@@ -336,15 +311,11 @@ export default function PurchaseDetailPage() {
       <View className="bg-white rounded-lg p-4 mb-6">
         <View className="flex-row justify-between mb-2">
           <Text className="text-gray-500">Tổng tiền hàng</Text>
-          <Text className="text-gray-800">
-            {order.total_products_cost?.toLocaleString()}đ
-          </Text>
+          <Text className="text-gray-800">{order.total_products_cost?.toLocaleString()}đ</Text>
         </View>
         <View className="flex-row justify-between mb-2">
           <Text className="text-gray-500">Phí vận chuyển</Text>
-          <Text className="text-gray-800">
-            {order.shipping_cost?.toLocaleString()}đ
-          </Text>
+          <Text className="text-gray-800">{order.shipping_cost?.toLocaleString()}đ</Text>
         </View>
         <View className="flex-row justify-between mb-2">
           <Text className="text-gray-500">Ưu đãi</Text>
@@ -361,9 +332,7 @@ export default function PurchaseDetailPage() {
       </View>
       {/* Order Tracking Section */}
       <View className="bg-white shadow rounded-lg p-4 mb-6">
-        <Text className="text-gray-800 font-c-bold text-lg mb-4">
-          Trạng thái đơn hàng
-        </Text>
+        <Text className="text-gray-800 font-c-bold text-lg mb-4">Trạng thái đơn hàng</Text>
 
         {/* Chờ xác nhận */}
         <View className="flex-row items-center mb-2">
@@ -377,11 +346,7 @@ export default function PurchaseDetailPage() {
             }`}
           />
           <Text
-            className={`${
-              order.order_status === "unpaid"
-                ? "text-teal-500"
-                : "text-gray-500"
-            }`}
+            className={`${order.order_status === "unpaid" ? "text-teal-500" : "text-gray-500"}`}
           >
             Chờ xác nhận
           </Text>
@@ -391,18 +356,13 @@ export default function PurchaseDetailPage() {
         <View className="flex-row items-center mb-2">
           <View
             className={`w-4 h-4 rounded-full mr-4 ${
-              order.order_status === "delivering" ||
-              order.order_status === "done"
+              order.order_status === "delivering" || order.order_status === "done"
                 ? "bg-teal-500"
                 : "bg-gray-300"
             }`}
           />
           <Text
-            className={`${
-              order.order_status === "delivering"
-                ? "text-teal-500"
-                : "text-gray-500"
-            }`}
+            className={`${order.order_status === "delivering" ? "text-teal-500" : "text-gray-500"}`}
           >
             Đang giao hàng
           </Text>
@@ -415,11 +375,7 @@ export default function PurchaseDetailPage() {
               order.order_status === "done" ? "bg-teal-500" : "bg-gray-300"
             }`}
           />
-          <Text
-            className={`${
-              order.order_status === "done" ? "text-teal-500" : "text-gray-500"
-            }`}
-          >
+          <Text className={`${order.order_status === "done" ? "text-teal-500" : "text-gray-500"}`}>
             Đã giao
           </Text>
         </View>
@@ -427,9 +383,7 @@ export default function PurchaseDetailPage() {
 
       {/* Payment Info */}
       <View className="bg-white shadow rounded-lg p-4 mb-6">
-        <Text className="text-gray-800 font-c-bold text-lg mb-2">
-          Thông tin thanh toán
-        </Text>
+        <Text className="text-gray-800 font-c-bold text-lg mb-2">Thông tin thanh toán</Text>
         {order.order_status === "unpaid" ? (
           <Text className="text-gray-500">Chưa có thông tin thanh toán.</Text>
         ) : (
@@ -455,13 +409,8 @@ export default function PurchaseDetailPage() {
       </View>
 
       {/* Print Button */}
-      <TouchableOpacity
-        className="bg-teal-500 rounded-lg py-4 px-8 mb-12"
-        onPress={generatePDF}
-      >
-        <Text className="text-white font-c-bold text-center">
-          In thông tin đơn hàng
-        </Text>
+      <TouchableOpacity className="bg-teal-500 rounded-lg py-4 px-8 mb-12" onPress={generatePDF}>
+        <Text className="text-white font-c-bold text-center">In thông tin đơn hàng</Text>
       </TouchableOpacity>
     </ScrollView>
   );

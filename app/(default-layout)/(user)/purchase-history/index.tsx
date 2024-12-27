@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { Text } from "@/components/Text";
-import { ArrowBack } from "@/components";
+import { ArrowBack, LoadingDefault } from "@/components";
 import { useRouter } from "expo-router"; // Import useRouter để điều hướng
 import { getData } from "@/utils/functions/handle";
 import { getAccessToken } from "@/lib/authStorage";
@@ -32,13 +32,7 @@ export default function PurchaseHistoryPage() {
   const [loading, setLoading] = useState(true);
   const colorScheme = useColorScheme();
 
-  const tabs = [
-    "Tất cả",
-    "Chờ xác nhận",
-    "Đang giao hàng",
-    "Đã giao",
-    "Đã hủy",
-  ];
+  const tabs = ["Tất cả", "Chờ xác nhận", "Đang giao hàng", "Đã giao", "Đã hủy"];
 
   const getStatusLabel = (status: OrderStatus): string => statusMapping[status];
 
@@ -86,13 +80,9 @@ export default function PurchaseHistoryPage() {
           ? "bg-green-700 text-green-200"
           : "bg-green-200/50 text-green-700";
       case "Đã hủy":
-        return colorScheme === "dark"
-          ? "bg-red-700 text-red-200"
-          : "bg-red-200/50 text-red-700";
+        return colorScheme === "dark" ? "bg-red-700 text-red-200" : "bg-red-200/50 text-red-700";
       default:
-        return colorScheme === "dark"
-          ? "bg-gray-700 text-gray-300"
-          : "bg-gray-200 text-gray-700";
+        return colorScheme === "dark" ? "bg-gray-700 text-gray-300" : "bg-gray-200 text-gray-700";
     }
   };
 
@@ -102,14 +92,10 @@ export default function PurchaseHistoryPage() {
         return (
           <View className="flex-row gap-3 mt-2 justify-end">
             <TouchableOpacity className="border border-red-500 w-36 py-3 rounded-lg">
-              <Text className="text-red-500 text-center text-base">
-                Hủy đơn hàng
-              </Text>
+              <Text className="text-red-500 text-center text-base">Hủy đơn hàng</Text>
             </TouchableOpacity>
             <TouchableOpacity className="bg-teal-500 w-36 py-3 rounded-lg">
-              <Text className="text-white text-center text-base">
-                Thanh toán
-              </Text>
+              <Text className="text-white text-center text-base">Thanh toán</Text>
             </TouchableOpacity>
           </View>
         );
@@ -117,9 +103,7 @@ export default function PurchaseHistoryPage() {
         return (
           <View className="mt-2 flex-row justify-end">
             <TouchableOpacity className="border border-teal-500 w-52 py-3 rounded-lg">
-              <Text className="text-teal-600 text-center text-base">
-                Đã nhận được hàng
-              </Text>
+              <Text className="text-teal-600 text-center text-base">Đã nhận được hàng</Text>
             </TouchableOpacity>
           </View>
         );
@@ -147,14 +131,12 @@ export default function PurchaseHistoryPage() {
   const filteredOrders =
     selectedTab === "Tất cả"
       ? orders
-      : orders.filter(
-          (order) => getStatusLabel(order.order_status) === selectedTab
-        );
+      : orders.filter((order) => getStatusLabel(order.order_status) === selectedTab);
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" color="#00bcd4" />
+      <View className="flex-1 justify-center items-center bg-white dark:bg-gray-800">
+        <LoadingDefault />
       </View>
     );
   }
@@ -171,9 +153,7 @@ export default function PurchaseHistoryPage() {
 
       {/* Tabs */}
       <View
-        className={`border-b ${
-          colorScheme === "dark" ? "border-gray-700" : "border-gray-200"
-        }`}
+        className={`border-b ${colorScheme === "dark" ? "border-gray-700" : "border-gray-200"}`}
       >
         <FlatList
           horizontal
@@ -213,11 +193,7 @@ export default function PurchaseHistoryPage() {
       <View className="flex-1">
         {filteredOrders.length === 0 ? (
           <View className="flex-1 items-center justify-center">
-            <Text
-              className={`${
-                colorScheme === "dark" ? "text-gray-400" : "text-gray-500"
-              }`}
-            >
+            <Text className={`${colorScheme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
               Không có đơn hàng nào!
             </Text>
           </View>
@@ -227,26 +203,18 @@ export default function PurchaseHistoryPage() {
             keyExtractor={(item) => item._id}
             renderItem={({ item }) => (
               <TouchableOpacity
-                onPress={() =>
-                  router.push(
-                    `/purchase-detail/${encodeURIComponent(item._id)}`
-                  )
-                }
+                onPress={() => router.push(`/purchase-detail/${encodeURIComponent(item._id)}`)}
               >
                 <View
                   className={`p-4 border-b ${
-                    colorScheme === "dark"
-                      ? "border-gray-700"
-                      : "border-gray-200"
+                    colorScheme === "dark" ? "border-gray-700" : "border-gray-200"
                   }`}
                 >
                   {/* Header */}
                   <View className="flex-row justify-between items-center mb-2">
                     <Text
                       className={`${
-                        colorScheme === "dark"
-                          ? "text-gray-300"
-                          : "text-gray-800"
+                        colorScheme === "dark" ? "text-gray-300" : "text-gray-800"
                       } font-bold`}
                     >
                       #{item.order_id.split(".")[0]}
@@ -263,10 +231,7 @@ export default function PurchaseHistoryPage() {
 
                   {/* Product Info */}
                   {item.order_products.slice(0, 1).map((product) => (
-                    <View
-                      key={product.product_id}
-                      className="flex-row items-center mb-2"
-                    >
+                    <View key={product.product_id} className="flex-row items-center mb-2">
                       <Image
                         source={{ uri: product.product_img }}
                         className="w-20 h-20 rounded-md"
@@ -274,9 +239,7 @@ export default function PurchaseHistoryPage() {
                       <View className="ml-4 flex-1">
                         <Text
                           className={`${
-                            colorScheme === "dark"
-                              ? "text-gray-300"
-                              : "text-gray-800"
+                            colorScheme === "dark" ? "text-gray-300" : "text-gray-800"
                           } font-c-medium mb-1 line-clamp-1`}
                           numberOfLines={2}
                         >
@@ -284,18 +247,14 @@ export default function PurchaseHistoryPage() {
                         </Text>
                         <Text
                           className={`${
-                            colorScheme === "dark"
-                              ? "text-gray-400"
-                              : "text-gray-500"
+                            colorScheme === "dark" ? "text-gray-400" : "text-gray-500"
                           }`}
                         >
                           Phân loại: {product.variant_name}
                         </Text>
                         <Text
                           className={`${
-                            colorScheme === "dark"
-                              ? "text-gray-400"
-                              : "text-gray-500"
+                            colorScheme === "dark" ? "text-gray-400" : "text-gray-500"
                           }`}
                         >
                           x{product.quantity}
@@ -308,9 +267,7 @@ export default function PurchaseHistoryPage() {
                   <View className="mb-2">
                     <Text
                       className={`${
-                        colorScheme === "dark"
-                          ? "text-gray-300"
-                          : "text-gray-800"
+                        colorScheme === "dark" ? "text-gray-300" : "text-gray-800"
                       } mt-1`}
                     >
                       Tổng số tiền:{" "}
