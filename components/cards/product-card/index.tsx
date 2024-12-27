@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useRouter } from "expo-router";
 import { View, Image, TouchableOpacity } from "react-native";
 import { Link } from "expo-router";
@@ -17,9 +17,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     <TouchableOpacity
       onPress={() =>
         router.push(
-          `/product/${product.product_slug}?pid=${encodeURIComponent(
-            product.product_id_hashed
-          )}`
+          `/product/${product.product_slug}?pid=${encodeURIComponent(product.product_id_hashed)}`
         )
       }
       // className="w-[48%] bg-pri-5 dark:bg-pri-7 rounded-md"
@@ -27,11 +25,9 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       <View className="relative w-full p-4 flex flex-col justify-center items-center gap-2">
         {/* Discount Badge */}
-        {product.highest_discount && (
+        {(product.highest_discount || 0) > 0 && (
           <View className="absolute top-2 left-2 bg-red-600 px-2 py-1 rounded z-10">
-            <Text className="text-white text-xs font-c-bold">
-              -{product.highest_discount}%
-            </Text>
+            <Text className="text-white text-xs font-c-bold">-{product.highest_discount}%</Text>
           </View>
         )}
 
@@ -44,7 +40,10 @@ export default function ProductCard({ product }: ProductCardProps) {
         <View className="w-full aspect-square">
           <Image
             source={{
-              uri: "https://dogily.vn/wp-content/swift-ai/images/wp-content/uploads/2021/08/tuoi-tho-meo-munchkin-jpg.webp",
+              // uri: "https://dogily.vn/wp-content/swift-ai/images/wp-content/uploads/2021/08/tuoi-tho-meo-munchkin-jpg.webp",
+              uri:
+                product.product_img ||
+                "https://dogily.vn/wp-content/swift-ai/images/wp-content/uploads/2021/08/tuoi-tho-meo-munchkin-jpg.webp",
             }}
             className="w-full h-full rounded-md"
           />
@@ -62,10 +61,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Rating and Sold */}
         <View className="w-full flex-row justify-start  items-center space-x-1 mb-2">
-          <StarGroup
-            rating={product?.product_rating?.rating_point || 0}
-            starSize={16}
-          />
+          <StarGroup rating={product?.product_rating?.rating_point || 0} starSize={16} />
           {/* {Array.from({ length: 5 }).map((_, index) => (
             <Ionicons
               key={index}
@@ -74,10 +70,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               color="gold"
             />
           ))} */}
-          <Text className="text-xs text-gray-500">
-            {" "}
-            ({product.product_sold_quantity} sold)
-          </Text>
+          <Text className="text-xs text-gray-500"> ({product.product_sold_quantity} sold)</Text>
         </View>
 
         {/* Variants */}
@@ -92,26 +85,22 @@ export default function ProductCard({ product }: ProductCardProps) {
                 {variant}
               </Text>
             ))}
-          {Array.isArray(product.variant_name) &&
-            product.variant_name.length > 3 && (
-              <Text className="px-2 py-1 text-xs bg-gray-100 text-gray-500 rounded-full">
-                ...
-              </Text>
-            )}
+          {Array.isArray(product.variant_name) && product.variant_name.length > 3 && (
+            <Text className="px-2 py-1 text-xs bg-gray-100 text-gray-500 rounded-full">...</Text>
+          )}
         </View>
 
         {/* Price */}
         <View className="flex-row items-center justify-between w-full">
-          {product.lowest_price &&
-          product.lowest_price !== product.product_price ? (
-            <>
+          {product.lowest_price && product.lowest_price !== product.product_price ? (
+            <Fragment>
               <Text className="text-sm text-gray-500 line-through">
                 {convertNumberToVND(product.product_price)}
               </Text>
               <Text className="text-base font-c-bold text-red-600">
                 {convertNumberToVND(product.lowest_price)}
               </Text>
-            </>
+            </Fragment>
           ) : (
             <Text className="text-base font-c-bold text-red-600">
               {convertNumberToVND(product.product_price)}

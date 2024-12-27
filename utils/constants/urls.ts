@@ -10,6 +10,7 @@ export const AUTH_RESET_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/auth/reset
 // Search
 export const RECOMMEND_SEARCH_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/guest/productList/searchRecommended`;
 export const RECOMMEND_CATEGORY_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/guest/categories`;
+export const SEARCH_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/guest/productList/search`;
 
 // Product
 export const PRODUCT_DETAIL_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/guest/product`;
