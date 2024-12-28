@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Text } from "@/components/Text";
-import { ArrowBack, ArrowBackFix } from "@/components";
+import { ArrowBack, ArrowBackFix, LoadingDefault } from "@/components";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import { useLocalSearchParams } from "expo-router";
@@ -36,12 +36,13 @@ export default function OrderTrackingResultPage() {
 
         const query = `?order_id=${orderId}&phone_number=${phoneNumber}`;
         const { data } = await getData(`${TRACK_ORDER_URL}${query}`);
+        // console.log("data", data);
 
-        if (!data || !data.order) {
+        if (!data || !data.data.order) {
           Alert.alert("Không tìm thấy đơn hàng", "Vui lòng thử lại sau.");
           setOrder(null);
         } else {
-          setOrder(data.order); // Gán dữ liệu từ API
+          setOrder(data.data.order); // Gán dữ liệu từ API
         }
       } catch (error) {
         console.error("Error fetching order:", error);
@@ -56,9 +57,7 @@ export default function OrderTrackingResultPage() {
 
   const generatePDF = async () => {
     const currentDate = new Date();
-    const formattedDate = `${currentDate.getFullYear()}_${(
-      currentDate.getMonth() + 1
-    )
+    const formattedDate = `${currentDate.getFullYear()}_${(currentDate.getMonth() + 1)
       .toString()
       .padStart(2, "0")}_${currentDate.getDate().toString().padStart(2, "0")}`;
     const fileName = `Order_${orderId}_${formattedDate}.pdf`;
@@ -147,9 +146,7 @@ export default function OrderTrackingResultPage() {
             order.createdAt
           ).toLocaleDateString()}</strong></p>
           <p class="text">Tổng tiền: <strong>${order.final_cost?.toLocaleString()}đ</strong></p>
-          <p class="text">Người nhận hàng: <strong>${
-            order.order_buyer?.name
-          }</strong></p>
+          <p class="text">Người nhận hàng: <strong>${order.order_buyer?.name}</strong></p>
           <p class="text">Số điện thoại người nhận: <strong>${
             order.order_buyer?.phone_number
           }</strong></p>
@@ -181,9 +178,7 @@ export default function OrderTrackingResultPage() {
                   (product: any) => `
                 <tr>
                   <td>
-                    <img src="${
-                      product.product_img || ""
-                    }" alt="Product Image" />
+                    <img src="${product.product_img || ""}" alt="Product Image" />
                   </td>
                   <td>${product.product_name || "Không xác định"}</td>
                   <td>${product.variant_name || "Không có"}</td>
@@ -235,8 +230,8 @@ export default function OrderTrackingResultPage() {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" color="#00bcd4" />
+      <View className="flex-1 justify-center items-center bg-bg-1 dark:bg-gray-800">
+        <LoadingDefault />
       </View>
     );
   }
@@ -245,8 +240,8 @@ export default function OrderTrackingResultPage() {
     return (
       <>
         <ArrowBackFix />
-        <View className="flex-1 justify-center items-center">
-          <Text className="text-gray-500">
+        <View className="flex-1 justify-center items-center bg-bg-1 dark:bg-gray-800">
+          <Text className="text-gray-500 dark:text-gray-300">
             Không tìm thấy thông tin đơn hàng.
           </Text>
         </View>
@@ -255,7 +250,7 @@ export default function OrderTrackingResultPage() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-gray-50 px-4 py-6">
+    <ScrollView className="flex-1 bg-bg-1 dark:bg-gray-800 px-4 py-6">
       {/* Header */}
       <View className="flex-row items-center mb-6">
         <ArrowBack />
@@ -265,21 +260,21 @@ export default function OrderTrackingResultPage() {
       </View>
 
       {/* Order Details */}
-      <View className="bg-white shadow rounded-lg p-4 mb-6">
-        <Text className="text-gray-800 font-c-bold text-lg mb-2">
+      <View className="shadow rounded-lg p-4 mb-6 bg-white dark:bg-pri-6">
+        <Text className="text-gray-800 dark:text-pri-2 font-c-bold text-lg mb-2">
           Thông tin đơn hàng
         </Text>
-        <Text className="text-gray-500 mb-3">Mã đơn hàng: {orderId}</Text>
-        <Text className="text-gray-500 mb-3">
+        <Text className="text-gray-500 dark:text-gray-300 mb-3">Mã đơn hàng: {orderId}</Text>
+        <Text className="text-gray-500 dark:text-gray-300 mb-3">
           Ngày đặt hàng: {convertDateTimeToDate(order.createdAt)}
         </Text>
-        <Text className="text-gray-500 mb-3">
+        <Text className="text-gray-500 dark:text-gray-300 mb-3">
           Người nhận hàng: {order.order_buyer?.name || " "}
         </Text>
-        <Text className="text-gray-500 mb-3">
+        <Text className="text-gray-500 dark:text-gray-300 mb-3">
           Số điện thoại: {order.order_buyer?.phone_number || " "}
         </Text>
-        <Text className="text-gray-500 mb-3">
+        <Text className="text-gray-500 dark:text-gray-300 mb-3">
           Địa chỉ:{" "}
           {`${order.order_buyer?.address?.street || " "}, ${
             order.order_buyer?.address?.ward || " "
@@ -290,27 +285,24 @@ export default function OrderTrackingResultPage() {
       </View>
 
       {/* Product List */}
-      <View className="bg-white shadow rounded-lg p-4 mb-6">
-        <Text className="text-gray-800 font-c-bold text-lg mb-4">
+      <View className="bg-white dark:bg-pri-6 shadow rounded-lg p-4 mb-6">
+        <Text className="text-gray-800 dark:text-pri-2 font-c-bold text-lg mb-4">
           Danh sách sản phẩm
         </Text>
         {order.order_products.map((product: any, index: number) => (
           <View key={index} className="flex-row items-center mb-4">
-            <Image
-              source={{ uri: product.product_img || "" }}
-              className="w-20 h-20 rounded-md"
-            />
+            <Image source={{ uri: product.product_img || "" }} className="w-20 h-20 rounded-md" />
             <View className="ml-4 flex-1">
               <Text
                 className={`${
-                  colorScheme === "dark" ? "text-gray-300" : "text-gray-800"
+                  colorScheme === "dark" ? "text-gray-300" : "text-gray-800 dark:text-pri-2"
                 } font-c-semibold mb-1`}
               >
                 {product.product_name || "Sản phẩm không xác định"}
               </Text>
               <Text
                 className={`${
-                  colorScheme === "dark" ? "text-gray-400" : "text-gray-500"
+                  colorScheme === "dark" ? "text-gray-400" : "text-gray-500 dark:text-gray-300"
                 }`}
               >
                 Phân loại: {product.variant_name || "Không có"}
@@ -325,7 +317,7 @@ export default function OrderTrackingResultPage() {
                 </Text>
                 <Text
                   className={`${
-                    colorScheme === "dark" ? "text-gray-400" : "text-gray-500"
+                    colorScheme === "dark" ? "text-gray-400" : "text-gray-500 dark:text-gray-300"
                   }`}
                 >
                   x{product.quantity || "1"}
@@ -337,35 +329,35 @@ export default function OrderTrackingResultPage() {
       </View>
 
       {/* Total Section */}
-      <View className="bg-white rounded-lg p-4 mb-6">
+      <View className="bg-white dark:bg-pri-6 rounded-lg p-4 mb-6">
         <View className="flex-row justify-between mb-2">
-          <Text className="text-gray-500">Tổng tiền hàng</Text>
-          <Text className="text-gray-800">
+          <Text className="text-gray-500 dark:text-gray-300">Tổng tiền hàng</Text>
+          <Text className="text-gray-800 dark:text-pri-2">
             {order.total_products_cost?.toLocaleString()}đ
           </Text>
         </View>
         <View className="flex-row justify-between mb-2">
-          <Text className="text-gray-500">Phí vận chuyển</Text>
-          <Text className="text-gray-800">
+          <Text className="text-gray-500 dark:text-gray-300">Phí vận chuyển</Text>
+          <Text className="text-gray-800 dark:text-pri-2">
             {order.shipping_cost?.toLocaleString()}đ
           </Text>
         </View>
         <View className="flex-row justify-between mb-2">
-          <Text className="text-gray-500">Ưu đãi</Text>
+          <Text className="text-gray-500 dark:text-gray-300">Ưu đãi</Text>
           <Text className="text-teal-500">
             {order.applied_coupons?.length > 0 ? "-15.000đ" : "Không có"}
           </Text>
         </View>
         <View className="flex-row justify-between mt-4">
-          <Text className="text-gray-800 font-c-bold !text-xl">Tổng cộng</Text>
+          <Text className="text-gray-800 dark:text-pri-2 font-c-bold !text-xl">Tổng cộng</Text>
           <Text className="text-teal-500 font-c-bold !text-xl">
             {order.final_cost?.toLocaleString()}đ
           </Text>
         </View>
       </View>
       {/* Order Tracking Section */}
-      <View className="bg-white shadow rounded-lg p-4 mb-6">
-        <Text className="text-gray-800 font-c-bold text-lg mb-4">
+      <View className="bg-white dark:bg-pri-6 shadow rounded-lg p-4 mb-6">
+        <Text className="text-gray-800 dark:text-pri-2 font-c-bold text-lg mb-4">
           Trạng thái đơn hàng
         </Text>
 
@@ -382,9 +374,7 @@ export default function OrderTrackingResultPage() {
           />
           <Text
             className={`${
-              order.order_status === "unpaid"
-                ? "text-teal-500"
-                : "text-gray-500"
+              order.order_status === "unpaid" ? "text-teal-500" : "text-gray-500 dark:text-gray-300"
             }`}
           >
             Chờ xác nhận
@@ -395,8 +385,7 @@ export default function OrderTrackingResultPage() {
         <View className="flex-row items-center mb-2">
           <View
             className={`w-4 h-4 rounded-full mr-4 ${
-              order.order_status === "delivering" ||
-              order.order_status === "done"
+              order.order_status === "delivering" || order.order_status === "done"
                 ? "bg-teal-500"
                 : "bg-gray-300"
             }`}
@@ -405,7 +394,7 @@ export default function OrderTrackingResultPage() {
             className={`${
               order.order_status === "delivering"
                 ? "text-teal-500"
-                : "text-gray-500"
+                : "text-gray-500 dark:text-gray-300"
             }`}
           >
             Đang giao hàng
@@ -421,7 +410,7 @@ export default function OrderTrackingResultPage() {
           />
           <Text
             className={`${
-              order.order_status === "done" ? "text-teal-500" : "text-gray-500"
+              order.order_status === "done" ? "text-teal-500" : "text-gray-500 dark:text-gray-300"
             }`}
           >
             Đã giao
@@ -430,26 +419,26 @@ export default function OrderTrackingResultPage() {
       </View>
 
       {/* Payment Info */}
-      <View className="bg-white shadow rounded-lg p-4 mb-6">
-        <Text className="text-gray-800 font-c-bold text-lg mb-2">
+      <View className="bg-white dark:bg-pri-6 shadow rounded-lg p-4 mb-6">
+        <Text className="text-gray-800 dark:text-pri-2 font-c-bold text-lg mb-2">
           Thông tin thanh toán
         </Text>
         {order.order_status === "unpaid" ? (
-          <Text className="text-gray-500">Chưa có thông tin thanh toán.</Text>
+          <Text className="text-gray-500 dark:text-gray-300">Chưa có thông tin thanh toán.</Text>
         ) : (
           <>
             <View className="flex-row flex-wrap mb-2">
-              <Text className="text-gray-500">Phương thức thanh toán: </Text>
+              <Text className="text-gray-500 dark:text-gray-300">Phương thức thanh toán: </Text>
               <Text className="text-teal-500 font-c-medium">Smart Banking</Text>
             </View>
             <View className="flex-row mb-2">
-              <Text className="text-gray-500">Ngày thanh toán: </Text>
+              <Text className="text-gray-500 dark:text-gray-300">Ngày thanh toán: </Text>
               <Text className="text-teal-500 font-c-medium">
                 {convertDateTimeToDate(order.updatedAt)}
               </Text>
             </View>
             <View className="flex-row mb-2">
-              <Text className="text-gray-500">Số tiền thanh toán: </Text>
+              <Text className="text-gray-500 dark:text-gray-300">Số tiền thanh toán: </Text>
               <Text className="text-teal-500 font-c-medium">
                 {order.final_cost?.toLocaleString()}đ
               </Text>
@@ -459,13 +448,8 @@ export default function OrderTrackingResultPage() {
       </View>
 
       {/* Print Button */}
-      <TouchableOpacity
-        className="bg-teal-500 rounded-lg py-4 px-8 mb-12"
-        onPress={generatePDF}
-      >
-        <Text className="text-white font-bold text-center">
-          In thông tin đơn hàng
-        </Text>
+      <TouchableOpacity className="bg-teal-500 rounded-lg py-4 px-8 mb-12" onPress={generatePDF}>
+        <Text className="text-white font-bold text-center">In thông tin đơn hàng</Text>
       </TouchableOpacity>
     </ScrollView>
   );

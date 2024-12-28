@@ -179,6 +179,7 @@ export interface IOption {
 
 export interface IOrderProduct {
   product_id: string;
+  product_hashed_id?: string;
   variant_id: string;
   quantity: number;
   unit_price: number;

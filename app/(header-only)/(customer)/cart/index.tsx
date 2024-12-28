@@ -35,8 +35,7 @@ export default function CartPage() {
       try {
         const currentStorage = await AsyncStorage.getItem(CART_PRODUCTS);
 
-        const cartData: ICartProduct[] =
-          JSON.parse(currentStorage || "{}")?.products || [];
+        const cartData: ICartProduct[] = JSON.parse(currentStorage || "{}")?.products || [];
 
         // console.log("aaaaaaaaaaaaaaaaa", cartData);
         const { data, message } = await postData(CART_URL, cartData);
@@ -67,9 +66,7 @@ export default function CartPage() {
     if (selectedItems.length === cartProducts.length) {
       setSelectedItems([]); // Bỏ chọn tất cả
     } else {
-      setSelectedItems(
-        cartProducts.map((item) => item.product_id + item.variant_id)
-      ); // Chọn tất cả
+      setSelectedItems(cartProducts.map((item) => item.product_id + item.variant_id)); // Chọn tất cả
     }
   };
 
@@ -77,9 +74,7 @@ export default function CartPage() {
   const calculateTotal = () => {
     return cartProducts.reduce((total, item) => {
       if (selectedItems.includes(item.product_id + item.variant_id)) {
-        const variant = item.product_variants.find(
-          (v: any) => v._id === item.variant_id
-        );
+        const variant = item.product_variants.find((v: any) => v._id === item.variant_id);
         return total + item.quantity * (variant?.variant_price || 0);
       }
       return total;
@@ -95,12 +90,8 @@ export default function CartPage() {
             .includes(removeVietnameseTones(searchQuery).toLowerCase())
         )
         .sort((a, b) => {
-          const priceA = a.product_variants.find(
-            (v: any) => v._id === a.variant_id
-          )?.variant_price;
-          const priceB = b.product_variants.find(
-            (v: any) => v._id === b.variant_id
-          )?.variant_price;
+          const priceA = a.product_variants.find((v: any) => v._id === a.variant_id)?.variant_price;
+          const priceB = b.product_variants.find((v: any) => v._id === b.variant_id)?.variant_price;
 
           return isPriceAscending ? priceA - priceB : priceB - priceA;
         })
@@ -108,7 +99,7 @@ export default function CartPage() {
 
   return (
     <>
-      <ScrollView className="flex-1 bg-gray-50 px-4 py-4">
+      <ScrollView className="flex-1 bg-bg-1 dark:bg-gray-800 px-4 py-4">
         {/* Header */}
         <View className="flex-row items-center mb-4">
           <ArrowBack />
@@ -129,23 +120,14 @@ export default function CartPage() {
 
         {/* Chọn tất cả và Lọc theo giá */}
         <View className="mb-4 flex-row items-center justify-between">
-          <TouchableOpacity
-            onPress={toggleSelectAll}
-            className="flex-row items-center"
-          >
+          <TouchableOpacity onPress={toggleSelectAll} className="flex-row items-center">
             <Ionicons
-              name={
-                selectedItems.length === cartProducts.length
-                  ? "checkbox"
-                  : "square-outline"
-              }
+              name={selectedItems.length === cartProducts.length ? "checkbox" : "square-outline"}
               size={20}
               color="#0F766E"
             />
             <Text className="ml-2 text-base font-c-medium">
-              {selectedItems.length === cartProducts.length
-                ? "Bỏ chọn tất cả"
-                : "Chọn tất cả"}
+              {selectedItems.length === cartProducts.length ? "Bỏ chọn tất cả" : "Chọn tất cả"}
             </Text>
           </TouchableOpacity>
 
@@ -154,9 +136,7 @@ export default function CartPage() {
             className="flex-row items-center"
           >
             <Ionicons
-              name={
-                isPriceAscending ? "caret-up-outline" : "caret-down-outline"
-              }
+              name={isPriceAscending ? "caret-up-outline" : "caret-down-outline"}
               size={20}
               color="#0F766E"
             />
@@ -167,12 +147,10 @@ export default function CartPage() {
         </View>
 
         {/* Cart Items */}
-        <View className="bg-white rounded-lg shadow-sm">
+        <View className="bg-white dark:bg-pri-6 rounded-lg shadow-sm">
           {filteredCartItems.length > 0 ? (
             filteredCartItems.map((item) => {
-              const variant = item.product_variants.find(
-                (v: any) => v._id === item.variant_id
-              ); // Tìm variant tương ứng với variant_id
+              const variant = item.product_variants.find((v: any) => v._id === item.variant_id); // Tìm variant tương ứng với variant_id
 
               return (
                 <View
@@ -181,15 +159,11 @@ export default function CartPage() {
                 >
                   {/* Checkbox chọn sản phẩm */}
                   <TouchableOpacity
-                    onPress={() =>
-                      toggleSelectItem(item.product_id + item.variant_id)
-                    }
+                    onPress={() => toggleSelectItem(item.product_id + item.variant_id)}
                   >
                     <Ionicons
                       name={
-                        selectedItems.includes(
-                          item.product_id + item.variant_id
-                        )
+                        selectedItems.includes(item.product_id + item.variant_id)
                           ? "checkbox"
                           : "square-outline"
                       }
@@ -208,17 +182,12 @@ export default function CartPage() {
 
                   {/* Thông tin sản phẩm */}
                   <View className="ml-4 flex-1">
-                    <Text className="font-c-medium line-clamp-1">
-                      {item.product_name}
-                    </Text>
-                    <Text className="text-gray-500 text-sm">
+                    <Text className="font-c-medium line-clamp-1">{item.product_name}</Text>
+                    <Text className="text-gray-500 dark:text-gray-300 text-sm">
                       Variant: {variant?.variant_name || "N/A"}
                     </Text>
                     <Text className="text-teal-500 font-c-bold">
-                      {(
-                        item.quantity * (variant?.variant_price || 0)
-                      ).toLocaleString()}
-                      đ
+                      {(item.quantity * (variant?.variant_price || 0)).toLocaleString()}đ
                     </Text>
                     <InputQuantityMini
                       min={1}
@@ -245,7 +214,7 @@ export default function CartPage() {
         </View>
 
         {/* Footer */}
-        <View className="py-4 bg-white shadow-md rounded-lg mt-4 mb-8">
+        <View className="py-4 bg-white dark:bg-pri-6 shadow-md rounded-lg mt-4 mb-8">
           <View className="flex-row items-center justify-between px-4 py-2">
             <Text className="font-c-bold text-xl">Tổng cộng</Text>
             <Text className="text-teal-500 font-c-bold text-xl">
@@ -254,14 +223,12 @@ export default function CartPage() {
           </View>
         </View>
         {/* Footer */}
-        <View className="py-4 bg-white shadow-md rounded-lg mt-4 mb-8">
+        <View className="py-4 bg-white dark:bg-pri-6 shadow-md rounded-lg mt-4 mb-8">
           <TouchableOpacity
             className="mt-4 bg-teal-500 p-3 rounded-lg"
             onPress={async () => {
               const selectedProducts = cartProducts
-                .filter((item) =>
-                  selectedItems.includes(item.product_id + item.variant_id)
-                )
+                .filter((item) => selectedItems.includes(item.product_id + item.variant_id))
                 .map((item) => ({
                   product_hashed_id: item.product_hashed_id,
                   variant_id: item.variant_id,
@@ -269,10 +236,7 @@ export default function CartPage() {
                 }));
 
               if (selectedProducts.length === 0) {
-                Alert.alert(
-                  "Lỗi",
-                  "Vui lòng chọn ít nhất một sản phẩm để đặt hàng."
-                );
+                Alert.alert("Lỗi", "Vui lòng chọn ít nhất một sản phẩm để đặt hàng.");
                 return;
               }
 
@@ -291,9 +255,7 @@ export default function CartPage() {
               }
             }}
           >
-            <Text className="text-white font-c-semibold text-center">
-              Đặt hàng
-            </Text>
+            <Text className="text-white font-c-semibold text-center">Đặt hàng</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
