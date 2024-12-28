@@ -10,11 +10,11 @@ const tabData = [
     label: "Tracking",
   },
   { href: "/profile", iconName: "person", label: "Profile" },
-  {
-    href: "/purchase-detail",
-    iconName: "person-add-outline",
-    label: "Purchase Detail",
-  },
+  // {
+  //   href: "/purchase-detail",
+  //   iconName: "person-add-outline",
+  //   label: "Purchase Detail",
+  // },
 ];
 
 export default function AppBar() {

@@ -23,6 +23,9 @@ export { default as InputSearch } from "./inputs/search";
 export { default as SelectAddress } from "./selects/address";
 export { default as SelectDefault } from "./selects/default";
 
+// Loadings
+export { default as LoadingDefault } from "./loadings/default";
+
 // Others
 export { default as StarGroup } from "./star-group";
 export { default as ArrowBack } from "./arrow-back";

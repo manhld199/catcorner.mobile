@@ -7,7 +7,7 @@ import { useColorScheme } from "nativewind";
 import { useRouter } from "expo-router";
 
 // import components
-import { CardCategory, CardSuggestedProduct, InputSearch } from "@/components";
+import { CardCategory, CardSuggestedProduct, InputSearch, LoadingDefault } from "@/components";
 import { Button } from "@/components/Button";
 import { Text } from "@/components/Text";
 import { Input } from "@/components/Input";
@@ -84,7 +84,7 @@ export default function SearchPage() {
   return (
     <Fragment>
       <InputSearch transcript={transcript} setTranscript={setTranscript} />
-      <ScrollView className="flex flex-col mb-[58px]">
+      <ScrollView className="flex flex-col mb-[58px] bg-white dark:bg-gray-800">
         <View className="w-full flex flex-col">
           {/* Suggested Products */}
           <View className="w-full px-4 py-4 bg-white dark:bg-gray-800">
@@ -93,7 +93,7 @@ export default function SearchPage() {
             </Text>
             <View className="w-1/3 h-[1.5px] mx-auto my-2 bg-teal-300"></View>
             {isProductLoading ? (
-              <ActivityIndicator size="large" color="#00bcd4" />
+              <LoadingDefault />
             ) : (
               <View className="flex flex-col items-center gap-2">
                 {suggestedProducts.length > 0 ? (
@@ -123,7 +123,7 @@ export default function SearchPage() {
                       />
                     </View>
                     <Text className="text-center text-gray-500 dark:text-white">
-                      {transcript
+                      {transcript != "" && isProductLoading
                         ? `Không có sản phẩm gợi ý cho từ khóa '${transcript}'.`
                         : "Hãy nhập từ khóa cần tìm."}
                     </Text>
@@ -137,11 +137,11 @@ export default function SearchPage() {
         {/* Categories */}
         <View className="w-full px-4 py-4 bg-white dark:bg-gray-800 flex flex-col gap-2">
           <Text className="w-full text-center text-xl font-c-semibold text-gray-600 dark:text-white">
-            Sản phẩm theo danh mục
+            Danh mục sản phẩm
           </Text>
           <View className="w-1/3 h-[1.5px] mx-auto my-2 bg-teal-300"></View>
           {isCategoriesLoading ? (
-            <ActivityIndicator size="large" color="#00bcd4" />
+            <LoadingDefault />
           ) : (
             <View className="w-full flex flex-row flex-wrap justify-between gap-x-2 gap-y-4">
               {categories.map((category, index) => (

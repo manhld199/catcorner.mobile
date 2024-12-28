@@ -1,6 +1,6 @@
 // import libs
 import React, { useEffect, useState } from "react";
-import { View, ActivityIndicator, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { WebView } from "react-native-webview";
 import * as Linking from "expo-linking";
@@ -9,6 +9,7 @@ import { useRouter } from "expo-router";
 
 // import components
 import { Text } from "@/components/Text";
+import { LoadingDefault } from "@/components";
 
 // import utils
 import { PAYMENT_PRODUCTS } from "@/utils/constants/variables";
@@ -96,8 +97,8 @@ export default function PaymentPage() {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+      <View style={styles.loadingContainer} className="bg-white dark:bg-gray-800">
+        <LoadingDefault />
       </View>
     );
   }
@@ -125,7 +126,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
   },
   errorContainer: {
     flex: 1,

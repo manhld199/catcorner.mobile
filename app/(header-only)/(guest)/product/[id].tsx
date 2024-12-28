@@ -10,7 +10,7 @@ import { useColorScheme } from "nativewind";
 
 // import components
 import { Text } from "@/components/Text";
-import { CardCoupon, CardReview, ModalBottomSheet, StarGroup } from "@/components";
+import { CardCoupon, CardReview, LoadingDefault, ModalBottomSheet, StarGroup } from "@/components";
 import PurchaseInfo from "./purchase-info";
 
 // import utils
@@ -64,7 +64,12 @@ export default function ProductDetailPage() {
   }, []);
   // console.log("prooooooo: ", pid);
 
-  if (isProductLoading) return <ActivityIndicator size="large" color="#00bcd4" />;
+  if (isProductLoading)
+    return (
+      <View className="w-full h-full bg-white dark:bg-gray-800">
+        <LoadingDefault />
+      </View>
+    );
 
   return (
     <View className="relative">

@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { Text } from "@/components/Text";
-import { ArrowBack } from "@/components";
+import { ArrowBack, LoadingDefault } from "@/components";
 import { useRouter } from "expo-router"; // Import useRouter để điều hướng
 import { getData, putData } from "@/utils/functions/handle";
 import { getAccessToken } from "@/lib/authStorage";
@@ -195,8 +195,8 @@ export default function PurchaseHistoryPage() {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" color="#00bcd4" />
+      <View className="flex-1 justify-center items-center bg-white dark:bg-gray-800">
+        <LoadingDefault />
       </View>
     );
   }
