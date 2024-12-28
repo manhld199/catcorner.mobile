@@ -75,9 +75,9 @@ export default function HomeScreen() {
         <ProductCarousel images={images} />
 
         {/* Banner */}
-        <View className="mx-4 bg-pri-4 rounded-lg p-4 flex-row justify-between items-center mt-6">
+        <View className="mx-4 bg-pri-4 dark:bg-pri-2 rounded-lg p-4 flex-row justify-between items-center mt-6">
           <View>
-            <Text className="font-c-bold text-lg">Today's discount</Text>
+            <Text className="font-c-bold text-lg text-pri-6">Today's discount</Text>
             <TouchableOpacity className="mt-2 bg-white px-3 py-1 rounded-lg">
               <Text className="text-gray-800">More</Text>
             </TouchableOpacity>

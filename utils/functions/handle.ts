@@ -16,12 +16,12 @@ export const postData = async (url: string, payload: any) => {
     if (!res.ok)
       return {
         data: null,
-        message: data.message || data.data.message || "Post Failed",
+        message: data?.message || data?.data?.message || "Post Failed",
       };
 
     return {
       data: data,
-      message: data.message || data.data.message || "Post Success",
+      message: data?.message || data?.data?.message || "Post Success",
     };
   } catch (err) {
     console.log("Fetch data error: ", err);
@@ -53,9 +53,9 @@ export const getData = async (url: string, token?: string) => {
     // console.log("resssssssssssssss", res.ok);
 
     if (!res.ok)
-      return { data: null, message: data.data.message || "Get Failed" };
+      return { data: null, message: data?.message || data?.data?.message || "Get Failed" };
 
-    return { data: data, message: data.data.message || "Get Success" };
+    return { data: data, message: data?.message || data?.data?.message || "Get Success" };
   } catch (err) {
     console.error("Fetch data error: ", err);
     return { data: null, message: "Get Error" };
@@ -78,13 +78,13 @@ export const putData = async (url: string, payload: any, token?: string) => {
     if (!res.ok) {
       return {
         data: null,
-        message: data.message || data.data?.message || "Put Failed",
+        message: data?.message || data?.data?.message || "Put Failed",
       };
     }
 
     return {
       data: data,
-      message: data.message || data.data?.message || "Put Success",
+      message: data?.message || data.data?.message || "Put Success",
     };
   } catch (err) {
     console.error("Fetch data error: ", err);

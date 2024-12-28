@@ -39,16 +39,29 @@ export default function PaymentPage() {
         await AsyncStorage.removeItem(PAYMENT_PRODUCTS);
         // console.log("paymentData", paymentData);
 
-        const response = await fetch(
-          `${process.env.EXPO_PUBLIC_BACKEND_URL}/payos/create-payment-link`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(paymentData),
-          }
-        );
+        let response;
+
+        if (paymentData.re_payment)
+          response = await fetch(
+            `${process.env.EXPO_PUBLIC_BACKEND_URL}/payos/get-payment-link/${paymentData.order_id}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+        else
+          response = await fetch(
+            `${process.env.EXPO_PUBLIC_BACKEND_URL}/payos/create-payment-link`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(paymentData),
+            }
+          );
 
         if (!response.ok) {
           Toast.show({
