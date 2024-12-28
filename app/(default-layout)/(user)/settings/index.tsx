@@ -1,11 +1,18 @@
-import React, { useContext, useState } from "react";
-import { View, TouchableOpacity, ScrollView, Switch } from "react-native";
+import React, { useContext, useState, useEffect } from "react";
+import {
+  View,
+  TouchableOpacity,
+  ScrollView,
+  Switch,
+  Alert,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useColorScheme } from "nativewind";
 import { ArrowBack, SwitchTheme } from "@/components";
 import { Text } from "@/components/Text";
 import { useRouter } from "expo-router"; // Import useRouter
 import { AuthContext } from "@/providers";
+import * as Notifications from "expo-notifications"; // Import thư viện notifications
 
 export default function SettingsPage() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
@@ -13,8 +20,32 @@ export default function SettingsPage() {
   const router = useRouter(); // Initialize router
   const { userInfo } = useContext(AuthContext) || {}; // Get userInfo from AuthContext
 
-  const toggleNotifications = () => {
-    setNotificationsEnabled((prev) => !prev);
+  // UseEffect để kiểm tra trạng thái quyền thông báo ban đầu
+  useEffect(() => {
+    const checkNotificationPermissions = async () => {
+      const { status } = await Notifications.getPermissionsAsync();
+      setNotificationsEnabled(status === "granted");
+    };
+
+    checkNotificationPermissions();
+  }, []);
+
+  // Yêu cầu quyền thông báo từ người dùng khi bật công tắc
+  const toggleNotifications = async () => {
+    if (!notificationsEnabled) {
+      // Kiểm tra và yêu cầu quyền thông báo
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status === "granted") {
+        setNotificationsEnabled(true);
+        Alert.alert("Thông báo", "Bạn đã cấp quyền nhận thông báo.");
+      } else {
+        setNotificationsEnabled(false);
+        Alert.alert("Thông báo", "Bạn đã từ chối quyền nhận thông báo.");
+      }
+    } else {
+      // Nếu người dùng đã bật, chỉ cần tắt
+      setNotificationsEnabled(false);
+    }
   };
 
   // Các tùy chọn cài đặt
@@ -23,7 +54,12 @@ export default function SettingsPage() {
       id: 1,
       icon: "notifications-outline",
       label: "Thông báo",
-      action: <Switch value={notificationsEnabled} onValueChange={toggleNotifications} />,
+      action: (
+        <Switch
+          value={notificationsEnabled}
+          onValueChange={toggleNotifications}
+        />
+      ),
     },
     {
       id: 2,
@@ -53,7 +89,9 @@ export default function SettingsPage() {
       {/* Header */}
       <View className="flex-row items-center mb-6">
         <ArrowBack />
-        <Text className="text-lg font-bold text-black dark:text-white ml-4">Cài đặt</Text>
+        <Text className="text-lg font-bold text-black dark:text-white ml-4">
+          Cài đặt
+        </Text>
       </View>
 
       {/* Settings Options */}
@@ -77,7 +115,9 @@ export default function SettingsPage() {
                 color={colorScheme === "dark" ? "white" : "black"}
                 className="mr-4"
               />
-              <Text className="text-gray-800 dark:text-gray-300">{item.label}</Text>
+              <Text className="text-gray-800 dark:text-gray-300">
+                {item.label}
+              </Text>
             </View>
             {item.action || (
               <Ionicons

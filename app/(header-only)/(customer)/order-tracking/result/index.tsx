@@ -37,6 +37,7 @@ export default function OrderTrackingResultPage() {
         const query = `?order_id=${orderId}&phone_number=${phoneNumber}`;
         const { data } = await getData(`${TRACK_ORDER_URL}${query}`);
 
+        console.log("aaaaaaaaaaaaaaaaaaaa", data);
         if (!data || !data.order) {
           Alert.alert("Không tìm thấy đơn hàng", "Vui lòng thử lại sau.");
           setOrder(null);
