@@ -488,7 +488,7 @@ export default function OrderTrackingResultPage() {
         className="bg-teal-500 rounded-lg py-4 px-8 mb-12"
         onPress={generatePDF}
       >
-        <Text className="text-white font-bold text-center">
+        <Text className="text-white font-c-bold text-center">
           In thông tin đơn hàng
         </Text>
       </TouchableOpacity>

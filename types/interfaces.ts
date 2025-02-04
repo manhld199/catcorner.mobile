@@ -193,7 +193,7 @@ export interface IOrderProduct {
 export interface IOrder {
   _id: string;
   order_id: string;
-  order_status: "unpaid" | "delivering" | "done" | "cancel";
+  order_status: "unpaid" | "delivering" | "delivered" | "canceled";
   order_products: IOrderProduct[];
   final_cost: number;
   createdAt: string;
